@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/sprite">
+        <file>sprites/sprite_blue_green_yellow.png</file>
+        <file>sprites/sprite_blue_green.png</file>
+        <file>sprites/sprite_blue_only.png</file>
+        <file>sprites/sprite_blue_yellow.png</file>
+        <file>sprites/sprite_empty.png</file>
+        <file>sprites/sprite_full.png</file>
+        <file>sprites/sprite_green_only.png</file>
+        <file>sprites/sprite_green_yellow.png</file>
+        <file>sprites/sprite_red_blue_green.png</file>
+        <file>sprites/sprite_red_blue_yellow.png</file>
+        <file>sprites/sprite_red_blue.png</file>
+        <file>sprites/sprite_red_green_yellow.png</file>
+        <file>sprites/sprite_red_green.png</file>
+        <file>sprites/sprite_red_only.png</file>
+        <file>sprites/sprite_red_yellow.png</file>
+        <file>sprites/sprite_yellow_only.png</file>
+    </qresource>
+</RCC>
