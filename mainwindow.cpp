@@ -46,7 +46,7 @@ MainWindow::~MainWindow()
 	delete game;
 }
 
-// parse input, convert to commands, and update peg sprites
+// check if a winstate is found, reset the game if found.
 void
 MainWindow::checkGameover()
 {
