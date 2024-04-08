@@ -32,8 +32,6 @@ class MainWindow : public QMainWindow
         ~MainWindow();
 
       private slots:
-        void on_lineEdit_returnPressed();
-
         void on_Btn_PegAPopToB_clicked();
 
         void on_Btn_PegAPopToC_clicked();
