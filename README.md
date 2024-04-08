@@ -1,9 +1,9 @@
 ## HanoiTower
-A Basic Implementation of the Hanoi Tower Game using Qt.
+A basic implementation of the Hanoi Tower game using Qt.
 
 ## TODO:
 - [ ] Rework the sprites.
 - [ ] Check for memory leak.
-- [ ] Catch the invalid moves errors,
+- [X] Catch the invalid moves errors,
       and show error messages.
 - [ ] Add a splash screen.
