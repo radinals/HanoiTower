@@ -43,39 +43,13 @@ MainWindow::update_PegC()
 MainWindow::~MainWindow()
 {
 	delete ui;
+	delete game;
 }
 
 // parse input, convert to commands, and update peg sprites
 void
-MainWindow::ParseCommand(QString cmd)
+MainWindow::checkGameover()
 {
-	cmd = cmd.toLower();
-	if (cmd == "pop(a)->b") {
-		game->doAction(POP_A_TO_B);
-		update_PegA();
-		update_PegB();
-	} else if (cmd == "pop(a)->c") {
-		game->doAction(POP_A_TO_C);
-		update_PegA();
-		update_PegC();
-	} else if (cmd == "pop(b)->a") {
-		game->doAction(POP_B_TO_A);
-		update_PegB();
-		update_PegA();
-	} else if (cmd == "pop(b)->c") {
-		game->doAction(POP_B_TO_C);
-		update_PegB();
-		update_PegC();
-	} else if (cmd == "pop(c)->a") {
-		game->doAction(POP_C_TO_A);
-		update_PegC();
-		update_PegA();
-	} else if (cmd == "pop(c)->b") {
-		game->doAction(POP_C_TO_B);
-		update_PegC();
-		update_PegB();
-	}
-
 	if (game->gameIsWon()) {
 		game->initPegs();
 		updateAllPeg();
@@ -83,9 +57,55 @@ MainWindow::ParseCommand(QString cmd)
 }
 
 void
-MainWindow::on_lineEdit_returnPressed()
+MainWindow::on_Btn_PegAPopToB_clicked()
 {
-	QString input = ui->lineEdit->text();
-	ParseCommand(input);
-	ui->lineEdit->clear();
+	game->doAction(POP_A_TO_B);
+	update_PegA();
+	update_PegB();
+	checkGameover();
+}
+
+void
+MainWindow::on_Btn_PegAPopToC_clicked()
+{
+	game->doAction(POP_A_TO_C);
+	update_PegA();
+	update_PegC();
+	checkGameover();
+}
+
+void
+MainWindow::on_Btn_PegBPopToA_clicked()
+{
+	game->doAction(POP_B_TO_A);
+	update_PegB();
+	update_PegA();
+	checkGameover();
+}
+
+void
+MainWindow::on_Btn_PegBPopToC_clicked()
+{
+	game->doAction(POP_B_TO_C);
+	update_PegB();
+	update_PegC();
+	checkGameover();
+}
+
+void
+MainWindow::on_Btn_PegCPopToA_clicked()
+{
+	game->doAction(POP_C_TO_A);
+	update_PegC();
+	update_PegA();
+	checkGameover();
+}
+
+void
+MainWindow::on_Btn_PegCPopToB_clicked()
+{
+	game->doAction(POP_C_TO_B);
+	update_PegC();
+	update_PegB();
+	checkGameover();
 }

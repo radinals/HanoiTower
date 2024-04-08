@@ -25,7 +25,7 @@ class MainWindow : public QMainWindow
         void update_PegB();
         void update_PegC();
         void updateAllPeg();
-        void ParseCommand(QString);
+        void checkGameover();
 
       public:
         MainWindow(QWidget *parent = nullptr);
@@ -33,6 +33,18 @@ class MainWindow : public QMainWindow
 
       private slots:
         void on_lineEdit_returnPressed();
+
+        void on_Btn_PegAPopToB_clicked();
+
+        void on_Btn_PegAPopToC_clicked();
+
+        void on_Btn_PegBPopToA_clicked();
+
+        void on_Btn_PegBPopToC_clicked();
+
+        void on_Btn_PegCPopToA_clicked();
+
+        void on_Btn_PegCPopToB_clicked();
 
       private:
         Ui::MainWindow *ui;
