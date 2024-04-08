@@ -2,14 +2,54 @@
 
 #include "./ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
         ui->setupUi(this);
 
-        game = new HanoiTower();
+	game = new HanoiTower();
+	msgbox = new QMessageBox();
 
-        updateAllPeg();
+	// TODO: tidy up formating and styling.
+
+	font = new QFont("Sans Serif", 18);
+
+	msgbox->setFont(*this->font);
+	msgbox->setStyleSheet("QLabel{min-width: 700px;}");
+
+	msgbox->setStandardButtons(QMessageBox::Ok);
+
+	updateAllPeg();
+
+	showPopup("Pindahkan semua balok dari A ke C dengan urutan yang sama!");
+}
+
+bool
+MainWindow::sendGameAction(GameActions action)
+{
+	// TODO: Re-Do Exceptions!
+	try {
+		game->doAction(action);
+		return true;
+	} catch (std::runtime_error err) {
+		if (strcmp(err.what(),
+			   "HanoiTower: Cannot Pop to lesser Slice")) {
+			showPopup(
+			    "Tidak bisa memindahkan balok yang lebih besar keatas balok yang lebih kecil!");
+		}
+	} catch (std::out_of_range err) {
+		showPopup("Masih kosong!, Tidak ada yang bisa dipindahkan!");
+	}
+	return false;
+}
+
+void
+MainWindow::showPopup(const QString& message)
+{
+	msgbox->setText(message);
+	msgbox->show();
+	msgbox->raise();
+	msgbox->activateWindow();
 }
 
 void
@@ -44,6 +84,8 @@ MainWindow::~MainWindow()
 {
 	delete ui;
 	delete game;
+	delete msgbox;
+	delete font;
 }
 
 // check if a winstate is found, reset the game if found.
@@ -51,6 +93,7 @@ void
 MainWindow::checkGameover()
 {
 	if (game->gameIsWon()) {
+		showPopup("Gameover: Selamat, anda menang!");
 		game->initPegs();
 		updateAllPeg();
 	}
@@ -59,53 +102,59 @@ MainWindow::checkGameover()
 void
 MainWindow::on_Btn_PegAPopToB_clicked()
 {
-	game->doAction(POP_A_TO_B);
-	update_PegA();
-	update_PegB();
-	checkGameover();
+	if (sendGameAction(POP_A_TO_B)) {
+		update_PegA();
+		update_PegB();
+		checkGameover();
+	}
 }
 
 void
 MainWindow::on_Btn_PegAPopToC_clicked()
 {
-	game->doAction(POP_A_TO_C);
-	update_PegA();
-	update_PegC();
-	checkGameover();
+	if (sendGameAction(POP_A_TO_C)) {
+		update_PegA();
+		update_PegC();
+		checkGameover();
+	}
 }
 
 void
 MainWindow::on_Btn_PegBPopToA_clicked()
 {
-	game->doAction(POP_B_TO_A);
-	update_PegB();
-	update_PegA();
-	checkGameover();
+	if (sendGameAction(POP_B_TO_A)) {
+		update_PegB();
+		update_PegA();
+		checkGameover();
+	}
 }
 
 void
 MainWindow::on_Btn_PegBPopToC_clicked()
 {
-	game->doAction(POP_B_TO_C);
-	update_PegB();
-	update_PegC();
-	checkGameover();
+	if (sendGameAction(POP_B_TO_C)) {
+		update_PegB();
+		update_PegC();
+		checkGameover();
+	}
 }
 
 void
 MainWindow::on_Btn_PegCPopToA_clicked()
 {
-	game->doAction(POP_C_TO_A);
-	update_PegC();
-	update_PegA();
-	checkGameover();
+	if (sendGameAction(POP_C_TO_A)) {
+		update_PegC();
+		update_PegA();
+		checkGameover();
+	}
 }
 
 void
 MainWindow::on_Btn_PegCPopToB_clicked()
 {
-	game->doAction(POP_C_TO_B);
-	update_PegC();
-	update_PegB();
-	checkGameover();
+	if (sendGameAction(POP_C_TO_B)) {
+		update_PegC();
+		update_PegB();
+		checkGameover();
+	}
 }

@@ -3,7 +3,9 @@
 
 #include "hanoitower.h"
 
+#include <QFont>
 #include <QMainWindow>
+#include <QMessageBox>
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -17,6 +19,8 @@ class MainWindow : public QMainWindow
         Q_OBJECT
 
       private:
+        QFont *font;
+        QMessageBox *msgbox;
         HanoiTower *game = nullptr;
         QPixmap peg_a;
         QPixmap peg_b;
@@ -26,6 +30,9 @@ class MainWindow : public QMainWindow
         void update_PegC();
         void updateAllPeg();
         void checkGameover();
+        bool sendGameAction(GameActions);
+
+        void showPopup(const QString &);
 
       public:
         MainWindow(QWidget *parent = nullptr);
