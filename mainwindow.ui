@@ -2,18 +2,33 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>1506</width>
-    <height>818</height>
+    <height>824</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1500</width>
-    <height>0</height>
+    <width>1506</width>
+    <height>798</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1506</width>
+    <height>824</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -37,7 +52,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Pop to A</string>
+         <string>Pop ke A</string>
         </property>
        </widget>
       </item>
@@ -55,7 +70,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Pop to B</string>
+         <string>Pop ke B</string>
         </property>
        </widget>
       </item>
@@ -73,7 +88,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Pop to A</string>
+         <string>Pop ke A</string>
         </property>
        </widget>
       </item>
@@ -91,7 +106,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Pop to C</string>
+         <string>Pop ke C</string>
         </property>
        </widget>
       </item>
@@ -109,7 +124,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Pop to C</string>
+         <string>Pop ke C</string>
         </property>
        </widget>
       </item>
@@ -127,7 +142,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Pop to  B</string>
+         <string>Pop ke  B</string>
         </property>
        </widget>
       </item>
@@ -136,40 +151,74 @@
     <item row="0" column="0" rowspan="2" colspan="2">
      <layout class="QGridLayout" name="gridLayout_2">
       <property name="sizeConstraint">
-       <enum>QLayout::SetFixedSize</enum>
+       <enum>QLayout::SetDefaultConstraint</enum>
       </property>
-      <item row="2" column="2">
-       <widget class="QLabel" name="Lbl_PegC">
-        <property name="font">
-         <font>
-          <pointsize>32</pointsize>
-         </font>
+      <item row="3" column="0">
+       <widget class="QLabel" name="PegA">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>500</width>
+          <height>400</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>500</width>
+          <height>400</height>
+         </size>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>500</width>
+          <height>400</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
         </property>
         <property name="text">
-         <string>C</string>
+         <string notr="true"/>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <set>Qt::AlignBottom|Qt::AlignHCenter</set>
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="Lbl_PegB">
-        <property name="font">
-         <font>
-          <pointsize>32</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>A</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
+      <item row="4" column="1">
        <widget class="QLabel" name="Lbl_PegA">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>500</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>500</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
         <property name="font">
          <font>
           <pointsize>32</pointsize>
@@ -183,78 +232,155 @@
         </property>
        </widget>
       </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="Lbl_PegB">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>500</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>500</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>32</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>A</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
       <item row="3" column="1">
        <widget class="QLabel" name="PegB">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
           <width>500</width>
-          <height>429</height>
+          <height>400</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
           <width>500</width>
-          <height>429</height>
+          <height>400</height>
+         </size>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>500</width>
+          <height>400</height>
          </size>
         </property>
         <property name="text">
-         <string/>
+         <string notr="true"/>
         </property>
         <property name="scaledContents">
-         <bool>false</bool>
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="3">
+       <widget class="QLabel" name="Lbl_PegC">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>500</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>500</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>32</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>C</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="PegA">
-        <property name="minimumSize">
-         <size>
-          <width>500</width>
-          <height>429</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>500</width>
-          <height>429</height>
-         </size>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="scaledContents">
-         <bool>false</bool>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="2">
+      <item row="3" column="3">
        <widget class="QLabel" name="PegC">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
           <width>500</width>
-          <height>429</height>
+          <height>400</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
           <width>500</width>
-          <height>429</height>
+          <height>400</height>
+         </size>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>500</width>
+          <height>400</height>
          </size>
         </property>
         <property name="text">
-         <string/>
+         <string notr="true"/>
         </property>
         <property name="scaledContents">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <set>Qt::AlignBottom|Qt::AlignHCenter</set>
         </property>
        </widget>
       </item>
