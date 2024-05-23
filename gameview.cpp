@@ -82,9 +82,9 @@ GameView::initStack(int x_offset, HanoiStack* stack)
 
 	for (HanoiSlice* slices : stack->getSlices()) {
 		QSize size = slices->getSize();
+		y_axis -= (size.height() / 2) + 10;
 		int x = r_x - (size.width() / 2);
 		slices->setCoordinate(QVector2D(x, y_axis));
-		y_axis -= (size.height() / 2) + 10;
 	}
 }
 
