@@ -4,12 +4,13 @@
 #include <QPixmap>
 #include <QString>
 #include <QVector2D>
-#include <map>
+#include <list>
 
 class HanoiSlice
 {
       private:
         QPixmap* m_pixmap = nullptr;
+        QSize m_size;
         QVector2D m_coordinate = QVector2D(0, 0);
         unsigned int m_value = 0;
 
@@ -24,6 +25,8 @@ class HanoiSlice
         inline QVector2D getCoordinate() const { return m_coordinate; };
         inline QPixmap* getPixmap() const { return m_pixmap; }
         inline void setValue(unsigned int value) { m_value = value; }
+        inline void setSize(QSize size) { m_size = size; }
+        inline QSize getSize() { return m_size; }
         inline unsigned int getValue() const { return m_value; }
         // clang-format on
 
@@ -32,32 +35,29 @@ class HanoiSlice
 
 class HanoiStack
 {
-      private:
-        const static size_t m_max_slice_amount = 5;
-        enum SliceColor {
-                CLR_NONE = 0,
-                CLR_RED = 1 < 2,
-                CLR_GREEN = 2 < 2,
-                CLR_BLUE = 3 < 2,
-                CLR_YELLOW = 4 < 2,
-                CLR_PURPLE = 5 < 2,
+      public:
+        enum class SliceColor {
+                NONE,
+                RED,
+                GREEN,
+                BLUE,
+                YELLOW,
+                PURPLE,
         };
 
-        QSize m_sprite_size;
-
-	QPixmap* m_stack_sprite;
-	QSize m_stack_sprite_size;
-	QVector2D m_stack_sprite_coordinate;
+      private:
+        const static size_t m_max_slice_amount = 5;
 
 	unsigned int m_stack_colors = 0;
 	size_t m_stack_slice_count = 0;
 
 	HanoiSlice* m_head = nullptr;
 
-	static void push(HanoiStack* stack, unsigned int color,
-			 QVector2D coordinate);
+	static void push(HanoiStack* stack, SliceColor color);
 
-	static QPixmap* generateSliceSprite(unsigned int color);
+	static QPixmap* generateSliceSprite(SliceColor);
+
+	static SliceColor getSliceValueColor(unsigned int);
 
       public:
         HanoiStack(){};
@@ -73,9 +73,13 @@ class HanoiStack
 	void push(HanoiSlice* slice);
 	const HanoiSlice* const peek() const;
 	HanoiSlice* pop();
+	std::list<QPixmap> getSprites(QSize base_size);
 
 	static bool isValidMove(HanoiSlice* src_top, HanoiSlice* dest_top);
 	static void setStackFull(HanoiStack* stack);
+	static unsigned int getSliceColorValue(SliceColor color);
+	std::list<HanoiSlice*> getSlices();
+	void scaleSlices(QSize base_sprite_size);
 };
 
 #endif // HANOISTACK_H

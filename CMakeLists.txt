@@ -14,8 +14,8 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
+
+
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -23,6 +23,13 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         hanoistack.h hanoistack.cpp
+
+        config.h
+
+        gameview.h gameview.cpp
+        gamewindow.h gamewindow.cpp
+        resources.qrc
+
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET HanoiTower APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
