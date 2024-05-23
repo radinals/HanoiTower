@@ -168,7 +168,8 @@ GameView::mouseMoveEvent(QMouseEvent* event)
 		return;
 	}
 	m_slice_sel->setCoordinate(
-	    QVector2D(event->pos().x(), event->pos().y()));
+	    QVector2D(event->pos().x() - (m_slice_sel->getSize().width() / 2),
+		      event->pos().y()));
 	repaint();
 }
 
