@@ -22,7 +22,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(HanoiTower
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        hanoitowerwidget.h hanoitowerwidget.cpp
         hanoistack.h hanoistack.cpp
     )
 # Define target properties for Android with Qt 6 as:
