@@ -16,20 +16,14 @@ set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
         mainwindow.h
-        mainwindow.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(HanoiTower
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        gamepeg.h gamepeg.cpp
-        sprite.h sprite.cpp
-        stack.h stack.cpp
-        slice.h slice.cpp
-        GameSlice.h
-        hanoitower.h hanoitower.cpp
-        sprites.qrc
+        hanoitowerwidget.h hanoitowerwidget.cpp
+        hanoistack.h hanoistack.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET HanoiTower APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
