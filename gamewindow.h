@@ -12,6 +12,10 @@ class GameWindow : public QMainWindow
       private:
         GameView* m_gameview = nullptr;
         QHBoxLayout* m_layout = nullptr;
+        QPushButton* m_reset_button = nullptr;
+
+      private slots:
+        void resetGame();
 
       public:
         explicit GameWindow(QWidget* parent = nullptr);

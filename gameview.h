@@ -5,52 +5,41 @@
 
 #include <QPushButton>
 #include <QWidget>
+#include <map>
 
 class GameView : public QWidget
 {
         Q_OBJECT
 
       private:
-        HanoiStack *m_stack_A = nullptr;
-        HanoiStack *m_stack_B = nullptr;
-        HanoiStack *m_stack_C = nullptr;
+        std::map<char, HanoiStack *> m_stacks;
 
-	const size_t m_stack_count = 3;
-	const size_t m_max_slice_count = 5;
-	const float m_slice_base_margin = 20;
-	const size_t m_stack_area_top_margin = 10;
-	const size_t m_stack_area_bottom_margin = 100;
+	int m_stack_count;
+	int m_max_slice_count;
 
-	QPushButton *m_exit_btn = nullptr;
-	QPushButton *m_reset_btn = nullptr;
+	bool init = true;
 
 	QSize m_stack_base_size;
 	QSize m_slice_base_size;
 	QVector2D m_view_center;
 
-	const float m_stack_base_space = 10;
-
-	bool init = true;
-	HanoiSlice *m_slice_sel = nullptr;
-	HanoiStack *m_slice_sel_source = nullptr;
+	std::pair<HanoiSlice *, HanoiStack *> m_selected_slice;
 
       public:
         explicit GameView(QWidget *parent = nullptr);
+        void resetGame();
 
       private:
         HanoiStack *calculateStackByPos(QPointF);
         void calculateElementSizes();
-        void mousePressEvent(QMouseEvent *) override;
-        void mouseReleaseEvent(QMouseEvent *) override;
-        void mouseMoveEvent(QMouseEvent *) override;
-        void paintEvent(QPaintEvent *) override;
         void drawStack(HanoiStack *stack, QPainter *painter);
-        void initStack(int x_offset, HanoiStack *stack);
-        void resizeEvent(QResizeEvent *event) override;
+        void placeStack(int x_offset, HanoiStack *stack);
 
-	// void exitButtonPressed();
-	// void resetButtonPressed();
-	// void startGameview();
+	void mousePressEvent(QMouseEvent *) override;
+	void mouseReleaseEvent(QMouseEvent *) override;
+	void mouseMoveEvent(QMouseEvent *) override;
+	void paintEvent(QPaintEvent *) override;
+	void resizeEvent(QResizeEvent *event) override;
 
       signals:
 };

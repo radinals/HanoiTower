@@ -24,6 +24,7 @@ class HanoiSlice
         inline void setCoordinate(const QVector2D coord) { m_coordinate = coord; }
         inline QVector2D getCoordinate() const { return m_coordinate; };
         inline QPixmap* getPixmap() const { return m_pixmap; }
+        inline QPixmap getScaledPixmap() const { return m_pixmap->scaled(m_size); }
         inline void setValue(unsigned int value) { m_value = value; }
         inline void setSize(QSize size) { m_size = size; }
         inline QSize getSize() { return m_size; }
@@ -45,19 +46,19 @@ class HanoiStack
                 PURPLE,
         };
 
-      private:
         const static size_t m_max_slice_amount = 5;
 
-	unsigned int m_stack_colors = 0;
-	size_t m_stack_slice_count = 0;
+      private:
+        unsigned int m_stack_colors = 0;
+        size_t m_stack_slice_count = 0;
 
-	HanoiSlice* m_head = nullptr;
+        HanoiSlice* m_head = nullptr;
 
-	static void push(HanoiStack* stack, SliceColor color);
+        static void push(HanoiStack* stack, SliceColor color);
 
-	static QPixmap* generateSliceSprite(SliceColor);
+        static QPixmap* generateSliceSprite(SliceColor);
 
-	static SliceColor getSliceValueColor(unsigned int);
+        static SliceColor getSliceValueColor(unsigned int);
 
       public:
         HanoiStack(){};
@@ -78,8 +79,8 @@ class HanoiStack
 	static bool isValidMove(HanoiSlice* src_top, HanoiSlice* dest_top);
 	static void setStackFull(HanoiStack* stack);
 	static unsigned int getSliceColorValue(SliceColor color);
-	std::list<HanoiSlice*> getSlices();
-	void scaleSlices(QSize base_sprite_size);
+	void scaleSlices(QSize base_sprite_size, float scale_factor);
+	inline size_t getStackCount() { return m_stack_slice_count; };
 };
 
 #endif // HANOISTACK_H

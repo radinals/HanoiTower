@@ -63,15 +63,15 @@ HanoiStack::getSliceColorValue(SliceColor color)
 {
 	switch (color) {
 	case SliceColor::RED:
-		return 5;
+		return 6;
 	case SliceColor::GREEN:
-		return 4;
+		return 5;
 	case SliceColor::BLUE:
-		return 3;
+		return 4;
 	case SliceColor::YELLOW:
-		return 2;
+		return 3;
 	case SliceColor::PURPLE:
-		return 1;
+		return 2;
 	default:
 		return 0;
 	}
@@ -81,15 +81,15 @@ HanoiStack::SliceColor
 HanoiStack::getSliceValueColor(unsigned int value)
 {
 	switch (value) {
-	case 5:
+	case 6:
 		return SliceColor::RED;
-	case 4:
+	case 5:
 		return SliceColor::GREEN;
-	case 3:
+	case 4:
 		return SliceColor::BLUE;
-	case 2:
+	case 3:
 		return SliceColor::YELLOW;
-	case 1:
+	case 2:
 		return SliceColor::PURPLE;
 	}
 	return SliceColor::NONE;
@@ -158,32 +158,16 @@ HanoiStack::setStackFull(HanoiStack* stack)
 	push(stack, SliceColor::RED);
 }
 
-std::list<QPixmap>
-HanoiStack::getSprites(QSize base_size)
-{
-	std::list<QPixmap> sprites;
-	HanoiSlice* slice = m_head;
-
-	unsigned int max = UINT_MAX;
-	while (slice != nullptr) {
-		QSize scale = base_size;
-		scale.setWidth(scale.width() - (50 * slice->getValue()));
-		scale.setHeight(scale.height() - (5 * slice->getValue()));
-		sprites.push_front(slice->getPixmap()->scaled(scale));
-		slice = slice->next;
-	}
-
-	return sprites;
-}
-
 void
-HanoiStack::scaleSlices(QSize base_sprite_size)
+HanoiStack::scaleSlices(QSize base_sprite_size, float scale_factor)
 {
 	HanoiSlice* slice = m_head;
 	while (slice != nullptr) {
 		QSize scale = base_sprite_size;
-		scale.setWidth(scale.width() - (50 * slice->getValue()));
-		scale.setHeight(scale.height() - (5 * slice->getValue()));
+		scale.setWidth(scale.width() /
+			       (slice->getValue() * scale_factor));
+		scale.setHeight(scale.height() /
+				(slice->getValue() * (scale_factor * 2.5f)));
 		slice->setSize(scale);
 		slice = slice->next;
 	}
