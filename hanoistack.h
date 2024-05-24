@@ -74,12 +74,12 @@ class HanoiStack
 	void push(HanoiSlice* slice);
 	const HanoiSlice* const peek() const;
 	HanoiSlice* pop();
-	std::list<QPixmap> getSprites(QSize base_size);
+	void scaleSlices(QSize base_sprite_size, float scale_factor);
+	std::list<HanoiSlice*> getSlices();
 
 	static bool isValidMove(HanoiSlice* src_top, HanoiSlice* dest_top);
 	static void setStackFull(HanoiStack* stack);
 	static unsigned int getSliceColorValue(SliceColor color);
-	void scaleSlices(QSize base_sprite_size, float scale_factor);
 	inline size_t getStackCount() { return m_stack_slice_count; };
 };
 
