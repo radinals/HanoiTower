@@ -1,5 +1,9 @@
 <RCC>
     <qresource prefix="/">
         <file>sprites/base_slice_sprite.png</file>
+        <file>sprites/background.png</file>
+        <file>sprites/stack_base_sprite.png</file>
+        <file>sprites/stack_pole_sprite.png</file>
+        <file>style/default.qss</file>
     </qresource>
 </RCC>

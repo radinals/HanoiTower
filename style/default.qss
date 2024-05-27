@@ -1,0 +1,43 @@
+MainWindow,
+#GameView{
+  background: #ffdc00;
+}
+
+#MenuButtonFrame {
+  background: #4a1d1b;
+  border-color : #4a1d1b;
+  border-radius: 20px;
+  border-width: 10px;
+  border-style: solid;
+}
+
+#GameTimerFrame {
+  border-radius: 20px;
+  border-width: 10px;
+  border-style: solid;
+  background : #c83737;
+  border-color : #c83737;
+}
+
+#GameTimer {
+  color : #f9f9f9;
+}
+
+#GameMoveCountLabel,
+#GameMoveCountOut,
+#GameScoreLabel,
+#GameScoreOut {
+  color : #f9f9f9;
+}
+
+
+#GameSideBarFrame {
+  background: #4a1d1b;
+  border-radius: 10px;
+}
+
+QPushButton {
+  background: #c83737;
+  color : #f9f9f9;
+  border-radius: 20px;
+}

@@ -11,114 +11,37 @@ HanoiStack::clearStack()
 	while (!isEmpty()) {
 		delete pop();
 	}
-}
-
-QPixmap*
-HanoiStack::generateSliceSprite(SliceColor slice_color)
-{
-	QPixmap* pixmap = new QPixmap(Config::SliceSpriteBasePath);
-	QPixmap mask(*pixmap);
-
-	QPainter painter;
-
-	painter.begin(&mask);
-	painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
-
-	QColor qcolor;
-	switch (slice_color) {
-	case SliceColor::RED:
-		qcolor = Qt::red;
-		break;
-	case SliceColor::GREEN:
-		qcolor = Qt::green;
-		break;
-	case SliceColor::BLUE:
-		qcolor = Qt::blue;
-		break;
-	case SliceColor::YELLOW:
-		qcolor = Qt::yellow;
-		break;
-	case SliceColor::PURPLE:
-		qcolor = Qt::magenta;
-		break;
-	default:
-		qcolor = Qt::black;
-		break;
-	};
-
-	painter.fillRect(mask.rect(), qcolor);
-	painter.end();
-
-	painter.begin(pixmap);
-	painter.setCompositionMode(QPainter::CompositionMode_Overlay);
-	painter.drawImage(0, 0, mask.toImage());
-
-	painter.end();
-
-	return pixmap;
-}
-
-unsigned int
-HanoiStack::getSliceColorValue(SliceColor color)
-{
-	switch (color) {
-	case SliceColor::RED:
-		return 6;
-	case SliceColor::GREEN:
-		return 5;
-	case SliceColor::BLUE:
-		return 4;
-	case SliceColor::YELLOW:
-		return 3;
-	case SliceColor::PURPLE:
-		return 2;
-	default:
-		return 0;
-	}
-}
-
-HanoiStack::SliceColor
-HanoiStack::getSliceValueColor(unsigned int value)
-{
-	switch (value) {
-	case 6:
-		return SliceColor::RED;
-	case 5:
-		return SliceColor::GREEN;
-	case 4:
-		return SliceColor::BLUE;
-	case 3:
-		return SliceColor::YELLOW;
-	case 2:
-		return SliceColor::PURPLE;
-	}
-	return SliceColor::NONE;
+	m_head = nullptr;
+	m_tail = nullptr;
 }
 
 void
 HanoiStack::push(HanoiSlice* slice)
 {
-	if (isFull()) {
-		throw std::length_error("Stack Is Full");
+	if (slice == nullptr) {
+		throw std::invalid_argument("Attempted to push a null slice");
 	}
-
 	if (isEmpty()) {
 		m_head = slice;
+		m_tail = m_head;
 	} else {
 		HanoiSlice* old_head = m_head;
+
 		slice->next = old_head;
+		old_head->prev = slice;
+
 		m_head = slice;
+		m_head->prev = nullptr;
 	}
 	m_stack_slice_count++;
 }
 
 void
-HanoiStack::push(HanoiStack* stack, SliceColor color)
+HanoiStack::generate_stack(HanoiStack* stack, size_t amount)
 {
-	QPixmap* sprite_pixmap = generateSliceSprite(color);
-	HanoiSlice* nw_slice =
-	    new HanoiSlice(sprite_pixmap, getSliceColorValue(color));
-	stack->push(nw_slice);
+	for (size_t i = 1; i <= amount; i++) {
+		stack->push(new HanoiSlice(i));
+	}
 }
 
 const HanoiSlice* const
@@ -135,54 +58,16 @@ HanoiStack::pop()
 	}
 
 	HanoiSlice* popped = m_head;
+
 	m_head = m_head->next;
+
+	if (m_head != nullptr) {
+		m_head->prev = nullptr;
+	}
+
 	--m_stack_slice_count;
-	popped->next = nullptr;
+
+	popped->next = popped->prev = nullptr;
 
 	return popped;
-}
-
-bool
-HanoiStack::isValidMove(HanoiSlice* src_top, HanoiSlice* dest_top)
-{
-	return dest_top->getValue() < src_top->getValue();
-}
-
-void
-HanoiStack::setStackFull(HanoiStack* stack)
-{
-	push(stack, SliceColor::PURPLE);
-	push(stack, SliceColor::YELLOW);
-	push(stack, SliceColor::BLUE);
-	push(stack, SliceColor::GREEN);
-	push(stack, SliceColor::RED);
-}
-
-void
-HanoiStack::scaleSlices(QSize base_sprite_size, float scale_factor)
-{
-	HanoiSlice* slice = m_head;
-	while (slice != nullptr) {
-		QSize scale = base_sprite_size;
-		scale.setWidth(scale.width() /
-			       (slice->getValue() * scale_factor));
-		scale.setHeight(scale.height() /
-				(slice->getValue() * (scale_factor * 2.5f)));
-		slice->setSize(scale);
-		slice = slice->next;
-	}
-}
-
-std::list<HanoiSlice*>
-HanoiStack::getSlices()
-{
-	std::list<HanoiSlice*> slices;
-	HanoiSlice* slice = m_head;
-
-	while (slice != nullptr) {
-		slices.push_front(slice);
-		slice = slice->next;
-	}
-
-	return slices;
 }

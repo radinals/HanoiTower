@@ -25,8 +25,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         config.h
 
         gameview.h gameview.cpp
-        gamewindow.h gamewindow.cpp
+
         resources.qrc
+        mainwindow.h mainwindow.cpp mainwindow.ui
+        settingswindow.h settingswindow.cpp settingswindow.ui
 
 
     )
