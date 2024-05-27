@@ -14,7 +14,6 @@ class Config
 
 	QColor m_StackTint = "#483333";
 	QColor m_SliceTint = "#a62e2e";
-	// QColor m_BackgroundColor;
 
 	size_t m_slice_amount = 5;
 	size_t m_stack_amount = 3;
@@ -35,7 +34,6 @@ class Config
 	QString getStackPoleSpritePath() { return m_StackPoleSpritePath; }
 	QColor getStackTint() { return m_StackTint; }
 	QColor getSliceTint() { return m_SliceTint; }
-	// QColor getBackgroundColor() { return m_BackgroundColor; }
 	void setTimerInterval(unsigned long long int ms) {m_timer_interval_ms = ms; }
 	void setSliceSpritePath(QString p) { m_SliceSpritePath = p; }
 	void setStackBaseSpritePath(QString p) { m_StackBaseSpritePath = p; }
@@ -47,7 +45,6 @@ class Config
         size_t getStackAmount() {return m_stack_amount;}
         void setSliceAmount(size_t n) { m_slice_amount = n;}
         void setStackAmount(size_t n) { m_stack_amount = n;}
-        // void setBackgroundColor(QColor c) { m_BackgroundColor = c; }
         // clang-format on
 };
 

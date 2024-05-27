@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "gameview.h"
+#include "leaderboardswindow.h"
 #include "settingswindow.h"
 
 #include <QMainWindow>
@@ -16,7 +17,8 @@ class MainWindow : public QMainWindow
         Q_OBJECT
       private:
         bool m_game_started = false;
-        SettingsWindow *m_settings_window;
+        SettingsWindow *m_settings_window = nullptr;
+        LeaderboardsWindow *m_leaderboards_window = nullptr;
 
       public:
         explicit MainWindow(QWidget *parent = nullptr);
@@ -24,6 +26,8 @@ class MainWindow : public QMainWindow
         GameView *m_game_view = nullptr;
 
       private slots:
+        void dummy_btn(bool _) { on_BackToMenuBtn_clicked(); }
+
         void on_ResetBtn_clicked();
 
         void on_ExitBtn_clicked();
@@ -35,6 +39,8 @@ class MainWindow : public QMainWindow
         void on_StartExitBtn_clicked();
 
         void on_BackToMenuBtn_clicked();
+
+        void on_LeaderboardsBtn_clicked();
 
       private:
         Ui::MainWindow *ui;

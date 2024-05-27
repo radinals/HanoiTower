@@ -75,6 +75,19 @@
          </property>
         </widget>
        </item>
+       <item>
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
        <item alignment="Qt::AlignHCenter">
         <widget class="QFrame" name="MenuButtonFrame">
          <property name="minimumSize">
@@ -215,6 +228,20 @@
        <number>0</number>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_5"/>
+     </widget>
+    </item>
+    <item>
+     <widget class="QFrame" name="LeaderboardsFrame">
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <property name="lineWidth">
+       <number>0</number>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_8"/>
      </widget>
     </item>
     <item>
