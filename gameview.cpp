@@ -16,7 +16,7 @@ GameView::GameView(QWidget* parent) : QWidget{parent}
 	m_selected_slice.first = nullptr;
 	m_selected_slice.second = nullptr;
 
-	for (size_t i = 0; i < m_max_stack_amount; i++) {
+	for (size_t i = 0; i < Config::get().getStackMax(); i++) {
 		m_stacks[i] = new HanoiStack;
 	}
 
@@ -42,11 +42,11 @@ void
 GameView::calculatesSizes()
 {
 	m_stack_area_size.setWidth(geometry().width() /
-				   Config::get().getStackAmount());
+	                           Config::get().getStackAmount());
 	m_stack_area_size.setHeight(geometry().height() * 0.9f);
 
 	m_slice_base_size.setHeight(
-	    (m_stack_area_size.height() / m_max_slice_amount));
+	    (m_stack_area_size.height() / Config::get().getSliceMax()));
 	m_slice_base_size.setWidth(m_stack_area_size.width() * 0.9f);
 
 	m_stack_base_size.setWidth(m_stack_area_size.width() * 0.8f);
@@ -95,8 +95,8 @@ GameView::paintEvent(QPaintEvent* event)
 	if (m_selected_slice.first != nullptr &&
 	    m_selected_slice.second != nullptr) {
 		p.drawPixmap(m_selected_slice.first->getCoordinate().x(),
-			     m_selected_slice.first->getCoordinate().y(),
-			     m_selected_slice.first->getScaledPixmap());
+		             m_selected_slice.first->getCoordinate().y(),
+		             m_selected_slice.first->getScaledPixmap());
 	}
 }
 
@@ -123,7 +123,7 @@ GameView::setStackCoordinates(float offset, HanoiStack* stack)
 
         }
 
-        // clang-format on
+	// clang-format on
 }
 
 void
@@ -141,12 +141,12 @@ GameView::drawStack(HanoiStack* stack, QPainter* painter)
                 slice->getScaledPixmap());
             slice = slice->prev;
         }
-        // clang-format on
+	// clang-format on
 }
 
 void
 GameView::drawStackBase(const QString& stack_label, float offset,
-			QPainter* painter)
+                        QPainter* painter)
 {
 	// draw the stack label
 	// painter->drawText(offset - (m_stack_area_size.width() * 0.5f),
@@ -159,16 +159,17 @@ GameView::drawStackBase(const QString& stack_label, float offset,
 
 	painter->drawPixmap(
 	    offset - ((m_slice_base_size.width() * 0.1f) * 0.5f),
-	    height() - (m_slice_base_size.height() * (m_max_slice_amount)),
+	    height() -
+	        (m_slice_base_size.height() * (Config::get().getSliceMax())),
 	    pole_sprite.scaled(m_slice_base_size.width() * 0.1f,
-			       m_slice_base_size.height() *
-				   (m_max_slice_amount)));
+	                       m_slice_base_size.height() *
+	                           (Config::get().getSliceMax())));
 
 	painter->drawPixmap(
 	    offset - ((m_slice_base_size.width() * 1.1f) * 0.5f),
 	    height() - m_slice_base_size.height(),
 	    stack_base_sprite.scaled(m_slice_base_size.width() * 1.1f,
-				     m_slice_base_size.height()));
+	                             m_slice_base_size.height()));
 }
 
 void
@@ -352,13 +353,13 @@ GameView::init()
 	}
 
 	HanoiStack::generate_stack(m_stacks.at(0),
-				   Config::get().getSliceAmount());
+	                           Config::get().getSliceAmount());
 
 	HanoiSlice* slice = m_stacks.at(0)->getHead();
 
 	while (slice != nullptr) {
 		colorizeSprite(slice->getPixmap(),
-			       Config::get().getSliceTint());
+		               Config::get().getSliceTint());
 		slice = slice->next;
 	}
 	updateInfo();
@@ -424,17 +425,11 @@ GameView::updateInfo()
 		m = QString::number(minutes);
 		s = QString::number(seconds);
 
-		if (hours < 10) {
-			h = '0' + h;
-		}
-
-		if (minutes < 10) {
-			m = '0' + m;
-		}
-
-		if (seconds < 10) {
-			s = '0' + s;
-		}
+		// clang-format off
+		if (hours < 10) { h = '0' + h; }
+		if (minutes < 10) { m = '0' + m; }
+		if (seconds < 10) { s = '0' + s; }
+		// clang-format on
 
 		m_time_output->setText(h + ":" + m + ":" + s);
 	}

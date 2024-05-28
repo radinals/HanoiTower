@@ -7,15 +7,14 @@
 #include <QPushButton>
 #include <QTimer>
 #include <QWidget>
+#include <QtMultimedia>
 #include <map>
+#include <qaudiooutput.h>
+#include <qmediaplayer.h>
 
 class GameView : public QWidget
 {
-        Q_OBJECT
-
-      public:
-        static const size_t m_max_slice_amount = 10;
-        static const size_t m_max_stack_amount = 10;
+	Q_OBJECT
 
       private:
 	// clang-format off
@@ -59,9 +58,9 @@ class GameView : public QWidget
 	       *m_move_count_output = nullptr;
 
       public:
-        explicit GameView(QWidget *parent = nullptr);
-        ~GameView() override;
-        void init();
+	explicit GameView(QWidget *parent = nullptr);
+	~GameView() override;
+	void init();
 
 	void setSliceTint(const QColor &color) { m_slice_tint = color; }
 	void setStackTint(const QColor &color) { m_stack_tint = color; }
@@ -74,14 +73,14 @@ class GameView : public QWidget
 	}
 
       private slots:
-        void checkWinState();
+	void checkWinState();
 
       private:
-        // clang-format off
+	// clang-format off
         inline static QString numToChar(size_t n) {
                 std::string str = ""; str += char('A' + n); return QString::fromStdString(str);
         };
-        // clang-format on
+	// clang-format on
 
 	void updateInfo();
 	void triggerLoseDialog();
@@ -93,7 +92,7 @@ class GameView : public QWidget
 	void calculatesSizes();
 	void drawStack(HanoiStack *stack, QPainter *painter);
 	void drawStackBase(const QString &stack_label, float offset,
-			   QPainter *painter);
+	                   QPainter *painter);
 	void setStackCoordinates(float offset, HanoiStack *stack);
 
 	void mousePressEvent(QMouseEvent *) override;

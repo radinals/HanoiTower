@@ -1,7 +1,6 @@
 #include "settingswindow.h"
 
 #include "config.h"
-#include "gameview.h"
 #include "ui_settingswindow.h"
 
 #include <QSize>
@@ -9,7 +8,7 @@
 SettingsWindow::SettingsWindow(QWidget* parent)
     : QWidget(parent), ui(new Ui::SettingsWindow)
 {
-        ui->setupUi(this);
+	ui->setupUi(this);
 
 	Settings.stack_amount = Config::get().getStackAmount();
 	Settings.slice_amount = Config::get().getSliceAmount();
@@ -62,7 +61,7 @@ SettingsWindow::on_GameStackAmountInput_editingFinished()
 	if (!ui->GameStackAmountInput->text().isEmpty()) {
 		bool ok = false;
 		unsigned int n = ui->GameStackAmountInput->text().toUInt(&ok);
-		if (ok && n > 0 && n <= GameView::m_max_stack_amount) {
+		if (ok && n > 0 && n <= Config::get().getStackMax()) {
 			Settings.stack_amount = n;
 		}
 	}
@@ -76,7 +75,7 @@ SettingsWindow::on_GameSliceAmountInput_editingFinished()
 	if (!ui->GameSliceAmountInput->text().isEmpty()) {
 		bool ok = false;
 		unsigned int n = ui->GameSliceAmountInput->text().toUInt(&ok);
-		if (ok && n > 0 && n <= GameView::m_max_slice_amount) {
+		if (ok && n > 0 && n <= Config::get().getSliceMax()) {
 			Settings.slice_amount = n;
 		}
 	}
@@ -121,7 +120,7 @@ SettingsWindow::on_GameTimerInput_editingFinished()
 		s = ui->GameTimerInput->time().second();
 
 		Config::get().setTimerInterval((h * 3600000) + (m * 60000) +
-					       (s * 1000));
+		                               (s * 1000));
 		// TODO add bottom limit
 	}
 }
@@ -211,7 +210,7 @@ SettingsWindow::drawPreview()
                             );
                         }
 
-                        // clang-format on
+			// clang-format on
 
 			slice_size *= 0.9f;
 			y_offset -= slice_size.height() + vpadding;
