@@ -3,6 +3,7 @@
 #include "config.h"
 
 #include <QDebug>
+#include <QMediaPlayer>
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QPainter>
@@ -22,6 +23,11 @@ GameView::GameView(QWidget* parent) : QWidget{parent}
 	m_timer = new QTimer(this);
 	connect(m_timer, &QTimer::timeout, this, &GameView::checkWinState);
 	// m_timer->setSingleShot(true);
+
+	m_placement_fx.m_audio_out->setVolume(
+	    Config::get().getAudioFXVolumeLevel());
+	m_placement_fx.m_player->setSource(
+	    QUrl("qrc" + Config::get().getPlacementFXAudioPath()));
 }
 
 GameView::~GameView()
@@ -307,6 +313,7 @@ GameView::mouseReleaseEvent(QMouseEvent* event)
 	m_selected_slice.first = nullptr;
 	m_selected_slice.second = nullptr;
 
+	m_placement_fx.m_player->play();
 	update();
 }
 

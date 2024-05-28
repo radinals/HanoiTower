@@ -18,8 +18,27 @@ class GameView : public QWidget
         static const size_t m_max_stack_amount = 10;
 
       private:
-        static QColor m_slice_tint;
-        static QColor m_stack_tint;
+	// clang-format off
+	struct AudioPlayer {
+		QMediaPlayer *m_player = nullptr;
+		QAudioOutput *m_audio_out = nullptr;
+
+		AudioPlayer()
+		{
+			m_player = new QMediaPlayer;
+			m_audio_out = new QAudioOutput;
+			m_player->setAudioOutput(m_audio_out);
+		}
+
+		~AudioPlayer() { delete m_audio_out; delete m_player; };
+	};
+	// clang-format on
+
+	AudioPlayer m_placement_fx;
+	// AudioPlayer m_bg_music;
+
+	static QColor m_slice_tint;
+	static QColor m_stack_tint;
 
 	bool m_init = false;
 	bool m_timer_started = false;
