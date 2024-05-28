@@ -47,10 +47,7 @@ MainWindow::~MainWindow()
 void
 MainWindow::on_ResetBtn_clicked()
 {
-	if (!m_game_started) {
-		m_game_view->init();
-		m_game_started = true;
-	}
+	m_game_view->init();
 }
 
 void

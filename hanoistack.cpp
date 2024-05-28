@@ -1,7 +1,5 @@
 #include "hanoistack.h"
 
-#include "config.h"
-
 #include <QPainter>
 #include <stdexcept>
 

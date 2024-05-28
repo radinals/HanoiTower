@@ -16,7 +16,6 @@ class MainWindow : public QMainWindow
 {
         Q_OBJECT
       private:
-        bool m_game_started = false;
         SettingsWindow *m_settings_window = nullptr;
         LeaderboardsWindow *m_leaderboards_window = nullptr;
 
