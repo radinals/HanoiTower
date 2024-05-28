@@ -8,11 +8,13 @@ class Config
 {
 
       private:
-	QString m_SliceSpritePath = ":/sprites/base_slice_sprite.png";
-	QString m_StackBaseSpritePath = ":/sprites/stack_base_sprite.png";
-	QString m_StackPoleSpritePath = ":/sprites/stack_pole_sprite.png";
-	QString m_PlacementFXAudioPath = ":/audio/placement_fx.mp3";
-	QString m_BgMusicAudioPath = ":/audio/placement_fx.mp3";
+        QString m_SliceSpritePath = ":/sprites/base_slice_sprite.png";
+        QString m_StackBaseSpritePath = ":/sprites/stack_base_sprite.png";
+        QString m_StackPoleSpritePath = ":/sprites/stack_pole_sprite.png";
+        QString m_PlacementFXAudioPath = ":/audio/placement_fx.mp3";
+        QString m_BgMusicAudioPath = ":/audio/placement_fx.mp3";
+        QString m_stack_label_font = "monospace";
+        QColor m_stack_label_font_color = "#fffeee";
 
 	QColor m_StackTint = "#483333";
 	QColor m_SliceTint = "#a62e2e";
@@ -29,13 +31,19 @@ class Config
 	unsigned long long int m_timer_interval_ms = 60000 * 60;
 
       public:
-	static Config& get()
-	{
-		static Config instance;
-		return instance;
-	}
+        static Config& get()
+        {
+                static Config instance;
+                return instance;
+        }
 
 	// clang-format off
+	QString getStackLabelFont() { return m_stack_label_font; }
+	void setStackLabelFont(const QString& f) { m_stack_label_font = f; }
+
+        QColor getStackLabelFontColor() { return m_stack_label_font_color; }
+        void setStackLabelFontColor(const QColor& c) { m_stack_label_font_color = c; }
+
 	unsigned long long int getTimerInterval() {return m_timer_interval_ms; }
 	QString getSliceSpritePath() { return m_SliceSpritePath; }
 	QString getStackBaseSpritePath() { return m_StackBaseSpritePath; }
@@ -67,7 +75,7 @@ class Config
         size_t getStackAmount() {return m_stack_amount;}
         void setSliceAmount(size_t n) { m_slice_amount = n;}
         void setStackAmount(size_t n) { m_stack_amount = n;}
-	// clang-format on
+        // clang-format on
 };
 
 #endif // CONFIG_H

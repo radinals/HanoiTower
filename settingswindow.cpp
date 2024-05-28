@@ -8,13 +8,16 @@
 SettingsWindow::SettingsWindow(QWidget* parent)
     : QWidget(parent), ui(new Ui::SettingsWindow)
 {
-	ui->setupUi(this);
+        ui->setupUi(this);
 
 	Settings.stack_amount = Config::get().getStackAmount();
 	Settings.slice_amount = Config::get().getSliceAmount();
 	Settings.slice_color = Config::get().getSliceTint();
 	Settings.stack_color = Config::get().getStackTint();
 	Settings.timer_ms = Config::get().getTimerInterval();
+	Settings.timer_ms = Config::get().getTimerInterval();
+	Settings.sfx_volume_level = Config::get().getAudioFXVolumeLevel();
+	Settings.music_volume_level = Config::get().getAudioMusicVolumeLevel();
 	update_options();
 	drawPreview();
 }
@@ -28,10 +31,21 @@ SettingsWindow::~SettingsWindow()
 void
 SettingsWindow::update_options()
 {
-	ui->GameSliceAmountInput->setText(
-	    QString::number(Settings.slice_amount));
-	ui->GameStackAmountInput->setText(
-	    QString::number(Settings.stack_amount));
+	ui->GameSliceAmountSlider->setValue(Settings.slice_amount);
+	ui->GameStackAmountSlider->setValue(Settings.stack_amount);
+
+	ui->GameSliceAmountOut->setText(QString::number(Settings.slice_amount));
+	ui->GameStackAmountOut->setText(QString::number(Settings.stack_amount));
+
+	ui->AudioMusicVolOut->setText(
+	    QString::number(int(Settings.music_volume_level)) + "%");
+
+	ui->AudioSFXVolOut->setText(
+	    QString::number(int(Settings.sfx_volume_level)) + "%");
+
+	ui->AudioMusicVolSlider->setValue(Settings.music_volume_level);
+	ui->AudioSFXVolSlider->setValue(Settings.sfx_volume_level);
+
 	ui->ThemeStackColorSettingsInput->setText(
 	    Settings.stack_color.toRgb().name());
 	ui->ThemeSliceColorSettingsInput->setText(
@@ -53,34 +67,6 @@ SettingsWindow::update_options()
 	seconds = (ms % 60000) / 1000.0;
 
 	ui->GameTimerInput->setTime(QTime(hours, minutes, seconds));
-}
-
-void
-SettingsWindow::on_GameStackAmountInput_editingFinished()
-{
-	if (!ui->GameStackAmountInput->text().isEmpty()) {
-		bool ok = false;
-		unsigned int n = ui->GameStackAmountInput->text().toUInt(&ok);
-		if (ok && n > 0 && n <= Config::get().getStackMax()) {
-			Settings.stack_amount = n;
-		}
-	}
-	update_options();
-	drawPreview();
-}
-
-void
-SettingsWindow::on_GameSliceAmountInput_editingFinished()
-{
-	if (!ui->GameSliceAmountInput->text().isEmpty()) {
-		bool ok = false;
-		unsigned int n = ui->GameSliceAmountInput->text().toUInt(&ok);
-		if (ok && n > 0 && n <= Config::get().getSliceMax()) {
-			Settings.slice_amount = n;
-		}
-	}
-	update_options();
-	drawPreview();
 }
 
 void
@@ -120,7 +106,7 @@ SettingsWindow::on_GameTimerInput_editingFinished()
 		s = ui->GameTimerInput->time().second();
 
 		Config::get().setTimerInterval((h * 3600000) + (m * 60000) +
-		                               (s * 1000));
+					       (s * 1000));
 		// TODO add bottom limit
 	}
 }
@@ -210,7 +196,7 @@ SettingsWindow::drawPreview()
                             );
                         }
 
-			// clang-format on
+                        // clang-format on
 
 			slice_size *= 0.9f;
 			y_offset -= slice_size.height() + vpadding;
@@ -220,4 +206,38 @@ SettingsWindow::drawPreview()
 
 	ui->PreviewOut->resetTransform();
 	ui->PreviewOut->viewport()->update();
+}
+
+void
+SettingsWindow::on_GameSliceAmountSlider_valueChanged(int value)
+{
+	if (value > 0 && value <= Config::get().getSliceMax()) {
+		Settings.slice_amount = value;
+	}
+	update_options();
+	drawPreview();
+}
+
+void
+SettingsWindow::on_GameStackAmountSlider_valueChanged(int value)
+{
+	if (value > 0 && value <= Config::get().getStackMax()) {
+		Settings.stack_amount = value;
+	}
+	update_options();
+	drawPreview();
+}
+
+void
+SettingsWindow::on_AudioSFXVolSlider_valueChanged(int value)
+{
+	Settings.sfx_volume_level = value;
+	update_options();
+}
+
+void
+SettingsWindow::on_AudioMusicVolSlider_valueChanged(int value)
+{
+	Settings.music_volume_level = value;
+	update_options();
 }
