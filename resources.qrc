@@ -5,6 +5,7 @@
         <file>sprites/stack_base_sprite.png</file>
         <file>sprites/stack_pole_sprite.png</file>
         <file>style/default.qss</file>
-        <file>audio/placement_fx.mp3</file>
+        <file>audio/placement_fx.wav</file>
+        <file>audio/bg_music.wav</file>
     </qresource>
 </RCC>

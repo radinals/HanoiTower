@@ -21,11 +21,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         hanoistack.h hanoistack.cpp
-
+        soundplayer.h
         config.h
-
         gameview.h gameview.cpp
-
         resources.qrc
         mainwindow.h mainwindow.cpp mainwindow.ui
         settingswindow.h settingswindow.cpp settingswindow.ui

@@ -3,16 +3,18 @@
 #include "gameview.h"
 #include "leaderboardswindow.h"
 #include "settingswindow.h"
+#include "soundplayer.h"
 #include "ui_mainwindow.h"
 
 #include <QFile>
+#include <qpushbutton.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
         ui->setupUi(this);
 
-	QFile file(":/style/default.qss");
+	QFile file(Config::get().getDefaultStyleSheet());
 	file.open(QFile::ReadOnly);
 	QString styleSheet = QLatin1String(file.readAll());
 	this->setStyleSheet(styleSheet);
@@ -29,11 +31,24 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(m_leaderboards_window->m_back_btn, &QPushButton::clicked, this,
 		&MainWindow::dummy_btn);
 
+	connect(m_game_view->m_gameover_dialog_no_btn, &QPushButton::clicked,
+		this, &MainWindow::dummy_reset_btn);
+
+	connect(m_game_view->m_gameover_dialog_yes_btn, &QPushButton::clicked,
+		this, &MainWindow::dummy_btn);
+
+	m_bg_music.setSource(Config::get().getBgMusicAudioPath());
+	m_bg_music.getSound()->setVolume(
+	    Config::get().getAudioMusicVolumeLevel());
+	m_bg_music.getSound()->setLoopCount(QSoundEffect::Infinite);
+
 	m_settings_window->hide();
 	ui->GameSideBarFrame->hide();
 	ui->LeaderboardsFrame->hide();
 	ui->GameViewFrame->hide();
 	ui->GameMenuFrame->show();
+
+	m_bg_music.getSound()->play();
 }
 
 MainWindow::~MainWindow()
@@ -69,6 +84,8 @@ void
 MainWindow::on_SettingsBtn_clicked()
 {
 	m_settings_window->show();
+	m_bg_music.getSound()->setVolume(
+	    Config::get().getAudioMusicVolumeLevel());
 }
 
 void

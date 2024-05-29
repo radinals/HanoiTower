@@ -1,6 +1,7 @@
 #include "gameview.h"
 
 #include "config.h"
+#include "soundplayer.h"
 
 #include <QFont>
 #include <QMediaPlayer>
@@ -8,6 +9,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPoint>
+#include <qmessagebox.h>
 
 // TODO:
 //  - add proper gameover screen
@@ -25,10 +27,15 @@ GameView::GameView(QWidget* parent) : QWidget{parent}
 	connect(m_timer, &QTimer::timeout, this, &GameView::checkWinState);
 	// m_timer->setSingleShot(true);
 
-	m_placement_fx.m_audio_out->setVolume(
-	    Config::get().getAudioFXVolumeLevel());
-	m_placement_fx.m_player->setSource(
-	    QUrl("qrc" + Config::get().getPlacementFXAudioPath()));
+	m_placement_fx.setSource(Config::get().getPlacementFXAudioPath());
+
+	m_gameover_dialog = new QMessageBox(this);
+
+	m_gameover_dialog_no_btn =
+	    m_gameover_dialog->addButton(QMessageBox::Yes);
+
+	m_gameover_dialog_yes_btn =
+	    m_gameover_dialog->addButton(QMessageBox::No);
 }
 
 GameView::~GameView()
@@ -37,6 +44,9 @@ GameView::~GameView()
 		stacks.second->clearStack();
 		delete stacks.second;
 	}
+
+	delete m_timer;
+	delete m_gameover_dialog;
 }
 
 // generate the base sizes to be used to render the sprites and etc.
@@ -44,7 +54,7 @@ void
 GameView::calculatesSizes()
 {
 	m_stack_area_size.setWidth(geometry().width() /
-				   Config::get().getStackAmount());
+	                           Config::get().getStackAmount());
 	m_stack_area_size.setHeight(geometry().height() * 0.9f);
 
 	m_slice_base_size.setHeight(
@@ -97,8 +107,8 @@ GameView::paintEvent(QPaintEvent* event)
 	if (m_selected_slice.first != nullptr &&
 	    m_selected_slice.second != nullptr) {
 		p.drawPixmap(m_selected_slice.first->getCoordinate().x(),
-			     m_selected_slice.first->getCoordinate().y(),
-			     m_selected_slice.first->getScaledPixmap());
+		             m_selected_slice.first->getCoordinate().y(),
+		             m_selected_slice.first->getScaledPixmap());
 	}
 }
 
@@ -126,7 +136,7 @@ GameView::setStackCoordinates(float offset, HanoiStack* stack)
                 slice = slice->prev;
         }
 
-        // clang-format on
+	// clang-format on
 }
 
 // draw the stack's slices
@@ -145,21 +155,21 @@ GameView::drawStack(HanoiStack* stack, QPainter* painter)
                 slice->getScaledPixmap());
             slice = slice->prev;
         }
-        // clang-format on
+	// clang-format on
 }
 
 // render the stack base
 void
 GameView::drawStackBase(const QString& stack_label, float offset,
-			QPainter* painter)
+                        QPainter* painter)
 {
 
 	QPixmap pole_sprite(Config::get().getStackPoleSpritePath());
 	QPixmap stack_base_sprite(Config::get().getStackBaseSpritePath());
 
 	pole_sprite = pole_sprite.scaled(m_stack_base_size.width() * 0.1f,
-					 m_stack_base_size.height() *
-					     Config::get().getSliceMax());
+	                                 m_stack_base_size.height() *
+	                                     Config::get().getSliceMax());
 
 	stack_base_sprite = stack_base_sprite.scaled(
 	    m_stack_base_size.width(), m_stack_base_size.height());
@@ -349,7 +359,7 @@ GameView::mouseReleaseEvent(QMouseEvent* event)
 	m_selected_slice.first = nullptr;
 	m_selected_slice.second = nullptr;
 
-	m_placement_fx.m_player->play();
+	m_placement_fx.getSound()->play();
 
 	update();
 }
@@ -381,6 +391,9 @@ GameView::init()
 {
 	calculatesSizes();
 
+	m_placement_fx.getSound()->setVolume(
+	    Config::get().getAudioFXVolumeLevel());
+
 	m_timer_elapsed = 0;
 	m_init = false;
 	m_timer_started = false;
@@ -392,13 +405,13 @@ GameView::init()
 	}
 
 	HanoiStack::generate_stack(m_stacks.at(0),
-				   Config::get().getSliceAmount());
+	                           Config::get().getSliceAmount());
 
 	HanoiSlice* slice = m_stacks.at(0)->getHead();
 
 	while (slice != nullptr) {
 		colorizeSprite(slice->getPixmap(),
-			       Config::get().getSliceTint());
+		               Config::get().getSliceTint());
 		slice = slice->next;
 	}
 	updateInfo();
@@ -409,15 +422,19 @@ GameView::init()
 void
 GameView::triggerLoseDialog()
 {
-	QMessageBox::information(this, "YOU LOSE!", "LOSER");
-	init();
+	m_gameover_dialog->setText("GAMEOVER.. YOU LOST");
+	m_gameover_dialog->setInformativeText(
+	    "You've Failed to Complete the Puzzle!\nDo You Want to Play Again?...");
+	m_gameover_dialog->exec();
 }
 
 void
 GameView::triggerWinDialog()
 {
-	QMessageBox::information(this, "YOU WIN!", "WINNER");
-	init();
+	m_gameover_dialog->setText("GAMEOVER.. YOU WIN");
+	m_gameover_dialog->setInformativeText(
+	    "You've Sucessfully to Complete the Puzzle!\nDo You Want to Play Again?...");
+	m_gameover_dialog->exec();
 }
 
 void

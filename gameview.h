@@ -2,38 +2,33 @@
 #define GAMEVIEW_H
 
 #include "hanoistack.h"
+#include "soundplayer.h"
 
 #include <QLabel>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QTimer>
 #include <QWidget>
 #include <QtMultimedia>
 #include <map>
+#include <qaccessible_base.h>
 #include <qaudiooutput.h>
+#include <qmainwindow.h>
 #include <qmediaplayer.h>
+#include <qpushbutton.h>
 
 class GameView : public QWidget
 {
-        Q_OBJECT
+	Q_OBJECT
 
       private:
-        // clang-format off
-        struct AudioPlayer {
-                QMediaPlayer *m_player = nullptr;
-                QAudioOutput *m_audio_out = nullptr;
+	QMessageBox *m_gameover_dialog = nullptr;
 
-		AudioPlayer()
-		{
-			m_player = new QMediaPlayer;
-			m_audio_out = new QAudioOutput;
-			m_player->setAudioOutput(m_audio_out);
-		}
+	// clang-format off
 
-		~AudioPlayer() { delete m_audio_out; delete m_player; };
-	};
 	// clang-format on
 
-	AudioPlayer m_placement_fx;
+	SoundPlayer m_placement_fx;
 	// AudioPlayer m_bg_music;
 
 	static QColor m_slice_tint;
@@ -49,8 +44,6 @@ class GameView : public QWidget
 
 	std::pair<HanoiSlice *, HanoiStack *> m_selected_slice;
 
-	bool m_game_over = false;
-
 	QTimer *m_timer;
 	unsigned int m_score = 0, m_move_count = 0;
 
@@ -58,9 +51,13 @@ class GameView : public QWidget
 	       *m_move_count_output = nullptr;
 
       public:
-        explicit GameView(QWidget *parent = nullptr);
-        ~GameView() override;
-        void init();
+	explicit GameView(QWidget *parent = nullptr);
+
+	QPushButton *m_gameover_dialog_yes_btn = nullptr;
+	QPushButton *m_gameover_dialog_no_btn = nullptr;
+
+	~GameView() override;
+	void init();
 
 	void setSliceTint(const QColor &color) { m_slice_tint = color; }
 	void setStackTint(const QColor &color) { m_stack_tint = color; }
@@ -73,14 +70,14 @@ class GameView : public QWidget
 	}
 
       private slots:
-        void checkWinState();
+	void checkWinState();
 
       private:
-        // clang-format off
+	// clang-format off
         inline static QString numToChar(size_t n) {
                 std::string str = ""; str += char('A' + n); return QString::fromStdString(str);
         };
-        // clang-format on
+	// clang-format on
 
 	void updateInfo();
 	void triggerLoseDialog();
@@ -92,7 +89,7 @@ class GameView : public QWidget
 	void calculatesSizes();
 	void drawStack(HanoiStack *stack, QPainter *painter);
 	void drawStackBase(const QString &stack_label, float offset,
-			   QPainter *painter);
+	                   QPainter *painter);
 	void setStackCoordinates(float offset, HanoiStack *stack);
 
 	void mousePressEvent(QMouseEvent *) override;

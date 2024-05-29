@@ -3,6 +3,7 @@
 
 #include <QPushButton>
 #include <QWidget>
+#include <list>
 
 namespace Ui
 {
@@ -12,6 +13,19 @@ namespace Ui
 class LeaderboardsWindow : public QWidget
 {
         Q_OBJECT
+
+      private:
+        struct LeaderBoardData {
+                std::string m_name;
+                size_t m_slice_count = 0, m_stack_count = 0;
+                unsigned int score = 0;
+                std::string m_date;
+        };
+
+        std::list<LeaderBoardData> m_leaderboard_datas;
+
+	void loadFromFile();
+	void saveToFile();
 
       public:
         explicit LeaderboardsWindow(QWidget *parent = nullptr);

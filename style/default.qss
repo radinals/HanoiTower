@@ -38,6 +38,18 @@ MainWindow,
 
 QPushButton {
   background: #c83737;
+  border-color : #c83737;
   color : #f9f9f9;
+  border-style: solid;
+  border-width: 10px;
   border-radius: 20px;
+}
+
+#SettingsWindow {
+  background : #ffdc00;
+}
+
+#GameStackAmountSlider,
+#GameSliceAmountSlider {
+  color: #c83737;
 }

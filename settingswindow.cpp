@@ -3,6 +3,7 @@
 #include "config.h"
 #include "ui_settingswindow.h"
 
+#include <QFile>
 #include <QSize>
 
 SettingsWindow::SettingsWindow(QWidget* parent)
@@ -10,14 +11,19 @@ SettingsWindow::SettingsWindow(QWidget* parent)
 {
         ui->setupUi(this);
 
+	QFile file(Config::get().getDefaultStyleSheet());
+	file.open(QFile::ReadOnly);
+	QString styleSheet = QLatin1String(file.readAll());
+	this->setStyleSheet(styleSheet);
+
 	Settings.stack_amount = Config::get().getStackAmount();
 	Settings.slice_amount = Config::get().getSliceAmount();
 	Settings.slice_color = Config::get().getSliceTint();
 	Settings.stack_color = Config::get().getStackTint();
 	Settings.timer_ms = Config::get().getTimerInterval();
-	Settings.timer_ms = Config::get().getTimerInterval();
 	Settings.sfx_volume_level = Config::get().getAudioFXVolumeLevel();
 	Settings.music_volume_level = Config::get().getAudioMusicVolumeLevel();
+
 	update_options();
 	drawPreview();
 }
@@ -38,13 +44,13 @@ SettingsWindow::update_options()
 	ui->GameStackAmountOut->setText(QString::number(Settings.stack_amount));
 
 	ui->AudioMusicVolOut->setText(
-	    QString::number(int(Settings.music_volume_level)) + "%");
+	    QString::number(int(Settings.music_volume_level * 100)) + "%");
 
 	ui->AudioSFXVolOut->setText(
-	    QString::number(int(Settings.sfx_volume_level)) + "%");
+	    QString::number(int(Settings.sfx_volume_level * 100)) + "%");
 
-	ui->AudioMusicVolSlider->setValue(Settings.music_volume_level);
-	ui->AudioSFXVolSlider->setValue(Settings.sfx_volume_level);
+	ui->AudioMusicVolSlider->setValue(Settings.music_volume_level * 100);
+	ui->AudioSFXVolSlider->setValue(Settings.sfx_volume_level * 100);
 
 	ui->ThemeStackColorSettingsInput->setText(
 	    Settings.stack_color.toRgb().name());
@@ -105,9 +111,7 @@ SettingsWindow::on_GameTimerInput_editingFinished()
 		m = ui->GameTimerInput->time().minute();
 		s = ui->GameTimerInput->time().second();
 
-		Config::get().setTimerInterval((h * 3600000) + (m * 60000) +
-					       (s * 1000));
-		// TODO add bottom limit
+		Settings.timer_ms = ((h * 3600000) + (m * 60000) + (s * 1000));
 	}
 }
 
@@ -124,6 +128,9 @@ SettingsWindow::on_SaveButton_clicked()
 	Config::get().setSliceAmount(Settings.slice_amount);
 	Config::get().setSliceTint(Settings.slice_color);
 	Config::get().setStackTint(Settings.stack_color);
+	Config::get().setTimerInterval(Settings.timer_ms);
+	Config::get().setAudioFXVolumeLevel(Settings.sfx_volume_level);
+	Config::get().setAudioMusicVolumeLevel(Settings.music_volume_level);
 	close();
 }
 
@@ -145,11 +152,15 @@ SettingsWindow::drawPreview()
 	const unsigned int hpadding = 5;
 
 	// clang-format off
-	QSize base_slice_size((Winsize.width() / Settings.stack_amount) * 0.5f,
-			      (Winsize.height() / Settings.slice_amount) * 0.3f);
+	QSize base_slice_size(
+		(Winsize.width() / Settings.stack_amount) * 0.5f,
+		(Winsize.height() / Settings.slice_amount) * 0.3f
+	);
 
-	QSize stack_pole_size(base_slice_size.width() * 0.1f,
-			      base_slice_size.height() * Settings.slice_amount);
+	QSize stack_pole_size(
+		base_slice_size.width() * 0.1f,
+		base_slice_size.height() * Settings.slice_amount
+	);
 	// clang-format on
 
 	QPen pen;
@@ -231,13 +242,13 @@ SettingsWindow::on_GameStackAmountSlider_valueChanged(int value)
 void
 SettingsWindow::on_AudioSFXVolSlider_valueChanged(int value)
 {
-	Settings.sfx_volume_level = value;
+	Settings.sfx_volume_level = (value * 0.01f);
 	update_options();
 }
 
 void
 SettingsWindow::on_AudioMusicVolSlider_valueChanged(int value)
 {
-	Settings.music_volume_level = value;
+	Settings.music_volume_level = (value * 0.01f);
 	update_options();
 }

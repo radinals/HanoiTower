@@ -3,18 +3,23 @@
 
 #include <QColor>
 #include <QString>
+#include <string>
 
 class Config
 {
 
       private:
-        QString m_SliceSpritePath = ":/sprites/base_slice_sprite.png";
-        QString m_StackBaseSpritePath = ":/sprites/stack_base_sprite.png";
-        QString m_StackPoleSpritePath = ":/sprites/stack_pole_sprite.png";
-        QString m_PlacementFXAudioPath = ":/audio/placement_fx.mp3";
-        QString m_BgMusicAudioPath = ":/audio/placement_fx.mp3";
-        QString m_stack_label_font = "monospace";
-        QColor m_stack_label_font_color = "#fffeee";
+        std::string m_program_data_pathname = "TowerOfHanoi";
+        std::string m_leaderboard_data_filename = "leaderboards.csv";
+        QString m_defaultStylesheet = ":/style/default.qss";
+
+	QString m_SliceSpritePath = ":/sprites/base_slice_sprite.png";
+	QString m_StackBaseSpritePath = ":/sprites/stack_base_sprite.png";
+	QString m_StackPoleSpritePath = ":/sprites/stack_pole_sprite.png";
+	QString m_PlacementFXAudioPath = ":/audio/placement_fx.wav";
+	QString m_BgMusicAudioPath = ":/audio/bg_music.wav";
+	QString m_stack_label_font = "monospace";
+	QColor m_stack_label_font_color = "#fffeee";
 
 	QColor m_StackTint = "#483333";
 	QColor m_SliceTint = "#a62e2e";
@@ -25,8 +30,8 @@ class Config
 	static const size_t m_slice_max = 10;
 	static const size_t m_stack_max = 10;
 
-	float m_AudioFXVolumeLevel = 100.0f;
-	float m_AudioMusicVolumeLevel = 100.0f;
+	float m_AudioFXVolumeLevel = 1.0f;
+	float m_AudioMusicVolumeLevel = 1.0f;
 
 	unsigned long long int m_timer_interval_ms = 60000 * 60;
 
@@ -38,6 +43,10 @@ class Config
         }
 
 	// clang-format off
+	//
+	QString getDefaultStyleSheet() { return m_defaultStylesheet; }
+	void setDefaultStyleSheet(const QString& f ) { m_defaultStylesheet = f; }
+
 	QString getStackLabelFont() { return m_stack_label_font; }
 	void setStackLabelFont(const QString& f) { m_stack_label_font = f; }
 
@@ -56,8 +65,8 @@ class Config
 	float getAudioFXVolumeLevel() { return m_AudioFXVolumeLevel; }
 	float getAudioMusicVolumeLevel() { return m_AudioMusicVolumeLevel; }
 
-	void getAudioFXVolumeLevel(float l) { m_AudioFXVolumeLevel = l; }
-	void getAudioMusicVolumeLevel(float l) { m_AudioMusicVolumeLevel = l; }
+	void setAudioFXVolumeLevel(float l) { m_AudioFXVolumeLevel = l; }
+	void setAudioMusicVolumeLevel(float l) { m_AudioMusicVolumeLevel = l; }
 
 	void setBgMusicAudioPath(const QString& p) { m_BgMusicAudioPath = p; }
 	void setPlacementFXAudioPath(const QString& p) { m_PlacementFXAudioPath = p; }

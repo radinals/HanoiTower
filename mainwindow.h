@@ -4,6 +4,7 @@
 #include "gameview.h"
 #include "leaderboardswindow.h"
 #include "settingswindow.h"
+#include "soundplayer.h"
 
 #include <QMainWindow>
 
@@ -18,6 +19,7 @@ class MainWindow : public QMainWindow
       private:
         SettingsWindow *m_settings_window = nullptr;
         LeaderboardsWindow *m_leaderboards_window = nullptr;
+        SoundPlayer m_bg_music;
 
       public:
         explicit MainWindow(QWidget *parent = nullptr);
@@ -26,6 +28,7 @@ class MainWindow : public QMainWindow
 
       private slots:
         void dummy_btn(bool _) { on_BackToMenuBtn_clicked(); }
+        void dummy_reset_btn(bool _) { on_ResetBtn_clicked(); }
 
         void on_ResetBtn_clicked();
 
