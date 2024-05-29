@@ -1,9 +1,6 @@
-## HanoiTower
-A basic implementation of the Hanoi Tower game using Qt.
+## Towers of Hanoi
+basic game made using the Qt GUI Framework.
 
-## TODO:
-- [ ] Rework the sprites.
-- [ ] Check for memory leak.
-- [X] Catch the invalid moves errors,
-      and show error messages.
-- [ ] Add a splash screen.
+### Building
+- Developed only using libraries provided by Qt (6.6.7).
+- Build either using QtCreator, or using CMake + build tools (make, etc)
