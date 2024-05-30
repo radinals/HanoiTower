@@ -19,8 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
 	this->setStyleSheet(styleSheet);
 
 	m_game_view = new GameView(ui->GameViewFrame);
-	m_game_view->setGameInfoOutputs(ui->GameTimer, ui->GameScoreOut,
-					ui->GameMoveCountOut);
+	m_game_view->setGameInfoOutputs(ui->GameTimer, ui->GameMoveCountOut);
 	m_settings_window = new SettingsWindow;
 
 	ui->GameViewFrame->layout()->addWidget(m_game_view);
@@ -30,6 +29,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 	connect(m_game_view->m_gameover_dialog_yes_btn, &QPushButton::clicked,
 		this, &MainWindow::dummy_btn);
+
+	ui->GameTitle->setPixmap(m_logo);
 
 	m_bg_music.setSource(Config::get().getBgMusicAudioPath());
 	m_bg_music.getSound()->setVolume(

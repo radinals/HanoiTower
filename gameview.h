@@ -21,12 +21,12 @@
 
 class GameView : public QWidget
 {
-	Q_OBJECT
+        Q_OBJECT
 
       private:
-	QMessageBox *m_gameover_dialog = nullptr;
+        QMessageBox *m_gameover_dialog = nullptr;
 
-	SoundPlayer m_placement_fx;
+        SoundPlayer m_placement_fx;
 
 	static QColor m_slice_tint;
 	static QColor m_stack_tint;
@@ -43,13 +43,12 @@ class GameView : public QWidget
 	std::pair<HanoiSlice *, HanoiStack *> m_selected_slice;
 
 	QTimer *m_timer;
-	unsigned int m_score = 0, m_move_count = 0;
+	unsigned int m_move_count = 0;
 
-	QLabel *m_time_output = nullptr, *m_score_output = nullptr,
-	       *m_move_count_output = nullptr;
+	QLabel *m_time_output = nullptr, *m_move_count_output = nullptr;
 
       public:
-	explicit GameView(QWidget *parent = nullptr);
+        explicit GameView(QWidget *parent = nullptr);
 
 	QPushButton *m_gameover_dialog_yes_btn = nullptr;
 	QPushButton *m_gameover_dialog_no_btn = nullptr;
@@ -59,22 +58,21 @@ class GameView : public QWidget
 	void reset();
 	void clear();
 
-	void setGameInfoOutputs(QLabel *time, QLabel *score, QLabel *moves)
+	void setGameInfoOutputs(QLabel *time, QLabel *moves)
 	{
 		m_time_output = time;
-		m_score_output = score;
 		m_move_count_output = moves;
 	}
 
       private slots:
-	void checkWinState();
+        void checkWinState();
 
       private:
-	// clang-format off
+        // clang-format off
         inline static QString numToChar(size_t n) {
                 std::string str = ""; str += char('A' + n); return QString::fromStdString(str);
         };
-	// clang-format on
+        // clang-format on
 
 	static size_t getRandomGoalStackIndex();
 	void showGameGoalDialog();

@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "config.h"
 #include "gameview.h"
 #include "settingswindow.h"
 #include "soundplayer.h"
@@ -18,6 +19,7 @@ class MainWindow : public QMainWindow
       private:
         SettingsWindow *m_settings_window = nullptr;
         SoundPlayer m_bg_music;
+        const QPixmap m_logo = QPixmap(Config::get().getProgramLogo());
 
       public:
         explicit MainWindow(QWidget *parent = nullptr);

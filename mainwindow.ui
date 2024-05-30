@@ -71,7 +71,7 @@
           </font>
          </property>
          <property name="text">
-          <string>TOWERS OF HANOI</string>
+          <string/>
          </property>
         </widget>
        </item>
@@ -288,50 +288,6 @@
        </item>
        <item>
         <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
-          <widget class="QLabel" name="GameScoreLabel">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <family>BlexMono Nerd Font</family>
-             <pointsize>30</pointsize>
-            </font>
-           </property>
-           <property name="text">
-            <string>SCORE</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="GameScoreOut">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <family>BlexMono Nerd Font</family>
-             <pointsize>20</pointsize>
-            </font>
-           </property>
-           <property name="text">
-            <string>0000000</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
          <item>
           <widget class="QLabel" name="GameMoveCountLabel">
            <property name="sizePolicy">

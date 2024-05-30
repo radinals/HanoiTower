@@ -53,7 +53,7 @@ void
 GameView::calculatesSizes()
 {
 	m_stack_area_size.setWidth(geometry().width() /
-	                           Config::get().getStackAmount());
+				   Config::get().getStackAmount());
 	m_stack_area_size.setHeight(geometry().height() * 0.9f);
 
 	m_slice_base_size.setHeight(
@@ -69,6 +69,9 @@ GameView::calculatesSizes()
 void
 GameView::paintEvent(QPaintEvent* event)
 {
+	if (isHidden())
+		return;
+
 	QPainter p(this);
 
 	updateInfo();
@@ -107,8 +110,8 @@ GameView::paintEvent(QPaintEvent* event)
 	{
 		p.drawPixmap(
 			m_selected_slice.first->getCoordinate().x(),
-		        m_selected_slice.first->getCoordinate().y(),
-		        m_selected_slice.first->getScaledPixmap()
+			m_selected_slice.first->getCoordinate().y(),
+			m_selected_slice.first->getScaledPixmap()
 		);
 	}
 	// clang-format on
@@ -139,7 +142,7 @@ GameView::setStackCoordinates(float offset, HanoiStack* stack)
                 slice = slice->prev;
         }
 
-	// clang-format on
+        // clang-format on
 }
 
 // draw the stack's slices
@@ -151,16 +154,16 @@ GameView::drawStack(HanoiStack* stack, QPainter* painter)
 
         HanoiSlice* slice = stack->getTail();
         while(slice != nullptr)
-	{
+        {
             painter->drawPixmap(
                 slice->getCoordinate().x(),
                 slice->getCoordinate().y(),
                 slice->getScaledPixmap()
-	    );
+            );
 
             slice = slice->prev;
         }
-	// clang-format on
+        // clang-format on
 }
 
 // render the stack base
@@ -172,8 +175,8 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 	QPixmap stack_base_sprite(Config::get().getStackBaseSpritePath());
 
 	pole_sprite = pole_sprite.scaled(m_stack_base_size.width() * 0.1f,
-	                                 m_stack_base_size.height() *
-	                                     Config::get().getSliceMax());
+					 m_stack_base_size.height() *
+					     Config::get().getSliceMax());
 
 	stack_base_sprite = stack_base_sprite.scaled(
 	    m_stack_base_size.width(), m_stack_base_size.height());
@@ -443,13 +446,13 @@ GameView::clear()
 	}
 
 	HanoiStack::generate_stack(m_stacks.at(0),
-	                           Config::get().getSliceAmount());
+				   Config::get().getSliceAmount());
 
 	HanoiSlice* slice = m_stacks.at(0)->getHead();
 
 	while (slice != nullptr) {
 		colorizeSprite(slice->getPixmap(),
-		               Config::get().getSliceTint());
+			       Config::get().getSliceTint());
 		slice = slice->next;
 	}
 }
@@ -526,10 +529,6 @@ GameView::updateInfo()
 		m_time_output->setText(h + ":" + m + ":" + s);
 	}
 
-	if (m_score_output != nullptr) {
-		m_score_output->setText(QString::number(m_score));
-	}
-
 	if (m_move_count_output != nullptr) {
 		m_move_count_output->setText(QString::number(m_move_count));
 	}
@@ -561,5 +560,5 @@ bool
 GameView::goalStackIsComplete()
 {
 	return (m_stacks.at(m_goal_stack_index)->getSliceCount() ==
-	        Config::get().getSliceAmount());
+		Config::get().getSliceAmount());
 }

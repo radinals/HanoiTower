@@ -1,11 +1,11 @@
 MainWindow,
 #GameView{
-  background: #ffdc00;
+  background: #343442;
 }
 
 #MenuButtonFrame {
-  background: #4a1d1b;
-  border-color : #4a1d1b;
+  background: #2a2c30;
+  border-color : #2a2c30;
   border-radius: 20px;
   border-width: 10px;
   border-style: solid;
@@ -15,8 +15,8 @@ MainWindow,
   border-radius: 20px;
   border-width: 10px;
   border-style: solid;
-  background : #c83737;
-  border-color : #c83737;
+  background : #41527b;
+  border-color : #41527b;
 }
 
 #GameTimer {
@@ -32,13 +32,13 @@ MainWindow,
 
 
 #GameSideBarFrame {
-  background: #4a1d1b;
+  background: #2a2c30;
   border-radius: 10px;
 }
 
 QPushButton {
-  background: #c83737;
-  border-color : #c83737;
+  background: #41527b;
+  border-color : #41527b;
   color : #f9f9f9;
   border-style: solid;
   border-width: 10px;
@@ -46,10 +46,10 @@ QPushButton {
 }
 
 #SettingsWindow {
-  background : #ffdc00;
+  background : #343442;
 }
 
 #GameStackAmountSlider,
 #GameSliceAmountSlider {
-  color: #c83737;
+  color: #41527b;
 }

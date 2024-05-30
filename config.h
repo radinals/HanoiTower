@@ -5,21 +5,21 @@
 
 #include <QColor>
 #include <QString>
-#include <string>
 
 class Config
 {
 
       private:
-	QString m_defaultStylesheet = ":/style/default.qss";
-	QString m_SliceSpritePath = ":/sprites/base_slice_sprite.png";
-	QString m_StackBaseSpritePath = ":/sprites/stack_base_sprite.png";
-	QString m_StackPoleSpritePath = ":/sprites/stack_pole_sprite.png";
-	QString m_PlacementFXAudioPath = ":/audio/placement_fx.wav";
-	QString m_BgMusicAudioPath = ":/audio/bg_music.wav";
-	QString m_stack_label_font = "monospace";
-	QColor m_stack_label_font_color = "#fffeee";
-	QColor m_stack_label_font_color_highlight = "#a62e2e";
+        const QString m_ProgramLogo = ":/style/logo.png";
+        QString m_defaultStylesheet = ":/style/default.qss";
+        QString m_SliceSpritePath = ":/sprites/base_slice_sprite.png";
+        QString m_StackBaseSpritePath = ":/sprites/stack_base_sprite.png";
+        QString m_StackPoleSpritePath = ":/sprites/stack_pole_sprite.png";
+        QString m_PlacementFXAudioPath = ":/audio/placement_fx.wav";
+        QString m_BgMusicAudioPath = ":/audio/bg_music.wav";
+        QString m_stack_label_font = "monospace";
+        QColor m_stack_label_font_color = "#fffeee";
+        QColor m_stack_label_font_color_highlight = "#a62e2e";
 
 	QColor m_StackTint = "#483333";
 	QColor m_SliceTint = "#a62e2e";
@@ -39,14 +39,16 @@ class Config
 	SoundPlayer* m_bg_music_player_instance = nullptr;
 
       public:
-	static Config& get()
-	{
-		QString s;
-		static Config instance;
-		return instance;
-	}
+        static Config& get()
+        {
+                QString s;
+                static Config instance;
+                return instance;
+        }
 
 	// clang-format off
+	const QString& getProgramLogo() { return m_ProgramLogo; }
+
 	SoundPlayer* const getBgMusicPlayerInstance() { return m_bg_music_player_instance; }
 	void setBgMusicPlayerInstance(SoundPlayer* player_instance) { m_bg_music_player_instance = player_instance; }
 
@@ -94,7 +96,7 @@ class Config
         size_t getStackAmount() { return m_stack_amount; }
         void setSliceAmount(size_t n) { m_slice_amount = n; }
         void setStackAmount(size_t n) { m_stack_amount = n; }
-	// clang-format on
+        // clang-format on
 };
 
 #endif // CONFIG_H

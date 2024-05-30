@@ -7,5 +7,6 @@
         <file>style/default.qss</file>
         <file>audio/placement_fx.wav</file>
         <file>audio/bg_music.wav</file>
+        <file>style/logo.png</file>
     </qresource>
 </RCC>
