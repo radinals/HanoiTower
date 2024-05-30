@@ -24,12 +24,8 @@ class GameView : public QWidget
       private:
 	QMessageBox *m_gameover_dialog = nullptr;
 
-	// clang-format off
-
-	// clang-format on
 
 	SoundPlayer m_placement_fx;
-	// AudioPlayer m_bg_music;
 
 	static QColor m_slice_tint;
 	static QColor m_stack_tint;

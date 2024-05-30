@@ -42,6 +42,8 @@ MainWindow::MainWindow(QWidget *parent)
 	    Config::get().getAudioMusicVolumeLevel());
 	m_bg_music.getSound()->setLoopCount(QSoundEffect::Infinite);
 
+	Config::get().setBgMusicPlayerInstance(&m_bg_music);
+
 	m_settings_window->hide();
 	ui->GameSideBarFrame->hide();
 	ui->LeaderboardsFrame->hide();
@@ -84,8 +86,6 @@ void
 MainWindow::on_SettingsBtn_clicked()
 {
 	m_settings_window->show();
-	m_bg_music.getSound()->setVolume(
-	    Config::get().getAudioMusicVolumeLevel());
 }
 
 void

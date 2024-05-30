@@ -131,6 +131,8 @@ SettingsWindow::on_SaveButton_clicked()
 	Config::get().setTimerInterval(Settings.timer_ms);
 	Config::get().setAudioFXVolumeLevel(Settings.sfx_volume_level);
 	Config::get().setAudioMusicVolumeLevel(Settings.music_volume_level);
+	Config::get().getBgMusicPlayerInstance()->getSound()->setVolume(
+	    Settings.music_volume_level);
 	close();
 }
 

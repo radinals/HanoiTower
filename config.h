@@ -1,6 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include "soundplayer.h"
+
 #include <QColor>
 #include <QString>
 #include <string>
@@ -35,6 +37,9 @@ class Config
 
 	unsigned long long int m_timer_interval_ms = 60000 * 5;
 
+	// FIXME: shouldn't be here
+	SoundPlayer* m_bg_music_player_instance = nullptr;
+
       public:
 	static Config& get()
 	{
@@ -44,8 +49,10 @@ class Config
 	}
 
 	// clang-format off
-	//
-	QString getDefaultStyleSheet() { return m_defaultStylesheet; }
+	SoundPlayer* const getBgMusicPlayerInstance() { return m_bg_music_player_instance; }
+	void setBgMusicPlayerInstance(SoundPlayer* player_instance) { m_bg_music_player_instance = player_instance; }
+
+	const QString& getDefaultStyleSheet() { return m_defaultStylesheet; }
 	void setDefaultStyleSheet(const QString& f ) { m_defaultStylesheet = f; }
 
 	const QString& getStackLabelFont() { return m_stack_label_font; }
