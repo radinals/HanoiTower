@@ -19,6 +19,7 @@ MainWindow,
   border-color : #41527b;
 }
 
+#SettingsTitle,
 #GameTimer {
   color : #f9f9f9;
 }
