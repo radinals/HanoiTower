@@ -12,7 +12,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
-        ui->setupUi(this);
+	ui->setupUi(this);
 
 	QFile file(Config::get().getDefaultStyleSheet());
 	file.open(QFile::ReadOnly);
@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 	m_game_view = new GameView(ui->GameViewFrame);
 	m_game_view->setGameInfoOutputs(ui->GameTimer, ui->GameScoreOut,
-					ui->GameMoveCountOut);
+	                                ui->GameMoveCountOut);
 	m_settings_window = new SettingsWindow;
 	m_leaderboards_window = new LeaderboardsWindow();
 
@@ -29,13 +29,13 @@ MainWindow::MainWindow(QWidget *parent)
 	ui->LeaderboardsFrame->layout()->addWidget(m_leaderboards_window);
 
 	connect(m_leaderboards_window->m_back_btn, &QPushButton::clicked, this,
-		&MainWindow::dummy_btn);
+	        &MainWindow::dummy_btn);
 
 	connect(m_game_view->m_gameover_dialog_no_btn, &QPushButton::clicked,
-		this, &MainWindow::dummy_reset_btn);
+	        this, &MainWindow::dummy_reset_btn);
 
 	connect(m_game_view->m_gameover_dialog_yes_btn, &QPushButton::clicked,
-		this, &MainWindow::dummy_btn);
+	        this, &MainWindow::dummy_btn);
 
 	m_bg_music.setSource(Config::get().getBgMusicAudioPath());
 	m_bg_music.getSound()->setVolume(

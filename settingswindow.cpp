@@ -9,7 +9,7 @@
 SettingsWindow::SettingsWindow(QWidget* parent)
     : QWidget(parent), ui(new Ui::SettingsWindow)
 {
-        ui->setupUi(this);
+	ui->setupUi(this);
 
 	QFile file(Config::get().getDefaultStyleSheet());
 	file.open(QFile::ReadOnly);
@@ -57,11 +57,13 @@ SettingsWindow::update_options()
 	ui->ThemeSliceColorSettingsInput->setText(
 	    Settings.slice_color.toRgb().name());
 
-	long long int ms = Settings.timer_ms;
-	long long hours = 0, minutes = 0, seconds = 0;
+	long long int ms = 0, hours = 0, minutes = 0, seconds = 0,
+	              total_seconds = 0;
+
+	ms = Settings.timer_ms;
 
 	// Calculate total seconds from milliseconds
-	long long int total_seconds = ms / 1000;
+	total_seconds = ms / 1000;
 
 	// Calculate hours
 	hours = total_seconds / 3600;
@@ -150,8 +152,8 @@ SettingsWindow::drawPreview()
 	m_preview_scene = new QGraphicsScene;
 	ui->PreviewOut->setScene(m_preview_scene);
 
-	const unsigned int vpadding = 0;
-	const unsigned int hpadding = 5;
+	static const unsigned int vpadding = 0;
+	static const unsigned int hpadding = 5;
 
 	// clang-format off
 	QSize base_slice_size(
@@ -197,6 +199,7 @@ SettingsWindow::drawPreview()
 				    stack_pole_size.height(), pen,
 				    Settings.stack_color
 				);
+
 				drawn_base = true;
 			}
 
@@ -209,7 +212,7 @@ SettingsWindow::drawPreview()
                             );
                         }
 
-                        // clang-format on
+			// clang-format on
 
 			slice_size *= 0.9f;
 			y_offset -= slice_size.height() + vpadding;

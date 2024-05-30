@@ -10,13 +10,13 @@
 class HanoiSlice
 {
       private:
-        QPixmap* m_pixmap = nullptr;
-        QSize m_size;
-        QVector2D m_coordinate = QVector2D(0, 0);
-        unsigned int m_value = 0;
+	QPixmap* m_pixmap = nullptr;
+	QSize m_size;
+	QVector2D m_coordinate = QVector2D(0, 0);
+	unsigned int m_value = 0;
 
       public:
-        // clang-format off
+	// clang-format off
         HanoiSlice(HanoiSlice&&) = delete;
 
         HanoiSlice(){ m_pixmap = new QPixmap(Config::get().getSliceSpritePath()); };
@@ -34,7 +34,7 @@ class HanoiSlice
 
         inline int width() {return m_size.width(); }
         inline int height() {return m_size.height(); }
-        // clang-format on
+	// clang-format on
 
 	HanoiSlice* next = nullptr;
 	HanoiSlice* prev = nullptr;
@@ -43,15 +43,15 @@ class HanoiSlice
 class HanoiStack
 {
       private:
-        unsigned int m_stack_colors = 0;
-        size_t m_stack_slice_count = 0;
+	unsigned int m_stack_colors = 0;
+	size_t m_stack_slice_count = 0;
 
-        HanoiSlice *m_head = nullptr, *m_tail = nullptr;
+	HanoiSlice *m_head = nullptr, *m_tail = nullptr;
 
       public:
-        HanoiStack(){};
-        HanoiStack(HanoiStack&&) = delete;
-        ~HanoiStack() { clearStack(); };
+	HanoiStack(){};
+	HanoiStack(HanoiStack&&) = delete;
+	~HanoiStack() { clearStack(); };
 
 	// clang-format off
 	inline bool isEmpty() const { return m_stack_slice_count <= 0; }
@@ -66,7 +66,7 @@ class HanoiStack
 
 	inline HanoiSlice* const getTail() { return m_tail; }
 	inline HanoiSlice* const getHead() { return m_head; }
-	inline size_t getSliceCount() { return m_stack_slice_count; };
+	inline size_t getSliceCount() const { return m_stack_slice_count; };
 
 	static void generate_stack(HanoiStack* stack, size_t slice_amount);
 };

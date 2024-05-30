@@ -18,8 +18,7 @@ HanoiStack::push(HanoiSlice* slice)
 {
 	if (slice == nullptr) {
 		throw std::invalid_argument("Attempted to push a null slice");
-	}
-	if (isEmpty()) {
+	} else if (isEmpty()) {
 		m_head = slice;
 		m_tail = m_head;
 	} else {
