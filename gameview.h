@@ -59,9 +59,6 @@ class GameView : public QWidget
 	void reset();
 	void clear();
 
-	void setSliceTint(const QColor &color) { m_slice_tint = color; }
-	void setStackTint(const QColor &color) { m_stack_tint = color; }
-
 	void setGameInfoOutputs(QLabel *time, QLabel *score, QLabel *moves)
 	{
 		m_time_output = time;
@@ -81,7 +78,7 @@ class GameView : public QWidget
 
 	static size_t getRandomGoalStackIndex();
 	void showGameGoalDialog();
-	bool goalStackIsComplete();
+	inline bool goalStackIsComplete();
 
 	void updateInfo();
 	void triggerLoseDialog();
