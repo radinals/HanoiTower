@@ -87,7 +87,7 @@ GameView::paintEvent(QPaintEvent* event)
 		}
 
 		// draw the stack base
-		drawStackBase(numToChar(stack.first), offset, &p);
+		drawStackBase(stack.first, offset, &p);
 
 		// configure each slice on the stack coordinates (placement)
 		setStackCoordinates(offset, stack.second);
