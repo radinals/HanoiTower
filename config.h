@@ -9,9 +9,9 @@ class Config
 {
 
       private:
-        std::string m_program_data_pathname = "TowerOfHanoi";
-        std::string m_leaderboard_data_filename = "leaderboards.csv";
-        QString m_defaultStylesheet = ":/style/default.qss";
+	std::string m_program_data_pathname = "TowerOfHanoi";
+	std::string m_leaderboard_data_filename = "leaderboards.csv";
+	QString m_defaultStylesheet = ":/style/default.qss";
 
 	QString m_SliceSpritePath = ":/sprites/base_slice_sprite.png";
 	QString m_StackBaseSpritePath = ":/sprites/stack_base_sprite.png";
@@ -36,31 +36,32 @@ class Config
 	unsigned long long int m_timer_interval_ms = 60000 * 60;
 
       public:
-        static Config& get()
-        {
-                static Config instance;
-                return instance;
-        }
+	static Config& get()
+	{
+		QString s;
+		static Config instance;
+		return instance;
+	}
 
 	// clang-format off
 	//
 	QString getDefaultStyleSheet() { return m_defaultStylesheet; }
 	void setDefaultStyleSheet(const QString& f ) { m_defaultStylesheet = f; }
 
-	QString getStackLabelFont() { return m_stack_label_font; }
+	const QString& getStackLabelFont() { return m_stack_label_font; }
 	void setStackLabelFont(const QString& f) { m_stack_label_font = f; }
 
-        QColor getStackLabelFontColor() { return m_stack_label_font_color; }
+        const QColor& getStackLabelFontColor() { return m_stack_label_font_color; }
         void setStackLabelFontColor(const QColor& c) { m_stack_label_font_color = c; }
 
-	unsigned long long int getTimerInterval() {return m_timer_interval_ms; }
-	QString getSliceSpritePath() { return m_SliceSpritePath; }
-	QString getStackBaseSpritePath() { return m_StackBaseSpritePath; }
-	QString getStackPoleSpritePath() { return m_StackPoleSpritePath; }
-	QColor getStackTint() { return m_StackTint; }
-	QColor getSliceTint() { return m_SliceTint; }
-	QString getPlacementFXAudioPath() { return m_PlacementFXAudioPath; }
-	QString getBgMusicAudioPath() { return m_BgMusicAudioPath; }
+	unsigned long long int getTimerInterval() { return m_timer_interval_ms; }
+	const QString& getSliceSpritePath() { return m_SliceSpritePath; }
+	const QString& getStackBaseSpritePath() { return m_StackBaseSpritePath; }
+	const QString& getStackPoleSpritePath() { return m_StackPoleSpritePath; }
+	const QColor& getStackTint() { return m_StackTint; }
+	const QColor& getSliceTint() { return m_SliceTint; }
+	const QString& getPlacementFXAudioPath() { return m_PlacementFXAudioPath; }
+	const QString& getBgMusicAudioPath() { return m_BgMusicAudioPath; }
 
 	float getAudioFXVolumeLevel() { return m_AudioFXVolumeLevel; }
 	float getAudioMusicVolumeLevel() { return m_AudioMusicVolumeLevel; }
@@ -77,14 +78,14 @@ class Config
 	void setStackTint(const QColor& c) { m_StackTint = c; }
 	void setSliceTint(const QColor& c) { m_SliceTint = c; }
 
-        size_t getSliceMax() {return m_slice_max;}
-        size_t getStackMax() {return m_stack_max;}
+        size_t getSliceMax() { return m_slice_max; }
+        size_t getStackMax() { return m_stack_max; }
 
-        size_t getSliceAmount() {return m_slice_amount;}
-        size_t getStackAmount() {return m_stack_amount;}
-        void setSliceAmount(size_t n) { m_slice_amount = n;}
-        void setStackAmount(size_t n) { m_stack_amount = n;}
-        // clang-format on
+        size_t getSliceAmount() { return m_slice_amount; }
+        size_t getStackAmount() { return m_stack_amount; }
+        void setSliceAmount(size_t n) { m_slice_amount = n; }
+        void setStackAmount(size_t n) { m_stack_amount = n; }
+	// clang-format on
 };
 
 #endif // CONFIG_H
