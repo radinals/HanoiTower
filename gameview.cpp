@@ -386,9 +386,11 @@ GameView::mouseReleaseEvent(QMouseEvent* event)
 	m_selected_slice.first = nullptr;
 	m_selected_slice.second = nullptr;
 
-	m_placement_fx.getSound()->play();
-
 	update();
+
+	if (!m_placement_fx.getSound()->isPlaying()) {
+		m_placement_fx.getSound()->play();
+	}
 }
 
 // add tint to a pixmap, by using masks
@@ -473,7 +475,6 @@ GameView::triggerWinDialog()
 void
 GameView::checkWinState()
 {
-
 	m_timer_elapsed++;
 	updateInfo();
 
