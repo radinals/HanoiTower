@@ -24,8 +24,8 @@ GameView::GameView(QWidget* parent) : QWidget{parent}
 	}
 
 	m_timer = new QTimer(this);
+
 	connect(m_timer, &QTimer::timeout, this, &GameView::checkWinState);
-	// m_timer->setSingleShot(true);
 
 	m_placement_fx.setSource(Config::get().getPlacementFXAudioPath());
 
@@ -103,13 +103,17 @@ GameView::paintEvent(QPaintEvent* event)
 		count++;
 	}
 
+	// clang-format off
 	// render the selected stack
-	if (m_selected_slice.first != nullptr &&
-	    m_selected_slice.second != nullptr) {
-		p.drawPixmap(m_selected_slice.first->getCoordinate().x(),
-		             m_selected_slice.first->getCoordinate().y(),
-		             m_selected_slice.first->getScaledPixmap());
+	if (m_selected_slice.first != nullptr && m_selected_slice.second != nullptr)
+	{
+		p.drawPixmap(
+			m_selected_slice.first->getCoordinate().x(),
+		        m_selected_slice.first->getCoordinate().y(),
+		        m_selected_slice.first->getScaledPixmap()
+		);
 	}
+	// clang-format on
 }
 
 // configure each slice placement in the screen, starting from the bottom
@@ -118,6 +122,7 @@ void
 GameView::setStackCoordinates(float offset, HanoiStack* stack)
 {
 	// clang-format off
+
 	if (stack == nullptr || stack->isEmpty()) { return; }
 
 	float y_axis = height() - m_slice_base_size.height();
@@ -147,12 +152,14 @@ GameView::drawStack(HanoiStack* stack, QPainter* painter)
 	if (stack == nullptr || stack->isEmpty()) { return; }
 
         HanoiSlice* slice = stack->getTail();
-        while(slice != nullptr) {
-            assert(slice->getPixmap() != nullptr);
+        while(slice != nullptr)
+	{
             painter->drawPixmap(
                 slice->getCoordinate().x(),
                 slice->getCoordinate().y(),
-                slice->getScaledPixmap());
+                slice->getScaledPixmap()
+	    );
+
             slice = slice->prev;
         }
 	// clang-format on
@@ -337,20 +344,20 @@ GameView::mouseReleaseEvent(QMouseEvent* event)
         //  - if the selected slice is bigger
         //     than the destination stack top value -> cancel
 
-	if (destination_stack == nullptr ||
-	    destination_stack == m_selected_slice.second ||
-	    (!destination_stack->isEmpty() &&
-		(m_selected_slice.first->getValue() <
-		    destination_stack->peek()->getValue())))
+	if (destination_stack == nullptr || destination_stack == m_selected_slice.second ||
+	    (!destination_stack->isEmpty() && (m_selected_slice.first->getValue()
+		< destination_stack->peek()->getValue())))
 	{
 		m_selected_slice.second->push(m_selected_slice.first);
 	} else {
+
 		if (!m_timer_started) {
-		    // m_timer->setSingleShot(true);
 		    m_timer->start(1);
 		    m_timer_started = true;
 		}
+
 		destination_stack->push(m_selected_slice.first);
+
 		m_move_count++;
 	}
 
@@ -395,9 +402,7 @@ GameView::init()
 	    Config::get().getAudioFXVolumeLevel());
 
 	m_timer_elapsed = 0;
-	m_init = false;
-	m_timer_started = false;
-
+	m_init = m_timer_started = false;
 	m_timer->stop();
 
 	for (auto stack : m_stacks) {
@@ -414,6 +419,7 @@ GameView::init()
 		               Config::get().getSliceTint());
 		slice = slice->next;
 	}
+
 	updateInfo();
 
 	repaint();
