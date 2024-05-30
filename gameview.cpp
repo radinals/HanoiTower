@@ -10,9 +10,8 @@
 #include <QPainter>
 #include <QPoint>
 #include <qmessagebox.h>
-
-// TODO:
-//  - add proper gameover screen
+#include <qrandom.h>
+#include <random>
 
 GameView::GameView(QWidget* parent) : QWidget{parent}
 {
@@ -100,7 +99,6 @@ GameView::paintEvent(QPaintEvent* event)
 		offset += m_stack_area_size.width();
 		count++;
 	}
-
 	m_init = true;
 
 	// clang-format off
@@ -398,10 +396,12 @@ GameView::init()
 {
 	calculatesSizes();
 
+	m_goal_stack_index = getRandomGoalStackIndex();
+
 	m_placement_fx.getSound()->setVolume(
 	    Config::get().getAudioFXVolumeLevel());
 
-	m_timer_elapsed = 0;
+	m_timer_elapsed = m_move_count = 0;
 	m_init = m_timer_started = false;
 	m_timer->stop();
 
@@ -423,6 +423,7 @@ GameView::init()
 	updateInfo();
 
 	repaint();
+	showGameGoalDialog();
 }
 
 void
@@ -450,8 +451,7 @@ GameView::checkWinState()
 	m_timer_elapsed++;
 	updateInfo();
 
-	if (m_stacks.at(Config::get().getStackAmount() - 1)->getSliceCount() >=
-	    Config::get().getSliceAmount()) {
+	if (goalStackIsComplete()) {
 		triggerWinDialog();
 	} else if (m_timer_elapsed >= Config::get().getTimerInterval()) {
 		triggerLoseDialog();
@@ -506,4 +506,33 @@ GameView::updateInfo()
 	if (m_move_count_output != nullptr) {
 		m_move_count_output->setText(QString::number(m_move_count));
 	}
+}
+
+size_t
+GameView::getRandomGoalStackIndex()
+{
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<size_t> distr(
+	    1, Config::get().getStackAmount() - 1);
+	return distr(gen);
+}
+
+void
+GameView::showGameGoalDialog()
+{
+	QMessageBox dialog(this);
+	dialog.setText("GOALS");
+	dialog.setInformativeText(
+	    "Move All Stack From Peg 'A' to '" + numToChar(m_goal_stack_index) +
+	    "'. No Slice may be placed on top of a slice that is smaller to it!.");
+	dialog.setStandardButtons(QMessageBox::Ok);
+	dialog.exec();
+}
+
+bool
+GameView::goalStackIsComplete()
+{
+	return (m_stacks.at(m_goal_stack_index)->getSliceCount() ==
+	        Config::get().getSliceAmount());
 }

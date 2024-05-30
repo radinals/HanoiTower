@@ -1,6 +1,7 @@
 #ifndef GAMEVIEW_H
 #define GAMEVIEW_H
 
+#include "config.h"
 #include "hanoistack.h"
 #include "soundplayer.h"
 
@@ -33,6 +34,7 @@ class GameView : public QWidget
 	bool m_init = false;
 	bool m_timer_started = false;
 	unsigned long long int m_timer_elapsed = 0;
+	size_t m_goal_stack_index = Config::get().getStackAmount() - 1;
 
 	std::map<size_t, HanoiStack *> m_stacks;
 	QSize m_stack_area_size, m_stack_base_size, m_slice_base_size;
@@ -75,6 +77,10 @@ class GameView : public QWidget
         };
 	// clang-format on
 
+	static size_t getRandomGoalStackIndex();
+	void showGameGoalDialog();
+	bool goalStackIsComplete();
+
 	void updateInfo();
 	void triggerLoseDialog();
 	void triggerWinDialog();
@@ -92,7 +98,7 @@ class GameView : public QWidget
 	void mouseReleaseEvent(QMouseEvent *) override;
 	void mouseMoveEvent(QMouseEvent *) override;
 	void paintEvent(QPaintEvent *) override;
-	void resizeEvent(QResizeEvent *event) override;
+	void resizeEvent(QResizeEvent *) override;
 
       signals:
 };
