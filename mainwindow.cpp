@@ -64,13 +64,13 @@ MainWindow::~MainWindow()
 void
 MainWindow::on_ResetBtn_clicked()
 {
-	m_game_view->init();
+	m_game_view->reset();
 }
 
 void
 MainWindow::on_ExitBtn_clicked()
 {
-	exit(1);
+	close();
 }
 
 void
@@ -79,7 +79,7 @@ MainWindow::on_StartBtn_clicked()
 	ui->GameMenuFrame->hide();
 	ui->GameSideBarFrame->show();
 	ui->GameViewFrame->show();
-	m_game_view->init();
+	m_game_view->reset();
 }
 
 void
@@ -91,13 +91,13 @@ MainWindow::on_SettingsBtn_clicked()
 void
 MainWindow::on_StartExitBtn_clicked()
 {
-	exit(1);
+	close();
 }
 
 void
 MainWindow::on_BackToMenuBtn_clicked()
 {
-	m_game_view->init();
+	m_game_view->clear();
 	ui->LeaderboardsFrame->hide();
 	ui->GameSideBarFrame->hide();
 	ui->GameViewFrame->hide();

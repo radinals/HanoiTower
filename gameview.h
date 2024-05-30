@@ -55,7 +55,9 @@ class GameView : public QWidget
 	QPushButton *m_gameover_dialog_no_btn = nullptr;
 
 	~GameView() override;
-	void init();
+
+	void reset();
+	void clear();
 
 	void setSliceTint(const QColor &color) { m_slice_tint = color; }
 	void setStackTint(const QColor &color) { m_stack_tint = color; }

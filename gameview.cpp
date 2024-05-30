@@ -392,7 +392,17 @@ GameView::colorizeSprite(QPixmap* sprite, const QColor& color)
 
 // (re)initialize an empty state
 void
-GameView::init()
+GameView::reset()
+{
+
+	clear();
+	updateInfo();
+	repaint();
+	showGameGoalDialog();
+}
+
+void
+GameView::clear()
 {
 	calculatesSizes();
 
@@ -419,11 +429,6 @@ GameView::init()
 		               Config::get().getSliceTint());
 		slice = slice->next;
 	}
-
-	updateInfo();
-
-	repaint();
-	showGameGoalDialog();
 }
 
 void
