@@ -72,21 +72,19 @@ GameView::paintEvent(QPaintEvent* event)
 {
 	QPainter p(this);
 
-	if (!m_init) {
-		for (auto stack : m_stacks) {
-			scaleStack(stack.second);
-		}
-		m_init = true;
-	}
-
 	updateInfo();
 
 	float offset = m_stack_area_size.width() * 0.5f;
 
 	size_t count = 0;
 	for (auto stack : m_stacks) {
+
 		if (count >= Config::get().getStackAmount()) {
 			break;
+		}
+
+		if (!m_init) {
+			scaleStack(stack.second);
 		}
 
 		// draw the stack base
@@ -102,6 +100,8 @@ GameView::paintEvent(QPaintEvent* event)
 		offset += m_stack_area_size.width();
 		count++;
 	}
+
+	m_init = true;
 
 	// clang-format off
 	// render the selected stack
