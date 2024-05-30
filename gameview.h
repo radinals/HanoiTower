@@ -16,6 +16,7 @@
 #include <qmainwindow.h>
 #include <qmediaplayer.h>
 #include <qpushbutton.h>
+#include <string>
 
 class GameView : public QWidget
 {
