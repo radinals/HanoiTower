@@ -33,7 +33,7 @@ class Config
 	float m_AudioFXVolumeLevel = 1.0f;
 	float m_AudioMusicVolumeLevel = 1.0f;
 
-	unsigned long long int m_timer_interval_ms = 60000 * 60;
+	unsigned long long int m_timer_interval_ms = 60000 * 5;
 
       public:
 	static Config& get()
