@@ -70,12 +70,19 @@ MainWindow::on_ResetBtn_clicked()
 void
 MainWindow::on_ExitBtn_clicked()
 {
+	if (m_settings_window->isVisible()) {
+		m_settings_window->close();
+	}
 	close();
 }
 
 void
 MainWindow::on_StartBtn_clicked()
 {
+	if (m_settings_window->isVisible()) {
+		return;
+	}
+
 	ui->GameMenuFrame->hide();
 	ui->GameSideBarFrame->show();
 	ui->GameViewFrame->show();
@@ -85,12 +92,19 @@ MainWindow::on_StartBtn_clicked()
 void
 MainWindow::on_SettingsBtn_clicked()
 {
+	if (m_settings_window->isVisible()) {
+		return;
+	}
+
 	m_settings_window->show();
 }
 
 void
 MainWindow::on_StartExitBtn_clicked()
 {
+	if (m_settings_window->isVisible()) {
+		m_settings_window->close();
+	}
 	close();
 }
 
@@ -107,6 +121,10 @@ MainWindow::on_BackToMenuBtn_clicked()
 void
 MainWindow::on_LeaderboardsBtn_clicked()
 {
+	if (m_settings_window->isVisible()) {
+		return;
+	}
+
 	ui->GameSideBarFrame->hide();
 	ui->GameViewFrame->hide();
 	ui->GameMenuFrame->hide();
