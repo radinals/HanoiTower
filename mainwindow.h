@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include "gameview.h"
-#include "leaderboardswindow.h"
 #include "settingswindow.h"
 #include "soundplayer.h"
 
@@ -18,7 +17,6 @@ class MainWindow : public QMainWindow
         Q_OBJECT
       private:
         SettingsWindow *m_settings_window = nullptr;
-        LeaderboardsWindow *m_leaderboards_window = nullptr;
         SoundPlayer m_bg_music;
 
       public:
@@ -41,8 +39,6 @@ class MainWindow : public QMainWindow
         void on_StartExitBtn_clicked();
 
         void on_BackToMenuBtn_clicked();
-
-        void on_LeaderboardsBtn_clicked();
 
       private:
         Ui::MainWindow *ui;

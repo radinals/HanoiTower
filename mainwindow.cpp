@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 
 #include "gameview.h"
-#include "leaderboardswindow.h"
 #include "settingswindow.h"
 #include "soundplayer.h"
 #include "ui_mainwindow.h"
@@ -12,7 +11,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
-	ui->setupUi(this);
+        ui->setupUi(this);
 
 	QFile file(Config::get().getDefaultStyleSheet());
 	file.open(QFile::ReadOnly);
@@ -21,21 +20,16 @@ MainWindow::MainWindow(QWidget *parent)
 
 	m_game_view = new GameView(ui->GameViewFrame);
 	m_game_view->setGameInfoOutputs(ui->GameTimer, ui->GameScoreOut,
-	                                ui->GameMoveCountOut);
+					ui->GameMoveCountOut);
 	m_settings_window = new SettingsWindow;
-	m_leaderboards_window = new LeaderboardsWindow();
 
 	ui->GameViewFrame->layout()->addWidget(m_game_view);
-	ui->LeaderboardsFrame->layout()->addWidget(m_leaderboards_window);
-
-	connect(m_leaderboards_window->m_back_btn, &QPushButton::clicked, this,
-	        &MainWindow::dummy_btn);
 
 	connect(m_game_view->m_gameover_dialog_no_btn, &QPushButton::clicked,
-	        this, &MainWindow::dummy_reset_btn);
+		this, &MainWindow::dummy_reset_btn);
 
 	connect(m_game_view->m_gameover_dialog_yes_btn, &QPushButton::clicked,
-	        this, &MainWindow::dummy_btn);
+		this, &MainWindow::dummy_btn);
 
 	m_bg_music.setSource(Config::get().getBgMusicAudioPath());
 	m_bg_music.getSound()->setVolume(
@@ -58,7 +52,6 @@ MainWindow::~MainWindow()
 	delete ui;
 	delete m_game_view;
 	delete m_settings_window;
-	delete m_leaderboards_window;
 }
 
 void
@@ -116,18 +109,4 @@ MainWindow::on_BackToMenuBtn_clicked()
 	ui->GameSideBarFrame->hide();
 	ui->GameViewFrame->hide();
 	ui->GameMenuFrame->show();
-}
-
-void
-MainWindow::on_LeaderboardsBtn_clicked()
-{
-	if (m_settings_window->isVisible()) {
-		return;
-	}
-
-	ui->GameSideBarFrame->hide();
-	ui->GameViewFrame->hide();
-	ui->GameMenuFrame->hide();
-
-	ui->LeaderboardsFrame->show();
 }

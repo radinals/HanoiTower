@@ -11,10 +11,7 @@ class Config
 {
 
       private:
-	std::string m_program_data_pathname = "TowerOfHanoi";
-	std::string m_leaderboard_data_filename = "leaderboards.csv";
 	QString m_defaultStylesheet = ":/style/default.qss";
-
 	QString m_SliceSpritePath = ":/sprites/base_slice_sprite.png";
 	QString m_StackBaseSpritePath = ":/sprites/stack_base_sprite.png";
 	QString m_StackPoleSpritePath = ":/sprites/stack_pole_sprite.png";
