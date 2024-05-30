@@ -24,7 +24,6 @@ class GameView : public QWidget
       private:
 	QMessageBox *m_gameover_dialog = nullptr;
 
-
 	SoundPlayer m_placement_fx;
 
 	static QColor m_slice_tint;
@@ -83,7 +82,7 @@ class GameView : public QWidget
 	static void colorizeSprite(QPixmap *, const QColor &);
 	HanoiStack *calculateStackByPos(QPointF);
 	void calculatesSizes();
-	void drawStack(HanoiStack *stack, QPainter *painter);
+	static void drawStack(HanoiStack *stack, QPainter *painter);
 	void drawStackBase(const QString &stack_label, float offset,
 	                   QPainter *painter);
 	void setStackCoordinates(float offset, HanoiStack *stack);
