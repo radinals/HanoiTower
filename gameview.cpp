@@ -165,8 +165,7 @@ GameView::drawStack(HanoiStack* stack, QPainter* painter)
 
 // render the stack base
 void
-GameView::drawStackBase(const QString& stack_label, float offset,
-                        QPainter* painter)
+GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 {
 
 	QPixmap pole_sprite(Config::get().getStackPoleSpritePath());
@@ -198,13 +197,36 @@ GameView::drawStackBase(const QString& stack_label, float offset,
 	    stack_base_sprite
 	);
 
+	QString stack_label = numToChar(label);
 	QFont font(Config::get().getStackLabelFont(), m_stack_base_size.width() * 0.1f);
-	painter->setPen(QColor(Config::get().getStackLabelFontColor()));
+
+	QColor font_color;
+
+	if (label == m_goal_stack_index) {
+
+		unsigned int box_size = (m_stack_base_size.width() * 0.1f) + 4;
+
+		font_color = Config::get().getStackLabelFontColorHighlight();
+
+		painter->fillRect(
+		    offset - (box_size * 0.5f),
+		    height() - (m_stack_base_size.height() * Config::get().getSliceMax() + (box_size * 0.5f) ),
+		    box_size,
+		    box_size * 0.2f, Config::get().getStackLabelFontColorHighlight()
+		);
+
+	} else {
+		font_color = Config::get().getStackLabelFontColor();
+	}
+
+	painter->setPen(font_color);
 	painter->setFont(font);
+
 	// draw the stack label
 	painter->drawText(
 	    offset - (painter->font().pointSizeF() * 0.5f),
-	    height() - ((m_stack_base_size.height() * (Config::get().getSliceMax()) + painter->font().pointSizeF())),
+	    height() - (m_stack_base_size.height() * Config::get().getSliceMax()
+		+ painter->font().pointSizeF()),
 	    stack_label
 	);
 
@@ -394,7 +416,6 @@ GameView::colorizeSprite(QPixmap* sprite, const QColor& color)
 void
 GameView::reset()
 {
-
 	clear();
 	updateInfo();
 	repaint();

@@ -92,8 +92,7 @@ class GameView : public QWidget
 	HanoiStack *calculateStackByPos(QPointF);
 	void calculatesSizes();
 	static void drawStack(HanoiStack *stack, QPainter *painter);
-	void drawStackBase(const QString &stack_label, float offset,
-	                   QPainter *painter);
+	void drawStackBase(size_t label, float offset, QPainter *painter);
 	void setStackCoordinates(float offset, HanoiStack *stack);
 
 	void mousePressEvent(QMouseEvent *) override;

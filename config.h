@@ -22,6 +22,7 @@ class Config
 	QString m_BgMusicAudioPath = ":/audio/bg_music.wav";
 	QString m_stack_label_font = "monospace";
 	QColor m_stack_label_font_color = "#fffeee";
+	QColor m_stack_label_font_color_highlight = "#a62e2e";
 
 	QColor m_StackTint = "#483333";
 	QColor m_SliceTint = "#a62e2e";
@@ -61,12 +62,16 @@ class Config
         const QColor& getStackLabelFontColor() { return m_stack_label_font_color; }
         void setStackLabelFontColor(const QColor& c) { m_stack_label_font_color = c; }
 
+        const QColor& getStackLabelFontColorHighlight() { return m_stack_label_font_color_highlight; }
+        void setStackLabelFontColorHighlight(const QColor& c) { m_stack_label_font_color_highlight = c; }
+
 	unsigned long long int getTimerInterval() { return m_timer_interval_ms; }
 	const QString& getSliceSpritePath() { return m_SliceSpritePath; }
 	const QString& getStackBaseSpritePath() { return m_StackBaseSpritePath; }
 	const QString& getStackPoleSpritePath() { return m_StackPoleSpritePath; }
 	const QColor& getStackTint() { return m_StackTint; }
 	const QColor& getSliceTint() { return m_SliceTint; }
+
 	const QString& getPlacementFXAudioPath() { return m_PlacementFXAudioPath; }
 	const QString& getBgMusicAudioPath() { return m_BgMusicAudioPath; }
 
