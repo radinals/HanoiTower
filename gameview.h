@@ -105,7 +105,7 @@ class GameView : public QWidget
 	void calculatesSizes();
 	void drawStack(float offset, HanoiStack *, QPainter *p);
 	void drawStackBase(size_t label, float offset, QPainter *painter);
-	void scaleStacks();
+	void scaleSlices();
 
 	// QWidget Event Handlers
 	void mousePressEvent(QMouseEvent *) override;

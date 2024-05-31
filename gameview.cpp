@@ -107,6 +107,7 @@ GameView::paintEvent(QPaintEvent* event)
 			m_selected_slice.first->getScaledPixmap()
 		);
 	}
+
 	// clang-format on
 }
 
@@ -214,7 +215,7 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 }
 
 void
-GameView::scaleStacks()
+GameView::scaleSlices()
 {
 	float w = m_slice_base_size.width(), h = m_stack_base_size.height();
 
@@ -231,7 +232,7 @@ GameView::resizeEvent(QResizeEvent* event)
 {
 	calculatesSizes();
 	if (m_game_started) {
-		scaleStacks();
+		scaleSlices();
 	}
 }
 
@@ -368,12 +369,13 @@ GameView::colorizeSprite(QPixmap* sprite, const QColor& color)
 	QPixmap mask(*sprite);
 	QPainter painter;
 
+	// create the mask
 	painter.begin(&mask);
 	painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
-
 	painter.fillRect(mask.rect(), color);
 	painter.end();
 
+	// apply the mask
 	painter.begin(sprite);
 	painter.setCompositionMode(QPainter::CompositionMode_Overlay);
 	painter.drawImage(0, 0, mask.toImage());
@@ -409,20 +411,23 @@ GameView::clear()
 
 	// clang-format off
 
+	// clear all stack
 	for (size_t label = 0; label < Config::get().getStackAmount(); label++) {
 		m_stacks.at(label)->clearStack();
 	}
 
+	// populate the first stack
 	HanoiStack::generate_stack(m_stacks.at(0), Config::get().getSliceAmount());
 
 	HanoiSlice* slice = m_stacks.at(0)->getHead();
 	while (slice != nullptr) {
 		colorizeSprite(slice->getPixmap(), Config::get().getSliceTint());
-		m_slice_list.append(slice);
+		m_slice_list.append(slice); // save the slices for ease of access
 		slice = slice->next;
 	}
 
-	scaleStacks();
+	// scale the slices
+	scaleSlices();
 
 	// clang-format on
 }
