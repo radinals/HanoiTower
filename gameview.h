@@ -20,7 +20,7 @@
 #include <qpoint.h>
 #include <qpushbutton.h>
 #include <string>
-#include <unordered_map>
+#include <vector>
 
 class GameView : public QWidget
 {
@@ -41,7 +41,7 @@ class GameView : public QWidget
 
 	QSizeF m_stack_area_size, m_stack_base_size, m_slice_base_size;
 
-	std::unordered_map<size_t, HanoiStack *> m_stacks;
+	std::vector<HanoiStack> m_stacks;
 	LinkedList<HanoiSlice *> m_slice_list;
 
 	std::pair<HanoiSlice *, HanoiStack *> m_selected_slice;
@@ -49,8 +49,8 @@ class GameView : public QWidget
 	QLabel *m_time_output = nullptr, *m_move_count_output = nullptr;
 	QTextEdit *m_info_box = nullptr;
 
-	QTimer *m_timer = nullptr;
-	QMessageBox *m_gameover_dialog = nullptr;
+	QTimer m_timer;
+	QMessageBox m_gameover_dialog;
 
 	SoundPlayer m_placement_fx;
 
@@ -61,7 +61,11 @@ class GameView : public QWidget
 	QPushButton *m_gameover_dialog_yes_btn = nullptr,
 	            *m_gameover_dialog_no_btn = nullptr;
 
-	~GameView() override;
+	~GameView() override
+	{
+		delete m_gameover_dialog_no_btn;
+		delete m_gameover_dialog_yes_btn;
+	};
 
 	void reset(); // reset the game states, and re-draw
 	void clear(); // reset the game states
@@ -97,7 +101,7 @@ class GameView : public QWidget
 	}
 
 	inline bool goalStackIsComplete() { ;
-		return ( m_stacks.at(m_goal_stack_index)->getSliceCount() ==
+		return ( m_stacks.at(m_goal_stack_index).getSliceCount() ==
 				Config::get().getSliceAmount() );
 	}
 

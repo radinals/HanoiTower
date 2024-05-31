@@ -10,7 +10,7 @@
 class HanoiSlice
 {
       private:
-	QPixmap* m_pixmap = nullptr;
+	QPixmap m_pixmap = QPixmap(Config::get().getSliceSpritePath());
 	unsigned int m_value = 0;
 
 	float m_x = 0, m_y = 0;
@@ -19,13 +19,11 @@ class HanoiSlice
       public:
 	// clang-format off
         HanoiSlice(HanoiSlice&&) = delete;
+        HanoiSlice(){};
+        HanoiSlice(unsigned int value) : m_value(value){};
 
-        HanoiSlice(){ m_pixmap = new QPixmap(Config::get().getSliceSpritePath()); };
-        HanoiSlice(unsigned int value) : m_value(value){m_pixmap = new QPixmap(Config::get().getSliceSpritePath());};
-        ~HanoiSlice(){ delete m_pixmap; };
-
-        inline QPixmap* getPixmap() { return m_pixmap; }
-        inline QPixmap getScaledPixmap() const { return m_pixmap->scaled(m_w, m_h); }
+        inline QPixmap& getPixmap() { return m_pixmap; }
+        inline QPixmap getScaledPixmap() const { return m_pixmap.scaled(m_w, m_h); }
 
         inline float getWidth() const { return m_w; }
         inline float getHeight() const { return m_h; }
@@ -55,7 +53,7 @@ class HanoiStack
 
       public:
 	HanoiStack(){};
-	HanoiStack(HanoiStack&&) = delete;
+	// HanoiStack(HanoiStack&&) = delete;
 	~HanoiStack() { clearStack(); };
 
 	// clang-format off

@@ -22,26 +22,21 @@ GameView::GameView(QWidget* parent) : QWidget{parent}
 	m_selected_slice.first = nullptr;
 	m_selected_slice.second = nullptr;
 
-	for (size_t i = 0; i < Config::get().getStackMax(); i++) {
-		m_stacks[i] = new HanoiStack;
-	}
+	m_stacks = std::vector(Config::get().getStackMax(), HanoiStack());
 
 	// init timer.
 	// timer will call checkWinState every tick (should be every 1ms).
-	m_timer = new QTimer(this);
-	connect(m_timer, &QTimer::timeout, this, &GameView::checkWinState);
+	connect(&m_timer, &QTimer::timeout, this, &GameView::checkWinState);
 
 	// load the placement sound effect
 	m_placement_fx.setSource(Config::get().getPlacementFXAudioPath());
 
 	// setup the gameover and it's buttons
-	m_gameover_dialog = new QMessageBox(this);
-
 	m_gameover_dialog_no_btn =
-	    m_gameover_dialog->addButton(QMessageBox::Yes);
+	    m_gameover_dialog.addButton(QMessageBox::Yes);
 
 	m_gameover_dialog_yes_btn =
-	    m_gameover_dialog->addButton(QMessageBox::No);
+	    m_gameover_dialog.addButton(QMessageBox::No);
 	// m_gameover_dialog->setTextFormat(Qt::TextFormat::RichText);
 
 	m_pole_sprite = QPixmap(Config::get().getStackPoleSpritePath());
@@ -54,27 +49,16 @@ GameView::GameView(QWidget* parent) : QWidget{parent}
 	colorizeSprite(&m_arrow_sprite, Config::get().getHighlightColor());
 }
 
-GameView::~GameView()
-{
-	for (auto& stacks : m_stacks) {
-		stacks.second->clearStack();
-		delete stacks.second;
-	}
-
-	delete m_timer;
-	delete m_gameover_dialog;
-}
-
 void
 GameView::pause()
 {
 	if (m_game_paused) {
-		m_timer->start(1);
+		m_timer.start(1);
 		updateInfo();
 		m_game_paused = false;
 	} else {
 		m_time_output->setText("PAUSED");
-		m_timer->stop();
+		m_timer.stop();
 		m_game_paused = true;
 	}
 }
@@ -105,22 +89,22 @@ GameView::clear()
 
 	m_timer_elapsed = m_move_count = 0;
 	m_game_paused = m_timer_started = m_game_started = false;
-	m_timer->stop();
+	m_timer.stop();
 	m_slice_list.clear();
 
 	// clang-format off
 
 	// clear all stack
 	for (size_t label = 0; label < Config::get().getStackAmount(); label++) {
-		m_stacks.at(label)->clearStack();
+		m_stacks.at(label).clearStack();
 	}
 
 	// populate the first stack
-	HanoiStack::generate_stack(m_stacks.at(0), Config::get().getSliceAmount());
+	HanoiStack::generate_stack(&m_stacks.at(0), Config::get().getSliceAmount());
 
-	HanoiSlice* slice = m_stacks.at(0)->getHead();
+	HanoiSlice* slice = m_stacks.at(0).getHead();
 	while (slice != nullptr) {
-		colorizeSprite(slice->getPixmap(), Config::get().getSliceTint());
+		colorizeSprite(&slice->getPixmap(), Config::get().getSliceTint());
 		m_slice_list.append(slice); // save the slices for ease of access
 		slice = slice->next;
 	}
@@ -305,12 +289,10 @@ GameView::calculateStackByPos(QPointF point)
 
 	for (size_t label = 0; label < Config::get().getStackAmount(); label++) {
 
-		HanoiStack* stack = m_stacks.at(label);
-
 		float x = x_area / point.x(), y = y_area / point.y();
 
 		// x and y should be 1 if the point is in the stack area
-		if ((x >= 1) && (y >= 1) ) { return m_stacks.at(label); }
+		if ((x >= 1) && (y >= 1) ) { return &m_stacks.at(label); }
 
 		// shift to the right, by stack area width
 		x_area += m_stack_area_size.width();
@@ -353,19 +335,19 @@ GameView::colorizeSprite(QPixmap* sprite, const QColor& color)
 void
 GameView::triggerLoseDialog()
 {
-	m_gameover_dialog->setText("GAMEOVER.. YOU LOST");
-	m_gameover_dialog->setInformativeText(
+	m_gameover_dialog.setText("GAMEOVER.. YOU LOST");
+	m_gameover_dialog.setInformativeText(
 	    "You've Failed to Complete the Puzzle!\nDo You Want to Play Again?...");
-	m_gameover_dialog->exec();
+	m_gameover_dialog.exec();
 }
 
 void
 GameView::triggerWinDialog()
 {
-	m_gameover_dialog->setText("GAMEOVER.. YOU WIN");
-	m_gameover_dialog->setInformativeText(
+	m_gameover_dialog.setText("GAMEOVER.. YOU WIN");
+	m_gameover_dialog.setInformativeText(
 	    "You've Sucessfully to Complete the Puzzle!\nDo You Want to Play Again?...");
-	m_gameover_dialog->exec();
+	m_gameover_dialog.exec();
 }
 
 void
@@ -451,7 +433,7 @@ GameView::paintEvent(QPaintEvent* event)
 	float offset = m_stack_area_size.width() * 0.5f;
 	for (size_t label = 0; label < Config::get().getStackAmount(); label++) {
 
-		HanoiStack* stack = m_stacks.at(label);
+		HanoiStack* stack = &m_stacks.at(label);
 
 		// draw the stack base
 		drawStackBase(label, offset, &p);
@@ -557,7 +539,7 @@ GameView::mouseReleaseEvent(QMouseEvent* event)
 	} else {
 
 		if (!m_timer_started) {
-		    m_timer->start(1);
+		    m_timer.start(1);
 		    m_timer_started = true;
 		}
 
