@@ -2,6 +2,7 @@
 
 #include "config.h"
 #include "hanoistack.h"
+#include "linkedlist.h"
 #include "soundplayer.h"
 
 #include <QFont>
@@ -215,27 +216,13 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 void
 GameView::scaleStacks()
 {
-	size_t current_slice_target = 1;
-
 	float w = m_slice_base_size.width(), h = m_stack_base_size.height();
 
-	while (current_slice_target <= Config::get().getSliceAmount()) {
-		for (auto stack : m_stacks) {
-			if (stack.second->isEmpty())
-				continue;
-			HanoiSlice* slice = stack.second->getTail();
-
-			while (slice != nullptr) {
-				if (slice->getValue() == current_slice_target) {
-					slice->setHeight(h *=
-					                 m_slice_scale_factor);
-					slice->setWidth(w *=
-					                m_slice_scale_factor);
-					current_slice_target++;
-				}
-				slice = slice->prev;
-			}
-		}
+	auto node = m_slice_list.m_head;
+	while (node != nullptr) {
+		node->data->setHeight(h *= m_slice_scale_factor);
+		node->data->setWidth(w *= m_slice_scale_factor);
+		node = node->next;
 	}
 }
 
@@ -418,6 +405,7 @@ GameView::clear()
 	m_timer_elapsed = m_move_count = 0;
 	m_game_paused = m_timer_started = m_game_started = false;
 	m_timer->stop();
+	m_slice_list.clear();
 
 	// clang-format off
 
@@ -428,9 +416,9 @@ GameView::clear()
 	HanoiStack::generate_stack(m_stacks.at(0), Config::get().getSliceAmount());
 
 	HanoiSlice* slice = m_stacks.at(0)->getHead();
-
 	while (slice != nullptr) {
 		colorizeSprite(slice->getPixmap(), Config::get().getSliceTint());
+		m_slice_list.append(slice);
 		slice = slice->next;
 	}
 

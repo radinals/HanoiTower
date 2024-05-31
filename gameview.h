@@ -2,6 +2,7 @@
 #define GAMEVIEW_H
 
 #include "hanoistack.h"
+#include "linkedlist.h"
 #include "soundplayer.h"
 
 #include <QLabel>
@@ -37,6 +38,7 @@ class GameView : public QWidget
 	QSizeF m_stack_area_size, m_stack_base_size, m_slice_base_size;
 
 	std::unordered_map<size_t, HanoiStack *> m_stacks;
+	LinkedList<HanoiSlice *> m_slice_list;
 
 	std::pair<HanoiSlice *, HanoiStack *> m_selected_slice;
 
