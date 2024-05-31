@@ -1,7 +1,6 @@
 #ifndef GAMEVIEW_H
 #define GAMEVIEW_H
 
-#include "config.h"
 #include "hanoistack.h"
 #include "soundplayer.h"
 
@@ -16,63 +15,77 @@
 #include <qaudiooutput.h>
 #include <qmainwindow.h>
 #include <qmediaplayer.h>
+#include <qpoint.h>
 #include <qpushbutton.h>
 #include <string>
 
 class GameView : public QWidget
 {
-        Q_OBJECT
+	Q_OBJECT
 
       private:
-        QMessageBox *m_gameover_dialog = nullptr;
-
-        SoundPlayer m_placement_fx;
-
-	static QColor m_slice_tint;
-	static QColor m_stack_tint;
-
 	bool m_init = false;
 	bool m_timer_started = false;
-	unsigned long long int m_timer_elapsed = 0;
-	size_t m_goal_stack_index = Config::get().getStackAmount() - 1;
+	const float m_slice_scale_factor = 0.9f;
 
-	std::map<size_t, HanoiStack *> m_stacks;
-	QSize m_stack_area_size, m_stack_base_size, m_slice_base_size;
-	QVector2D m_view_center;
+	unsigned long long int m_timer_elapsed = 0;
+	size_t m_goal_stack_index = 0;
+	unsigned int m_move_count = 0;
+
+	QSizeF m_stack_area_size, m_stack_base_size, m_slice_base_size;
+
+	std::unordered_map<size_t, HanoiStack *> m_stacks;
 
 	std::pair<HanoiSlice *, HanoiStack *> m_selected_slice;
 
-	QTimer *m_timer;
-	unsigned int m_move_count = 0;
-
 	QLabel *m_time_output = nullptr, *m_move_count_output = nullptr;
+	QTimer *m_timer = nullptr;
+	QMessageBox *m_gameover_dialog = nullptr;
+
+	SoundPlayer m_placement_fx;
 
       public:
-        explicit GameView(QWidget *parent = nullptr);
+	explicit GameView(QWidget *parent = nullptr);
 
-	QPushButton *m_gameover_dialog_yes_btn = nullptr;
-	QPushButton *m_gameover_dialog_no_btn = nullptr;
+	// button events are set in MainWindow
+	QPushButton *m_gameover_dialog_yes_btn = nullptr,
+	            *m_gameover_dialog_no_btn = nullptr;
 
 	~GameView() override;
 
-	void reset();
-	void clear();
+	void reset(); // reset the game states, and re-draw
+	void clear(); // reset the game states
 
-	void setGameInfoOutputs(QLabel *time, QLabel *moves)
-	{
-		m_time_output = time;
-		m_move_count_output = moves;
+	bool isPaused() { return m_game_paused; }
+
+	// clang-format off
+
+	void setGameInfoOutputs(QLabel *time, QLabel *moves) {
+		m_time_output = time; m_move_count_output = moves;
 	}
 
+	// clang-format on
+
       private slots:
-        void checkWinState();
+	void checkWinState();
 
       private:
-        // clang-format off
+	// clang-format off
+
         inline static QString numToChar(size_t n) {
-                std::string str = ""; str += char('A' + n); return QString::fromStdString(str);
+                std::string str = ""; str += char('A' + n);
+		return QString::fromStdString(str);
         };
-        // clang-format on
+
+	inline void moveSelectedSlice(int x, int y) {
+		m_selected_slice.first->setX(
+		    x - (m_selected_slice.first->getWidth() * 0.5));
+		m_selected_slice.first->setY(
+		    y - (m_selected_slice.first->getHeight() * 0.5));
+		update();
+	}
+
+	// clang-format on
 
 	static size_t getRandomGoalStackIndex();
 	void showGameGoalDialog();
@@ -82,14 +95,13 @@ class GameView : public QWidget
 	void triggerLoseDialog();
 	void triggerWinDialog();
 
-	void scaleStack(HanoiStack *);
 	static void colorizeSprite(QPixmap *, const QColor &);
 	HanoiStack *calculateStackByPos(QPointF);
 	void calculatesSizes();
-	static void drawStack(HanoiStack *stack, QPainter *painter);
+	void drawStack(float offset, HanoiStack *, QPainter *p);
 	void drawStackBase(size_t label, float offset, QPainter *painter);
-	void setStackCoordinates(float offset, HanoiStack *stack);
 
+	// QWidget Event Handlers
 	void mousePressEvent(QMouseEvent *) override;
 	void mouseReleaseEvent(QMouseEvent *) override;
 	void mouseMoveEvent(QMouseEvent *) override;

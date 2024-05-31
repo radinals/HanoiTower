@@ -9,6 +9,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPoint>
+#include <cmath>
 #include <qmessagebox.h>
 #include <qrandom.h>
 #include <random>
@@ -52,9 +53,9 @@ GameView::~GameView()
 void
 GameView::calculatesSizes()
 {
-	m_stack_area_size.setWidth(geometry().width() /
-				   Config::get().getStackAmount());
-	m_stack_area_size.setHeight(geometry().height() * 0.9f);
+	m_stack_area_size.setWidth(float(width()) /
+	                           Config::get().getStackAmount());
+	m_stack_area_size.setHeight(height() * 0.9f);
 
 	m_slice_base_size.setHeight(
 	    (m_stack_area_size.height() / Config::get().getSliceMax()));
@@ -62,46 +63,37 @@ GameView::calculatesSizes()
 
 	m_stack_base_size.setWidth(m_slice_base_size.width() * 1.1f);
 	m_stack_base_size.setHeight(m_slice_base_size.height());
-
-	m_view_center = QVector2D(width() * 0.5f, height() * 0.5f);
 }
 
 void
 GameView::paintEvent(QPaintEvent* event)
 {
-	if (isHidden())
+	if (m_game_paused)
 		return;
 
 	QPainter p(this);
 
 	updateInfo();
 
+	// clang-format off
+
 	float offset = m_stack_area_size.width() * 0.5f;
+	for (size_t label = 0; label < Config::get().getStackAmount(); label++) {
 
-	size_t count = 0;
-	for (auto stack : m_stacks) {
-
-		if (count >= Config::get().getStackAmount()) {
-			break;
-		}
-
-		if (!m_init) {
-			scaleStack(stack.second);
-		}
+		HanoiStack* stack = m_stacks.at(label);
 
 		// draw the stack base
-		drawStackBase(stack.first, offset, &p);
-
-		// configure each slice on the stack coordinates (placement)
-		setStackCoordinates(offset, stack.second);
+		drawStackBase(label, offset, &p);
 
 		// render the stack
-		drawStack(stack.second, &p);
+		drawStack(offset, stack, &p);
 
 		// shift to the right for the next stack
 		offset += m_stack_area_size.width();
-		count++;
 	}
+
+	// clang-format on
+
 	m_init = true;
 
 	// clang-format off
@@ -109,74 +101,69 @@ GameView::paintEvent(QPaintEvent* event)
 	if (m_selected_slice.first != nullptr && m_selected_slice.second != nullptr)
 	{
 		p.drawPixmap(
-			m_selected_slice.first->getCoordinate().x(),
-			m_selected_slice.first->getCoordinate().y(),
+			m_selected_slice.first->getX(),
+			m_selected_slice.first->getY(),
 			m_selected_slice.first->getScaledPixmap()
 		);
 	}
 	// clang-format on
 }
 
-// configure each slice placement in the screen, starting from the bottom
-// of the stack
+// - draw the stack's slices
+// - configure each slice placement in the screen, starting from the bottom
+//   of the stack
+// - set Slices size to be 90% of the base slice size and the size keeps
+//   getting smaller for each slice
 void
-GameView::setStackCoordinates(float offset, HanoiStack* stack)
+GameView::drawStack(float offset, HanoiStack* stack, QPainter* painter)
 {
 	// clang-format off
 
 	if (stack == nullptr || stack->isEmpty()) { return; }
 
-	float y_axis = height() - m_slice_base_size.height();
+	float y_axis = (height() - m_slice_base_size.height());
 
-        HanoiSlice* slice = stack->getTail();
-        while(slice != nullptr) {
-
-                y_axis -= slice->height();
-
-                QVector2D slice_coord(
-                    offset - (slice->width() * 0.5f),
-                    y_axis);
-
-                slice->setCoordinate(slice_coord);
-
-                slice = slice->prev;
-        }
-
-        // clang-format on
-}
-
-// draw the stack's slices
-void
-GameView::drawStack(HanoiStack* stack, QPainter* painter)
-{
-	// clang-format off
-	if (stack == nullptr || stack->isEmpty()) { return; }
+	float w=0, h=0;
+	if (!m_init) {
+		w = m_slice_base_size.width();
+		h = m_stack_base_size.height();
+	}
 
         HanoiSlice* slice = stack->getTail();
         while(slice != nullptr)
         {
-            painter->drawPixmap(
-                slice->getCoordinate().x(),
-                slice->getCoordinate().y(),
-                slice->getScaledPixmap()
-            );
+	    if (!m_init) {
+		slice->setHeight(h *= m_slice_scale_factor);
+		slice->setWidth(w *= m_slice_scale_factor);
+	    }
+
+            y_axis -= std::floor(slice->getHeight());
+
+	    slice->setX(offset - (slice->getWidth() * 0.5f));
+	    slice->setY(y_axis);
+
+            painter->drawPixmap(QPointF(slice->getX(),slice->getY()), slice->getScaledPixmap());
 
             slice = slice->prev;
         }
-        // clang-format on
+
+	// clang-format on
 }
 
 // render the stack base
 void
 GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 {
+	if (painter == nullptr) {
+		return;
+	}
 
 	QPixmap pole_sprite(Config::get().getStackPoleSpritePath());
 	QPixmap stack_base_sprite(Config::get().getStackBaseSpritePath());
 
 	pole_sprite = pole_sprite.scaled(m_stack_base_size.width() * 0.1f,
-					 m_stack_base_size.height() *
-					     Config::get().getSliceMax());
+	                                 m_stack_base_size.height() *
+	                                     Config::get().getSliceMax());
 
 	stack_base_sprite = stack_base_sprite.scaled(
 	    m_stack_base_size.width(), m_stack_base_size.height());
@@ -236,22 +223,6 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 	// clang-format on
 }
 
-//   set Slices size to be 90% of the base slice size and
-//   the size keeps getting smaller for each slice
-void
-GameView::scaleStack(HanoiStack* stack)
-{
-	HanoiSlice* slice = stack->getTail();
-
-	QSize size = m_slice_base_size;
-	while (slice != nullptr) {
-		size.setHeight(size.height() * 0.9f);
-		size.setWidth(size.width() * 0.9f);
-		slice->setSize(size);
-		slice = slice->prev;
-	}
-}
-
 void
 GameView::resizeEvent(QResizeEvent* event)
 {
@@ -269,23 +240,17 @@ GameView::calculateStackByPos(QPointF point)
 
 	// clang-format off
 
-	size_t count = 0;
-	for (auto stack : m_stacks) {
-		if (count >= Config::get().getStackAmount()) {
-			break;;
-		}
+	for (size_t label = 0; label < Config::get().getStackAmount(); label++) {
+
+		HanoiStack* stack = m_stacks.at(label);
+
 		float x = x_area / point.x(), y = y_area / point.y();
 
 		// x and y should be 1 if the point is in the stack area
-
-		if ((x >= 1) && (y >= 1) )
-		{
-			return m_stacks[stack.first];
-		}
+		if ((x >= 1) && (y >= 1) ) { return m_stacks.at(label); }
 
 		// shift to the right, by stack area width
 		x_area += m_stack_area_size.width();
-	    count++;
 	}
 
 	// clang-format on
@@ -299,11 +264,10 @@ void
 GameView::mousePressEvent(QMouseEvent* event)
 {
 	if (m_selected_slice.first != nullptr ||
-	    m_selected_slice.second != nullptr) {
+	    m_selected_slice.second != nullptr || m_game_paused) {
 		return;
 	}
 
-	QPoint point;
 	HanoiStack* clicked_stack = nullptr;
 	switch (event->button()) {
 	case Qt::LeftButton:
@@ -320,6 +284,8 @@ GameView::mousePressEvent(QMouseEvent* event)
 
 	m_selected_slice.first = clicked_stack->pop();
 	m_selected_slice.second = clicked_stack;
+
+	moveSelectedSlice(event->pos().x(), event->pos().y());
 }
 
 // on mouse move, if a slice is stored from a clicked event, update
@@ -328,22 +294,11 @@ void
 GameView::mouseMoveEvent(QMouseEvent* event)
 {
 	if (m_selected_slice.first == nullptr ||
-	    m_selected_slice.second == nullptr) {
+	    m_selected_slice.second == nullptr || m_game_paused) {
 		return;
 	}
 
-	// clang-format off
-
-	QVector2D drag_coordinate(
-	    event->pos().x() - (m_selected_slice.first->width() * 0.5),
-	    event->pos().y() - (m_selected_slice.first->height() * 0.5)
-	);
-
-	// clang-format on
-
-	m_selected_slice.first->setCoordinate(drag_coordinate);
-
-	update();
+	moveSelectedSlice(event->pos().x(), event->pos().y());
 }
 
 // on mouse release, if holding any slice, place the slice in
@@ -352,7 +307,7 @@ void
 GameView::mouseReleaseEvent(QMouseEvent* event)
 {
 	if (m_selected_slice.first == nullptr ||
-	    m_selected_slice.second == nullptr) {
+	    m_selected_slice.second == nullptr || m_game_paused) {
 		return;
 	}
 
@@ -400,8 +355,11 @@ GameView::mouseReleaseEvent(QMouseEvent* event)
 void
 GameView::colorizeSprite(QPixmap* sprite, const QColor& color)
 {
-	QPixmap mask(*sprite);
+	if (sprite == nullptr) {
+		return;
+	}
 
+	QPixmap mask(*sprite);
 	QPainter painter;
 
 	painter.begin(&mask);
@@ -438,23 +396,25 @@ GameView::clear()
 	    Config::get().getAudioFXVolumeLevel());
 
 	m_timer_elapsed = m_move_count = 0;
-	m_init = m_timer_started = false;
+	m_game_paused = m_init = m_timer_started = false;
 	m_timer->stop();
 
-	for (auto stack : m_stacks) {
-		stack.second->clearStack();
+	// clang-format off
+
+	for (size_t label = 0; label < Config::get().getStackAmount(); label++) {
+		m_stacks.at(label)->clearStack();
 	}
 
-	HanoiStack::generate_stack(m_stacks.at(0),
-				   Config::get().getSliceAmount());
+	HanoiStack::generate_stack(m_stacks.at(0), Config::get().getSliceAmount());
 
 	HanoiSlice* slice = m_stacks.at(0)->getHead();
 
 	while (slice != nullptr) {
-		colorizeSprite(slice->getPixmap(),
-			       Config::get().getSliceTint());
+		colorizeSprite(slice->getPixmap(), Config::get().getSliceTint());
 		slice = slice->next;
 	}
+
+	// clang-format on
 }
 
 void
@@ -496,9 +456,8 @@ GameView::updateInfo()
 {
 	if (m_time_output != nullptr) {
 
-		unsigned long long int ms = 0;
-
-		ms = Config::get().getTimerInterval() - m_timer_elapsed;
+		unsigned long long int ms =
+		    Config::get().getTimerInterval() - m_timer_elapsed;
 
 		QString h, m, s;
 
@@ -560,5 +519,5 @@ bool
 GameView::goalStackIsComplete()
 {
 	return (m_stacks.at(m_goal_stack_index)->getSliceCount() ==
-		Config::get().getSliceAmount());
+	        Config::get().getSliceAmount());
 }

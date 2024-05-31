@@ -11,9 +11,10 @@ class HanoiSlice
 {
       private:
 	QPixmap* m_pixmap = nullptr;
-	QSize m_size;
-	QVector2D m_coordinate = QVector2D(0, 0);
 	unsigned int m_value = 0;
+
+	float m_x = 0, m_y = 0;
+	float m_w = 0, m_h = 0;
 
       public:
 	// clang-format off
@@ -23,17 +24,21 @@ class HanoiSlice
         HanoiSlice(unsigned int value) : m_value(value){m_pixmap = new QPixmap(Config::get().getSliceSpritePath());};
         ~HanoiSlice(){ delete m_pixmap; };
 
-        inline void setCoordinate(const QVector2D coord) { m_coordinate = coord; }
-        inline QVector2D getCoordinate() const { return m_coordinate; };
-        inline QPixmap* getPixmap() const { return m_pixmap; }
-        inline QPixmap getScaledPixmap() const { return m_pixmap->scaled(m_size); }
-        inline void setValue(unsigned int value) { m_value = value; }
-        inline void setSize(QSize size) { m_size = size; }
-        inline QSize getSize() const { return m_size; }
+        inline QPixmap* getPixmap() { return m_pixmap; }
+        inline QPixmap getScaledPixmap() const { return m_pixmap->scaled(m_w, m_h); }
+
+        inline float getWidth() const { return m_w; }
+        inline float getHeight() const { return m_h; }
+        inline void setWidth(float w) { m_w = w; }
+        inline void setHeight(float h) { m_h = h; }
+
+	inline float getX() const { return m_x; }
+	inline float getY() const { return m_y; }
+	inline void setX(float x) { m_x = x; }
+	inline void setY(float y) { m_y = y; }
+
         inline unsigned int getValue() const { return m_value; }
 
-        inline int width() {return m_size.width(); }
-        inline int height() {return m_size.height(); }
 	// clang-format on
 
 	HanoiSlice* next = nullptr;
