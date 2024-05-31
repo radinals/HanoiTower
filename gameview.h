@@ -27,6 +27,7 @@ class GameView : public QWidget
 	bool m_init = false;
 	bool m_timer_started = false;
 	bool m_game_paused = false;
+
 	const float m_slice_scale_factor = 0.9f;
 
 	unsigned long long int m_timer_elapsed = 0;

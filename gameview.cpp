@@ -16,6 +16,7 @@
 
 GameView::GameView(QWidget* parent) : QWidget{parent}
 {
+	// init selected slice var
 	m_selected_slice.first = nullptr;
 	m_selected_slice.second = nullptr;
 
@@ -23,12 +24,15 @@ GameView::GameView(QWidget* parent) : QWidget{parent}
 		m_stacks[i] = new HanoiStack;
 	}
 
+	// init timer.
+	// timer will call checkWinState every tick (should be every 1ms).
 	m_timer = new QTimer(this);
-
 	connect(m_timer, &QTimer::timeout, this, &GameView::checkWinState);
 
+	// load the placement sound effect
 	m_placement_fx.setSource(Config::get().getPlacementFXAudioPath());
 
+	// setup the gameover and it's buttons
 	m_gameover_dialog = new QMessageBox(this);
 
 	m_gameover_dialog_no_btn =

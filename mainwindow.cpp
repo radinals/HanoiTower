@@ -11,7 +11,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
-        ui->setupUi(this);
+	ui->setupUi(this);
 
 	QFile file(Config::get().getDefaultStyleSheet());
 	file.open(QFile::ReadOnly);
@@ -25,10 +25,10 @@ MainWindow::MainWindow(QWidget *parent)
 	ui->GameViewFrame->layout()->addWidget(m_game_view);
 
 	connect(m_game_view->m_gameover_dialog_no_btn, &QPushButton::clicked,
-		this, &MainWindow::dummy_reset_btn);
+	        this, &MainWindow::dummy_reset_btn);
 
 	connect(m_game_view->m_gameover_dialog_yes_btn, &QPushButton::clicked,
-		this, &MainWindow::dummy_btn);
+	        this, &MainWindow::dummy_btn);
 
 	ui->GameTitle->setPixmap(m_logo);
 

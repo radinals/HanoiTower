@@ -20,7 +20,7 @@ class SoundPlayer
 	QSoundEffect* const getSound() const { return m_sound; };
 
       private:
-	QSoundEffect* m_sound;
+	QSoundEffect* m_sound = nullptr;
 };
 
 #endif // !SOUNDS_H
