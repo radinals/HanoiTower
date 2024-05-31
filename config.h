@@ -26,7 +26,7 @@ class Config
 	QColor m_stack_label_font_color = "#fffeee";
 	QColor m_highlight_color        = "#e8d81c";
 	QColor m_StackTint              = "#71391c";
-	QColor m_SliceTint              = "#a62e2e";
+	QColor m_SliceTint              = "#892828";
 
 	size_t m_slice_amount = 5;
 	size_t m_stack_amount = 3;
