@@ -11,7 +11,6 @@
 #include <QTimer>
 #include <QWidget>
 #include <QtMultimedia>
-#include <map>
 #include <qaccessible_base.h>
 #include <qaudiooutput.h>
 #include <qmainwindow.h>
@@ -19,6 +18,7 @@
 #include <qpoint.h>
 #include <qpushbutton.h>
 #include <string>
+#include <unordered_map>
 
 class GameView : public QWidget
 {

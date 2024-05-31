@@ -172,25 +172,37 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 		return;
 	}
 
+	// clang-format off
+
+	//--Draw Stack Base+Pole----------------------------------------------
+
 	QPixmap pole_sprite(Config::get().getStackPoleSpritePath());
 	QPixmap stack_base_sprite(Config::get().getStackBaseSpritePath());
 
-	pole_sprite = pole_sprite.scaled(m_stack_base_size.width() * 0.1f,
-	                                 m_stack_base_size.height() *
-	                                     Config::get().getSliceMax());
+	const float pole_height =
+		m_stack_base_size.height() * Config::get().getSliceMax();
+
+	const float pole_base_y_offset = height() - pole_height;
+
+	// scale the sprites
+	pole_sprite = pole_sprite.scaled(
+		m_stack_base_size.width() * 0.1f,
+	        pole_height
+	);
 
 	stack_base_sprite = stack_base_sprite.scaled(
-	    m_stack_base_size.width(), m_stack_base_size.height());
+		m_stack_base_size.width(),
+		m_stack_base_size.height()
+	);
 
-	// clang-format off
-
+	// tint the sprites
 	colorizeSprite(&pole_sprite, Config::get().getStackTint());
 	colorizeSprite(&stack_base_sprite, Config::get().getStackTint());
 
         // draw the pole
         painter->drawPixmap(
             offset - (pole_sprite.width() * 0.5f),
-            height() - (m_stack_base_size.height() * (Config::get().getSliceMax())),
+            pole_base_y_offset,
             pole_sprite
         );
 
@@ -201,36 +213,40 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 	    stack_base_sprite
 	);
 
-	QString stack_label = numToChar(label);
-	QFont font(Config::get().getStackLabelFont(), m_stack_base_size.width() * 0.1f);
+	//--Draw Stack Label--------------------------------------------------
 
-	QColor font_color;
 
+	const QFont font(
+		Config::get().getStackLabelFont(), // fontname
+		m_stack_base_size.width() * 0.1f // size
+	);
+
+	const QString stack_label = numToChar(label);
+
+	QColor font_color = Config::get().getStackLabelFontColor();
+
+	// highlight + draw the indicator if current stack is the goal stack
 	if (label == m_goal_stack_index) {
-
-		unsigned int box_size = (m_stack_base_size.width() * 0.1f) + 4;
+		float box_size = (m_stack_base_size.width() * 0.1f) + 4;
 
 		font_color = Config::get().getStackLabelFontColorHighlight();
 
 		painter->fillRect(
-		    offset - (box_size * 0.5f),
-		    height() - (m_stack_base_size.height() * Config::get().getSliceMax() + (box_size * 0.5f) ),
-		    box_size,
-		    box_size * 0.2f, Config::get().getStackLabelFontColorHighlight()
+		    offset - (box_size * 0.5f),                     // x
+		    pole_base_y_offset - (box_size * 0.5f),         // y
+		    box_size,                                       // w
+		    box_size * 0.2f,                                // h
+		    Config::get().getStackLabelFontColorHighlight() // color
 		);
-
-	} else {
-		font_color = Config::get().getStackLabelFontColor();
 	}
 
-	painter->setPen(font_color);
-	painter->setFont(font);
+	// set font & color for drawing the label
+	painter->setPen(font_color); painter->setFont(font);
 
 	// draw the stack label
 	painter->drawText(
 	    offset - (painter->font().pointSizeF() * 0.5f),
-	    height() - (m_stack_base_size.height() * Config::get().getSliceMax()
-		+ painter->font().pointSizeF()),
+	    pole_base_y_offset - painter->font().pointSizeF(),
 	    stack_label
 	);
 
