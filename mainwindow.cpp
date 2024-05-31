@@ -25,10 +25,22 @@ MainWindow::MainWindow(QWidget *parent)
 	ui->GameViewFrame->layout()->addWidget(m_game_view);
 
 	connect(m_game_view->m_gameover_dialog_no_btn, &QPushButton::clicked,
-	        this, &MainWindow::dummy_reset_btn);
+	        this, &MainWindow::resetGameAction);
+
+	connect(ui->ResetBtn, &QPushButton::clicked, this,
+	        &MainWindow::resetGameAction);
 
 	connect(m_game_view->m_gameover_dialog_yes_btn, &QPushButton::clicked,
-	        this, &MainWindow::dummy_btn);
+	        this, &MainWindow::backToMainMenuAction);
+
+	connect(ui->BackToMenuBtn, &QPushButton::clicked, this,
+	        &MainWindow::backToMainMenuAction);
+
+	connect(ui->ExitBtn, &QPushButton::clicked, this,
+	        &MainWindow::exitAction);
+
+	connect(ui->StartExitBtn, &QPushButton::clicked, this,
+	        &MainWindow::exitAction);
 
 	ui->GameTitle->setPixmap(m_logo);
 
@@ -56,18 +68,9 @@ MainWindow::~MainWindow()
 }
 
 void
-MainWindow::on_ResetBtn_clicked()
+MainWindow::resetGameAction()
 {
 	m_game_view->reset();
-}
-
-void
-MainWindow::on_ExitBtn_clicked()
-{
-	if (m_settings_window->isVisible()) {
-		m_settings_window->close();
-	}
-	close();
 }
 
 void
@@ -94,7 +97,7 @@ MainWindow::on_SettingsBtn_clicked()
 }
 
 void
-MainWindow::on_StartExitBtn_clicked()
+MainWindow::exitAction()
 {
 	if (m_settings_window->isVisible()) {
 		m_settings_window->close();
@@ -103,7 +106,7 @@ MainWindow::on_StartExitBtn_clicked()
 }
 
 void
-MainWindow::on_BackToMenuBtn_clicked()
+MainWindow::backToMainMenuAction()
 {
 	m_game_view->clear();
 	ui->LeaderboardsFrame->hide();
