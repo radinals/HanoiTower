@@ -8,5 +8,6 @@
         <file>audio/placement_fx.wav</file>
         <file>audio/bg_music.wav</file>
         <file>style/logo.png</file>
+        <file>sprites/arrow.png</file>
     </qresource>
 </RCC>

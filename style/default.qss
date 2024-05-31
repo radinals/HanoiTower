@@ -11,26 +11,25 @@ MainWindow,
   border-style: solid;
 }
 
-#GameTimerFrame {
-  border-radius: 20px;
-  border-width: 10px;
-  border-style: solid;
-  background : #41527b;
-  border-color : #41527b;
-}
-
 #SettingsTitle,
-#GameTimer {
-  color : #f9f9f9;
-}
-
+#GameTimerFrame,
+#GameTimerLabel,
+#GameTimer,
+#GameInfoBoxFrame,
+#GameInfoBoxLabel,
+#GameInfoBox,
+#GameMoveCountFrame,
 #GameMoveCountLabel,
 #GameMoveCountOut,
 #GameScoreLabel,
 #GameScoreOut {
   color : #f9f9f9;
+  background: #343442;
+  border-color : #343442;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 20px;
 }
-
 
 #GameSideBarFrame {
   background: #2a2c30;
@@ -42,7 +41,7 @@ QPushButton {
   border-color : #41527b;
   color : #f9f9f9;
   border-style: solid;
-  border-width: 10px;
+  border-width: 1px;
   border-radius: 20px;
 }
 

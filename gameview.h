@@ -1,6 +1,7 @@
 #ifndef GAMEVIEW_H
 #define GAMEVIEW_H
 
+#include "config.h"
 #include "hanoistack.h"
 #include "linkedlist.h"
 #include "soundplayer.h"
@@ -8,6 +9,7 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QTextEdit>
 #include <QTimer>
 #include <QWidget>
 #include <QtMultimedia>
@@ -29,6 +31,8 @@ class GameView : public QWidget
 	bool m_game_paused = false;
 	bool m_game_started = false;
 
+	QPixmap m_pole_sprite, m_stack_base_sprite, m_arrow_sprite;
+
 	const float m_slice_scale_factor = 0.9f;
 
 	unsigned long long int m_timer_elapsed = 0;
@@ -43,6 +47,8 @@ class GameView : public QWidget
 	std::pair<HanoiSlice *, HanoiStack *> m_selected_slice;
 
 	QLabel *m_time_output = nullptr, *m_move_count_output = nullptr;
+	QTextEdit *m_info_box = nullptr;
+
 	QTimer *m_timer = nullptr;
 	QMessageBox *m_gameover_dialog = nullptr;
 
@@ -65,8 +71,8 @@ class GameView : public QWidget
 
 	// clang-format off
 
-	void setGameInfoOutputs(QLabel *time, QLabel *moves) {
-		m_time_output = time; m_move_count_output = moves;
+	void setGameInfoOutputs(QLabel *time, QLabel *moves, QTextEdit* info_box) {
+		m_time_output = time; m_move_count_output = moves; m_info_box = info_box;
 	}
 
 	// clang-format on
@@ -98,7 +104,6 @@ class GameView : public QWidget
 	// clang-format on
 
 	static size_t getRandomGoalStackIndex();
-	void showGameGoalDialog();
 
 	void updateInfo();
 	void triggerLoseDialog();

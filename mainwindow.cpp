@@ -19,7 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
 	this->setStyleSheet(styleSheet);
 
 	m_game_view = new GameView(ui->GameViewFrame);
-	m_game_view->setGameInfoOutputs(ui->GameTimer, ui->GameMoveCountOut);
+	m_game_view->setGameInfoOutputs(ui->GameTimer, ui->GameMoveCountOut,
+	                                ui->GameInfoBox);
 	m_settings_window = new SettingsWindow;
 
 	ui->GameViewFrame->layout()->addWidget(m_game_view);

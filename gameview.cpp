@@ -42,6 +42,16 @@ GameView::GameView(QWidget* parent) : QWidget{parent}
 
 	m_gameover_dialog_yes_btn =
 	    m_gameover_dialog->addButton(QMessageBox::No);
+	// m_gameover_dialog->setTextFormat(Qt::TextFormat::RichText);
+
+	m_pole_sprite = QPixmap(Config::get().getStackPoleSpritePath());
+	m_stack_base_sprite = QPixmap(Config::get().getStackBaseSpritePath());
+	m_arrow_sprite = QPixmap(Config::get().getArrowSpritePath());
+
+	// tint the sprites
+	colorizeSprite(&m_pole_sprite, Config::get().getStackTint());
+	colorizeSprite(&m_stack_base_sprite, Config::get().getStackTint());
+	colorizeSprite(&m_arrow_sprite, Config::get().getHighlightColor());
 }
 
 GameView::~GameView()
@@ -77,7 +87,6 @@ GameView::reset()
 	updateInfo();
 	m_game_started = true;
 	repaint();
-	showGameGoalDialog();
 }
 
 void
@@ -86,6 +95,10 @@ GameView::clear()
 	calculatesSizes();
 
 	m_goal_stack_index = getRandomGoalStackIndex();
+
+	m_info_box->setText("Move All Slice to Stack " +
+	                    numToChar(m_goal_stack_index));
+	m_info_box->setAlignment(Qt::AlignCenter);
 
 	m_placement_fx.getSound()->setVolume(
 	    Config::get().getAudioFXVolumeLevel());
@@ -156,7 +169,7 @@ GameView::drawStack(float offset, HanoiStack* stack, QPainter* painter)
 	    slice->setX(offset - (slice->getWidth() * 0.5f));
 	    slice->setY(y_axis);
 
-            painter->drawPixmap(QPointF(slice->getX(),slice->getY()), slice->getScaledPixmap());
+	    painter->drawPixmap(QPointF(slice->getX(),slice->getY()), slice->getScaledPixmap());
 
             slice = slice->prev;
         }
@@ -168,7 +181,7 @@ GameView::drawStack(float offset, HanoiStack* stack, QPainter* painter)
 void
 GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 {
-	if (painter == nullptr) {
+	if (painter == nullptr || !painter->isActive()) {
 		return;
 	}
 
@@ -176,28 +189,24 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 
 	//--Draw Stack Base+Pole----------------------------------------------
 
-	QPixmap pole_sprite(Config::get().getStackPoleSpritePath());
-	QPixmap stack_base_sprite(Config::get().getStackBaseSpritePath());
-
-	const float pole_height =
-		m_stack_base_size.height() * Config::get().getSliceMax();
-
-	const float pole_base_y_offset = height() - pole_height;
+	const float pole_height = m_stack_base_size.height() * Config::get().getSliceMax(),
+	            pole_base_y_offset = height() - pole_height;
 
 	// scale the sprites
-	pole_sprite = pole_sprite.scaled(
+	const QPixmap pole_sprite = m_pole_sprite.scaled(
 		m_stack_base_size.width() * 0.1f,
-	        pole_height
+		pole_height
 	);
 
-	stack_base_sprite = stack_base_sprite.scaled(
+	const QPixmap stack_base_sprite = m_stack_base_sprite.scaled(
 		m_stack_base_size.width(),
 		m_stack_base_size.height()
 	);
 
-	// tint the sprites
-	colorizeSprite(&pole_sprite, Config::get().getStackTint());
-	colorizeSprite(&stack_base_sprite, Config::get().getStackTint());
+	const QPixmap arrow_sprite = m_arrow_sprite.scaled(
+		offset - m_stack_area_size.width() * 0.5f,
+		m_stack_base_size.width() * 0.1f
+	);
 
         // draw the pole
         painter->drawPixmap(
@@ -227,17 +236,26 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 
 	// highlight + draw the indicator if current stack is the goal stack
 	if (label == m_goal_stack_index) {
-		float box_size = (m_stack_base_size.width() * 0.1f) + 4;
 
-		font_color = Config::get().getStackLabelFontColorHighlight();
+		const float box_size = (m_stack_base_size.width() * 0.1f) + 4;
 
-		painter->fillRect(
-		    offset - (box_size * 0.5f),                     // x
-		    pole_base_y_offset - (box_size * 0.5f),         // y
-		    box_size,                                       // w
-		    box_size * 0.2f,                                // h
-		    Config::get().getStackLabelFontColorHighlight() // color
-		);
+		font_color = Config::get().getHighlightColor();
+
+		if (!m_timer_started && !m_game_paused) {
+			painter->drawPixmap(
+				m_stack_area_size.width() * 0.5f,
+				pole_base_y_offset - (arrow_sprite.height()), // y
+				arrow_sprite
+			);
+		} else {
+			painter->fillRect(
+			    offset - (box_size * 0.5f),             // x
+			    pole_base_y_offset - (box_size * 0.5f), // y
+			    box_size,                               // w
+			    box_size * 0.2f,                        // h
+			    Config::get().getHighlightColor()       // color
+			);
+		}
 	}
 
 	// set font & color for drawing the label
@@ -404,18 +422,6 @@ GameView::getRandomGoalStackIndex()
 	std::uniform_int_distribution<size_t> distr(
 	    1, Config::get().getStackAmount() - 1);
 	return distr(gen);
-}
-
-void
-GameView::showGameGoalDialog()
-{
-	QMessageBox dialog(this);
-	dialog.setText("GOALS");
-	dialog.setInformativeText(
-	    "Move All Stack From Peg 'A' to '" + numToChar(m_goal_stack_index) +
-	    "'. No Slice may be placed on top of a slice that is smaller to it!.");
-	dialog.setStandardButtons(QMessageBox::Ok);
-	dialog.exec();
 }
 
 void
