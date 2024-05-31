@@ -55,6 +55,69 @@ GameView::~GameView()
 	delete m_gameover_dialog;
 }
 
+void
+GameView::pause()
+{
+	if (m_game_paused) {
+		m_timer->start(1);
+		updateInfo();
+		m_game_paused = false;
+	} else {
+		m_time_output->setText("PAUSED");
+		m_timer->stop();
+		m_game_paused = true;
+	}
+}
+
+// (re)initialize an empty state
+void
+GameView::reset()
+{
+	clear();
+	updateInfo();
+	m_game_started = true;
+	repaint();
+	showGameGoalDialog();
+}
+
+void
+GameView::clear()
+{
+	calculatesSizes();
+
+	m_goal_stack_index = getRandomGoalStackIndex();
+
+	m_placement_fx.getSound()->setVolume(
+	    Config::get().getAudioFXVolumeLevel());
+
+	m_timer_elapsed = m_move_count = 0;
+	m_game_paused = m_timer_started = m_game_started = false;
+	m_timer->stop();
+	m_slice_list.clear();
+
+	// clang-format off
+
+	// clear all stack
+	for (size_t label = 0; label < Config::get().getStackAmount(); label++) {
+		m_stacks.at(label)->clearStack();
+	}
+
+	// populate the first stack
+	HanoiStack::generate_stack(m_stacks.at(0), Config::get().getSliceAmount());
+
+	HanoiSlice* slice = m_stacks.at(0)->getHead();
+	while (slice != nullptr) {
+		colorizeSprite(slice->getPixmap(), Config::get().getSliceTint());
+		m_slice_list.append(slice); // save the slices for ease of access
+		slice = slice->next;
+	}
+
+	// scale the slices
+	scaleSlices();
+
+	// clang-format on
+}
+
 // generate the base sizes to be used to render the sprites and etc.
 void
 GameView::calculatesSizes()
@@ -69,46 +132,6 @@ GameView::calculatesSizes()
 
 	m_stack_base_size.setWidth(m_slice_base_size.width() * 1.1f);
 	m_stack_base_size.setHeight(m_slice_base_size.height());
-}
-
-void
-GameView::paintEvent(QPaintEvent* event)
-{
-	if (m_game_paused || !m_game_started)
-		return;
-
-	QPainter p(this);
-
-	updateInfo();
-
-	// clang-format off
-
-	float offset = m_stack_area_size.width() * 0.5f;
-	for (size_t label = 0; label < Config::get().getStackAmount(); label++) {
-
-		HanoiStack* stack = m_stacks.at(label);
-
-		// draw the stack base
-		drawStackBase(label, offset, &p);
-
-		// render the stack
-		drawStack(offset, stack, &p);
-
-		// shift to the right for the next stack
-		offset += m_stack_area_size.width();
-	}
-
-	// render the selected stack
-	if (m_selected_slice.first != nullptr && m_selected_slice.second != nullptr)
-	{
-		p.drawPixmap(
-			m_selected_slice.first->getX(),
-			m_selected_slice.first->getY(),
-			m_selected_slice.first->getScaledPixmap()
-		);
-	}
-
-	// clang-format on
 }
 
 // - draw the stack's slices
@@ -227,15 +250,6 @@ GameView::scaleSlices()
 	}
 }
 
-void
-GameView::resizeEvent(QResizeEvent* event)
-{
-	calculatesSizes();
-	if (m_game_started) {
-		scaleSlices();
-	}
-}
-
 // compare the QPointF x and y values to a stack's area, if
 // if said point is in a stack's area, return the pointer
 // to the stack
@@ -265,99 +279,6 @@ GameView::calculateStackByPos(QPointF point)
 	return nullptr;
 }
 
-// on mouse press, pop the slice of the stack below the mouse click,
-// and store it.
-void
-GameView::mousePressEvent(QMouseEvent* event)
-{
-	if (m_selected_slice.first != nullptr ||
-	    m_selected_slice.second != nullptr || m_game_paused) {
-		return;
-	}
-
-	HanoiStack* clicked_stack = nullptr;
-	switch (event->button()) {
-	case Qt::LeftButton:
-		clicked_stack =
-		    calculateStackByPos(event->position().toPoint());
-		break;
-	default:
-		return;
-	}
-
-	if (clicked_stack == nullptr || clicked_stack->isEmpty()) {
-		return;
-	}
-
-	m_selected_slice.first = clicked_stack->pop();
-	m_selected_slice.second = clicked_stack;
-
-	moveSelectedSlice(event->pos().x(), event->pos().y());
-}
-
-// on mouse move, if a slice is stored from a clicked event, update
-// the slice coordinate to be the cursor coordinates and redraw screen.
-void
-GameView::mouseMoveEvent(QMouseEvent* event)
-{
-	if (m_selected_slice.first == nullptr ||
-	    m_selected_slice.second == nullptr || m_game_paused) {
-		return;
-	}
-
-	moveSelectedSlice(event->pos().x(), event->pos().y());
-}
-
-// on mouse release, if holding any slice, place the slice in
-// the stack where the mouse was released, or just put it back.
-void
-GameView::mouseReleaseEvent(QMouseEvent* event)
-{
-	if (m_selected_slice.first == nullptr ||
-	    m_selected_slice.second == nullptr || m_game_paused) {
-		return;
-	}
-
-	HanoiStack* destination_stack =
-	    calculateStackByPos(event->position().toPoint());
-
-	// clang-format off
-
-        // checks:
-        //  - if the destination stack is full -> cancel
-        //  - if destination stack is the same with the source stack -> cancel
-        //  - if the selected slice is bigger
-        //     than the destination stack top value -> cancel
-
-	if (destination_stack == nullptr || destination_stack == m_selected_slice.second ||
-	    (!destination_stack->isEmpty() && (m_selected_slice.first->getValue()
-		< destination_stack->peek()->getValue())))
-	{
-		m_selected_slice.second->push(m_selected_slice.first);
-	} else {
-
-		if (!m_timer_started) {
-		    m_timer->start(1);
-		    m_timer_started = true;
-		}
-
-		destination_stack->push(m_selected_slice.first);
-
-		m_move_count++;
-	}
-
-	// clang-format on
-
-	m_selected_slice.first = nullptr;
-	m_selected_slice.second = nullptr;
-
-	update();
-
-	if (!m_placement_fx.getSound()->isPlaying()) {
-		m_placement_fx.getSound()->play();
-	}
-}
-
 // add tint to a pixmap, by using masks
 void
 GameView::colorizeSprite(QPixmap* sprite, const QColor& color)
@@ -381,55 +302,6 @@ GameView::colorizeSprite(QPixmap* sprite, const QColor& color)
 	painter.drawImage(0, 0, mask.toImage());
 
 	painter.end();
-}
-
-// (re)initialize an empty state
-void
-GameView::reset()
-{
-	clear();
-	updateInfo();
-	m_game_started = true;
-	repaint();
-	showGameGoalDialog();
-}
-
-void
-GameView::clear()
-{
-	calculatesSizes();
-
-	m_goal_stack_index = getRandomGoalStackIndex();
-
-	m_placement_fx.getSound()->setVolume(
-	    Config::get().getAudioFXVolumeLevel());
-
-	m_timer_elapsed = m_move_count = 0;
-	m_game_paused = m_timer_started = m_game_started = false;
-	m_timer->stop();
-	m_slice_list.clear();
-
-	// clang-format off
-
-	// clear all stack
-	for (size_t label = 0; label < Config::get().getStackAmount(); label++) {
-		m_stacks.at(label)->clearStack();
-	}
-
-	// populate the first stack
-	HanoiStack::generate_stack(m_stacks.at(0), Config::get().getSliceAmount());
-
-	HanoiSlice* slice = m_stacks.at(0)->getHead();
-	while (slice != nullptr) {
-		colorizeSprite(slice->getPixmap(), Config::get().getSliceTint());
-		m_slice_list.append(slice); // save the slices for ease of access
-		slice = slice->next;
-	}
-
-	// scale the slices
-	scaleSlices();
-
-	// clang-format on
 }
 
 void
@@ -530,23 +402,144 @@ GameView::showGameGoalDialog()
 	dialog.exec();
 }
 
-bool
-GameView::goalStackIsComplete()
+void
+GameView::paintEvent(QPaintEvent* event)
 {
-	return (m_stacks.at(m_goal_stack_index)->getSliceCount() ==
-	        Config::get().getSliceAmount());
+	if (m_game_paused || !m_game_started)
+		return;
+
+	QPainter p(this);
+
+	updateInfo();
+
+	// clang-format off
+
+	float offset = m_stack_area_size.width() * 0.5f;
+	for (size_t label = 0; label < Config::get().getStackAmount(); label++) {
+
+		HanoiStack* stack = m_stacks.at(label);
+
+		// draw the stack base
+		drawStackBase(label, offset, &p);
+
+		// render the stack
+		drawStack(offset, stack, &p);
+
+		// shift to the right for the next stack
+		offset += m_stack_area_size.width();
+	}
+
+	// render the selected stack
+	if (m_selected_slice.first != nullptr && m_selected_slice.second != nullptr)
+	{
+		p.drawPixmap(
+			m_selected_slice.first->getX(),
+			m_selected_slice.first->getY(),
+			m_selected_slice.first->getScaledPixmap()
+		);
+	}
+
+	// clang-format on
 }
 
 void
-GameView::pause()
+GameView::resizeEvent(QResizeEvent* event)
 {
-	if (m_game_paused) {
-		m_timer->start(1);
-		updateInfo();
-		m_game_paused = false;
+	calculatesSizes();
+	if (m_game_started) {
+		scaleSlices();
+	}
+}
+
+// on mouse press, pop the slice of the stack below the mouse click,
+// and store it.
+void
+GameView::mousePressEvent(QMouseEvent* event)
+{
+	if (m_selected_slice.first != nullptr ||
+	    m_selected_slice.second != nullptr || m_game_paused) {
+		return;
+	}
+
+	HanoiStack* clicked_stack = nullptr;
+	switch (event->button()) {
+	case Qt::LeftButton:
+		clicked_stack =
+		    calculateStackByPos(event->position().toPoint());
+		break;
+	default:
+		return;
+	}
+
+	if (clicked_stack == nullptr || clicked_stack->isEmpty()) {
+		return;
+	}
+
+	m_selected_slice.first = clicked_stack->pop();
+	m_selected_slice.second = clicked_stack;
+
+	moveSelectedSlice(event->pos().x(), event->pos().y());
+}
+
+// on mouse move, if a slice is stored from a clicked event, update
+// the slice coordinate to be the cursor coordinates and redraw screen.
+void
+GameView::mouseMoveEvent(QMouseEvent* event)
+{
+	if (m_selected_slice.first == nullptr ||
+	    m_selected_slice.second == nullptr || m_game_paused) {
+		return;
+	}
+
+	moveSelectedSlice(event->pos().x(), event->pos().y());
+}
+
+// on mouse release, if holding any slice, place the slice in
+// the stack where the mouse was released, or just put it back.
+void
+GameView::mouseReleaseEvent(QMouseEvent* event)
+{
+	if (m_selected_slice.first == nullptr ||
+	    m_selected_slice.second == nullptr || m_game_paused) {
+		return;
+	}
+
+	HanoiStack* destination_stack =
+	    calculateStackByPos(event->position().toPoint());
+
+	// clang-format off
+
+        // checks:
+        //  - if the destination stack is full -> cancel
+        //  - if destination stack is the same with the source stack -> cancel
+        //  - if the selected slice is bigger
+        //     than the destination stack top value -> cancel
+
+	if (destination_stack == nullptr || destination_stack == m_selected_slice.second ||
+	    (!destination_stack->isEmpty() && (m_selected_slice.first->getValue()
+		< destination_stack->peek()->getValue())))
+	{
+		m_selected_slice.second->push(m_selected_slice.first);
 	} else {
-		m_time_output->setText("PAUSED");
-		m_timer->stop();
-		m_game_paused = true;
+
+		if (!m_timer_started) {
+		    m_timer->start(1);
+		    m_timer_started = true;
+		}
+
+		destination_stack->push(m_selected_slice.first);
+
+		m_move_count++;
+	}
+
+	// clang-format on
+
+	m_selected_slice.first = nullptr;
+	m_selected_slice.second = nullptr;
+
+	update();
+
+	if (!m_placement_fx.getSound()->isPlaying()) {
+		m_placement_fx.getSound()->play();
 	}
 }

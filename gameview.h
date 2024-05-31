@@ -90,11 +90,15 @@ class GameView : public QWidget
 		update();
 	}
 
+	inline bool goalStackIsComplete() { ;
+		return ( m_stacks.at(m_goal_stack_index)->getSliceCount() ==
+				Config::get().getSliceAmount() );
+	}
+
 	// clang-format on
 
 	static size_t getRandomGoalStackIndex();
 	void showGameGoalDialog();
-	inline bool goalStackIsComplete();
 
 	void updateInfo();
 	void triggerLoseDialog();
