@@ -24,9 +24,9 @@ class GameView : public QWidget
 	Q_OBJECT
 
       private:
-	bool m_init = false;
 	bool m_timer_started = false;
 	bool m_game_paused = false;
+	bool m_game_started = false;
 
 	const float m_slice_scale_factor = 0.9f;
 
@@ -103,6 +103,7 @@ class GameView : public QWidget
 	void calculatesSizes();
 	void drawStack(float offset, HanoiStack *, QPainter *p);
 	void drawStackBase(size_t label, float offset, QPainter *painter);
+	void scaleStacks();
 
 	// QWidget Event Handlers
 	void mousePressEvent(QMouseEvent *) override;

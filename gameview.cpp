@@ -1,6 +1,7 @@
 #include "gameview.h"
 
 #include "config.h"
+#include "hanoistack.h"
 #include "soundplayer.h"
 
 #include <QFont>
@@ -72,7 +73,7 @@ GameView::calculatesSizes()
 void
 GameView::paintEvent(QPaintEvent* event)
 {
-	if (m_game_paused)
+	if (m_game_paused || !m_game_started)
 		return;
 
 	QPainter p(this);
@@ -96,11 +97,6 @@ GameView::paintEvent(QPaintEvent* event)
 		offset += m_stack_area_size.width();
 	}
 
-	// clang-format on
-
-	m_init = true;
-
-	// clang-format off
 	// render the selected stack
 	if (m_selected_slice.first != nullptr && m_selected_slice.second != nullptr)
 	{
@@ -127,20 +123,9 @@ GameView::drawStack(float offset, HanoiStack* stack, QPainter* painter)
 
 	float y_axis = (height() - m_slice_base_size.height());
 
-	float w=0, h=0;
-	if (!m_init) {
-		w = m_slice_base_size.width();
-		h = m_stack_base_size.height();
-	}
-
         HanoiSlice* slice = stack->getTail();
         while(slice != nullptr)
         {
-	    if (!m_init) {
-		slice->setHeight(h *= m_slice_scale_factor);
-		slice->setWidth(w *= m_slice_scale_factor);
-	    }
-
             y_axis -= std::floor(slice->getHeight());
 
 	    slice->setX(offset - (slice->getWidth() * 0.5f));
@@ -228,9 +213,39 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 }
 
 void
+GameView::scaleStacks()
+{
+	size_t current_slice_target = 1;
+
+	float w = m_slice_base_size.width(), h = m_stack_base_size.height();
+
+	while (current_slice_target <= Config::get().getSliceAmount()) {
+		for (auto stack : m_stacks) {
+			if (stack.second->isEmpty())
+				continue;
+			HanoiSlice* slice = stack.second->getTail();
+
+			while (slice != nullptr) {
+				if (slice->getValue() == current_slice_target) {
+					slice->setHeight(h *=
+					                 m_slice_scale_factor);
+					slice->setWidth(w *=
+					                m_slice_scale_factor);
+					current_slice_target++;
+				}
+				slice = slice->prev;
+			}
+		}
+	}
+}
+
+void
 GameView::resizeEvent(QResizeEvent* event)
 {
 	calculatesSizes();
+	if (m_game_started) {
+		scaleStacks();
+	}
 }
 
 // compare the QPointF x and y values to a stack's area, if
@@ -385,6 +400,7 @@ GameView::reset()
 {
 	clear();
 	updateInfo();
+	m_game_started = true;
 	repaint();
 	showGameGoalDialog();
 }
@@ -400,7 +416,7 @@ GameView::clear()
 	    Config::get().getAudioFXVolumeLevel());
 
 	m_timer_elapsed = m_move_count = 0;
-	m_game_paused = m_init = m_timer_started = false;
+	m_game_paused = m_timer_started = m_game_started = false;
 	m_timer->stop();
 
 	// clang-format off
@@ -417,6 +433,8 @@ GameView::clear()
 		colorizeSprite(slice->getPixmap(), Config::get().getSliceTint());
 		slice = slice->next;
 	}
+
+	scaleStacks();
 
 	// clang-format on
 }
