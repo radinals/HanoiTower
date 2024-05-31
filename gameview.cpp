@@ -521,3 +521,17 @@ GameView::goalStackIsComplete()
 	return (m_stacks.at(m_goal_stack_index)->getSliceCount() ==
 	        Config::get().getSliceAmount());
 }
+
+void
+GameView::pause()
+{
+	if (m_game_paused) {
+		m_timer->start(1);
+		updateInfo();
+		m_game_paused = false;
+	} else {
+		m_time_output->setText("PAUSED");
+		m_timer->stop();
+		m_game_paused = true;
+	}
+}

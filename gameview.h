@@ -26,6 +26,7 @@ class GameView : public QWidget
       private:
 	bool m_init = false;
 	bool m_timer_started = false;
+	bool m_game_paused = false;
 	const float m_slice_scale_factor = 0.9f;
 
 	unsigned long long int m_timer_elapsed = 0;
@@ -55,6 +56,7 @@ class GameView : public QWidget
 
 	void reset(); // reset the game states, and re-draw
 	void clear(); // reset the game states
+	void pause(); // halt the timer, inhibit input
 
 	bool isPaused() { return m_game_paused; }
 

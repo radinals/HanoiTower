@@ -111,3 +111,14 @@ MainWindow::on_BackToMenuBtn_clicked()
 	ui->GameViewFrame->hide();
 	ui->GameMenuFrame->show();
 }
+
+void
+MainWindow::on_PauseBtn_clicked()
+{
+	m_game_view->pause();
+	if (m_game_view->isPaused()) {
+		ui->PauseBtn->setText("UN-PAUSE");
+	} else {
+		ui->PauseBtn->setText("PAUSE");
+	}
+}

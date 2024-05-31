@@ -135,7 +135,7 @@
              </font>
             </property>
             <property name="text">
-             <string>START</string>
+             <string>PLAY</string>
             </property>
            </widget>
           </item>
@@ -171,7 +171,7 @@
              </font>
             </property>
             <property name="text">
-             <string>EXIT</string>
+             <string>QUIT GAME</string>
             </property>
            </widget>
           </item>
@@ -272,6 +272,22 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_7">
           <item>
+           <widget class="QLabel" name="GameTimerLabel">
+            <property name="font">
+             <font>
+              <family>BlexMono Nerd Font Mono</family>
+              <pointsize>30</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>TIME</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QLabel" name="GameTimer">
             <property name="maximumSize">
              <size>
@@ -281,11 +297,12 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>30</pointsize>
+              <family>BlexMono Nerd Font Mono</family>
+              <pointsize>20</pointsize>
              </font>
             </property>
             <property name="text">
-             <string>00:00</string>
+             <string>00:00:00</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -346,10 +363,23 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
+          <widget class="QPushButton" name="PauseBtn">
+           <property name="font">
+            <font>
+             <family>BlexMono Nerd Font Mono</family>
+             <pointsize>25</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>PAUSE</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="ResetBtn">
            <property name="font">
             <font>
-             <family>BlexMono Nerd Font</family>
+             <family>BlexMono Nerd Font Mono</family>
              <pointsize>25</pointsize>
             </font>
            </property>
@@ -380,11 +410,12 @@
         <widget class="QPushButton" name="BackToMenuBtn">
          <property name="font">
           <font>
+           <family>BlexMono Nerd Font Mono</family>
            <pointsize>15</pointsize>
           </font>
          </property>
          <property name="text">
-          <string>Back to Menu</string>
+          <string>BACK TO MENU</string>
          </property>
         </widget>
        </item>
@@ -392,11 +423,12 @@
         <widget class="QPushButton" name="ExitBtn">
          <property name="font">
           <font>
+           <family>BlexMono Nerd Font Mono</family>
            <pointsize>15</pointsize>
           </font>
          </property>
          <property name="text">
-          <string>Exit</string>
+          <string>QUIT GAME</string>
          </property>
         </widget>
        </item>

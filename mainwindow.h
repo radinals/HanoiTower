@@ -42,6 +42,8 @@ class MainWindow : public QMainWindow
 
         void on_BackToMenuBtn_clicked();
 
+        void on_PauseBtn_clicked();
+
       private:
         Ui::MainWindow *ui;
 };
