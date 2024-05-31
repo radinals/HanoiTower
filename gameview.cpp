@@ -135,12 +135,15 @@ GameView::clear()
 void
 GameView::calculatesSizes()
 {
+
 	m_stack_area_size.setWidth(float(width()) /
 	                           Config::get().getStackAmount());
+
 	m_stack_area_size.setHeight(height() * 0.9f);
 
-	m_slice_base_size.setHeight(
-	    (m_stack_area_size.height() / Config::get().getSliceMax()));
+	m_slice_base_size.setHeight(m_stack_area_size.height() /
+	                            Config::get().getSliceMax());
+
 	m_slice_base_size.setWidth(m_stack_area_size.width() * 0.9f);
 
 	m_stack_base_size.setWidth(m_slice_base_size.width() * 1.1f);
@@ -274,7 +277,10 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 void
 GameView::scaleSlices()
 {
-	float w = m_slice_base_size.width(), h = m_stack_base_size.height();
+	// clang-format off
+
+	float w = m_slice_base_size.width(),
+	      h = m_stack_base_size.height();
 
 	auto node = m_slice_list.m_head;
 	while (node != nullptr) {
@@ -282,6 +288,8 @@ GameView::scaleSlices()
 		node->data->setWidth(w *= m_slice_scale_factor);
 		node = node->next;
 	}
+
+	// clang-format on
 }
 
 // compare the QPointF x and y values to a stack's area, if
@@ -290,10 +298,10 @@ GameView::scaleSlices()
 HanoiStack*
 GameView::calculateStackByPos(QPointF point)
 {
-	float x_area = m_stack_area_size.width();
-	float y_area = m_stack_area_size.height();
-
 	// clang-format off
+
+	float x_area = m_stack_area_size.width(),
+	      y_area = m_stack_area_size.height();
 
 	for (size_t label = 0; label < Config::get().getStackAmount(); label++) {
 
@@ -322,20 +330,24 @@ GameView::colorizeSprite(QPixmap* sprite, const QColor& color)
 	}
 
 	QPixmap mask(*sprite);
+
 	QPainter painter;
 
 	// create the mask
 	painter.begin(&mask);
-	painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
-	painter.fillRect(mask.rect(), color);
-	painter.end();
+	if (painter.isActive()) {
+		painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
+		painter.fillRect(mask.rect(), color);
+		painter.end();
+	}
 
 	// apply the mask
 	painter.begin(sprite);
-	painter.setCompositionMode(QPainter::CompositionMode_Overlay);
-	painter.drawImage(0, 0, mask.toImage());
-
-	painter.end();
+	if (painter.isActive()) {
+		painter.setCompositionMode(QPainter::CompositionMode_Overlay);
+		painter.drawImage(0, 0, mask.toImage());
+		painter.end();
+	}
 }
 
 void
@@ -377,7 +389,7 @@ GameView::updateInfo()
 {
 	if (m_time_output != nullptr) {
 
-		unsigned long long int ms =
+		const unsigned long long int ms =
 		    Config::get().getTimerInterval() - m_timer_elapsed;
 
 		QString h, m, s;
