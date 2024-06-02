@@ -66,14 +66,7 @@ class GameView : public QWidget
 	explicit GameView(QWidget *parent = nullptr);
 
 	// button events are set in MainWindow
-	QPushButton *m_gameover_dialog_yes_btn = nullptr,
-	            *m_gameover_dialog_no_btn = nullptr;
-
-	~GameView() override
-	{
-		delete m_gameover_dialog_no_btn;
-		delete m_gameover_dialog_yes_btn;
-	};
+	// ~GameView() override {};
 
 	void reset(); // reset the game states, and re-draw
 	void clear(); // reset the game states
