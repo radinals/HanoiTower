@@ -48,16 +48,19 @@ GameView::GameView(QWidget* parent) : QWidget{parent}
 void
 GameView::pause()
 {
-	if (!m_game_started || m_game_state != GameState::Normal) {
-		return;
-	} else if (m_game_paused) {
+	switch (m_game_state) {
+	case GameState::GamePaused:
 		m_timer.start(1);
 		updateInfo();
-		m_game_paused = false;
-	} else {
+		m_game_state = GameState::GameRunning;
+		break;
+	case GameState::GameRunning:
 		m_time_output->setText("PAUSED");
 		m_timer.stop();
-		m_game_paused = true;
+		m_game_state = GameState::GamePaused;
+		break;
+	default:
+		return;
 	}
 }
 
@@ -67,7 +70,7 @@ GameView::reset()
 {
 	clear();
 	updateInfo();
-	m_game_started = true;
+	m_game_state = GameState::GameRunning;
 	repaint();
 }
 
@@ -86,10 +89,10 @@ GameView::clear()
 	    Config::get().getAudioFXVolumeLevel());
 
 	m_timer_elapsed = m_move_count = 0;
-	m_game_paused = m_timer_started = m_game_started = false;
+	m_game_state = GameState::GameNotRunning;
+	m_timer_started = false;
 	m_timer.stop();
 	m_slice_list.clear();
-	m_game_state = GameState::Normal;
 
 	// clang-format off
 
@@ -230,7 +233,7 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 
 		font_color = Config::get().getHighlightColor();
 
-		if (!m_timer_started && !m_game_paused) {
+		if (!m_timer_started) {
 			painter->drawPixmap(
 				m_stack_area_size.width() * 0.5f,
 				pole_base_y_offset - (arrow_sprite.height()), // y
@@ -410,7 +413,7 @@ void
 GameView::paintEvent(QPaintEvent* event)
 {
 
-	if (m_game_paused || !m_game_started)
+	if (m_game_state == GameState::GameNotRunning)
 		return;
 
 	QPainter p(this);
@@ -489,7 +492,7 @@ void
 GameView::resizeEvent(QResizeEvent* event)
 {
 	calculatesSizes();
-	if (m_game_started) {
+	if (m_game_state != GameState::GameNotRunning) {
 		scaleSlices();
 	}
 }
@@ -500,8 +503,8 @@ void
 GameView::mousePressEvent(QMouseEvent* event)
 {
 	if (m_selected_slice.first != nullptr ||
-	    m_selected_slice.second != nullptr || m_game_paused ||
-	    m_game_state != GameState::Normal) {
+	    m_selected_slice.second != nullptr ||
+	    m_game_state != GameState::GameRunning) {
 		return;
 	}
 
@@ -531,8 +534,8 @@ void
 GameView::mouseMoveEvent(QMouseEvent* event)
 {
 	if (m_selected_slice.first == nullptr ||
-	    m_selected_slice.second == nullptr || m_game_paused ||
-	    m_game_state != GameState::Normal) {
+	    m_selected_slice.second == nullptr ||
+	    m_game_state != GameState::GameRunning) {
 		return;
 	}
 
@@ -545,8 +548,8 @@ void
 GameView::mouseReleaseEvent(QMouseEvent* event)
 {
 	if (m_selected_slice.first == nullptr ||
-	    m_selected_slice.second == nullptr || m_game_paused ||
-	    m_game_state != GameState::Normal) {
+	    m_selected_slice.second == nullptr ||
+	    m_game_state != GameState::GameRunning) {
 		return;
 	}
 
@@ -568,7 +571,7 @@ GameView::mouseReleaseEvent(QMouseEvent* event)
 		m_selected_slice.second->push(m_selected_slice.first);
 	} else {
 
-		if (!m_timer_started) {
+		if (m_game_state == GameState::GameRunning && !m_timer_started) {
 		    m_timer.start(1);
 		    m_timer_started = true;
 		}

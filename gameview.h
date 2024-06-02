@@ -28,18 +28,18 @@ class GameView : public QWidget
 
       private:
 	enum class GameState {
-		Normal,
+		GameNotRunning,
+		GameRunning,
+		GamePaused,
 		GameOverLost,
 		GameOverWon,
 	};
 
-	GameState m_game_state = GameState::Normal;
+	GameState m_game_state = GameState::GameNotRunning;
 
 	QPixmap m_win_dialog, m_lose_dialog;
 
 	bool m_timer_started = false;
-	bool m_game_paused = false;
-	bool m_game_started = false;
 
 	QPixmap m_pole_sprite, m_stack_base_sprite, m_arrow_sprite;
 
@@ -81,7 +81,7 @@ class GameView : public QWidget
 	void clear(); // reset the game states
 	void pause(); // halt the timer, inhibit input
 
-	bool isPaused() { return m_game_paused; }
+	bool isPaused() { return m_game_state == GameState::GamePaused; }
 
 	// clang-format off
 
