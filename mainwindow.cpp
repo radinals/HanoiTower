@@ -25,14 +25,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 	ui->GameViewFrame->layout()->addWidget(m_game_view);
 
-	connect(m_game_view->m_gameover_dialog_no_btn, &QPushButton::clicked,
-	        this, &MainWindow::resetGameAction);
-
 	connect(ui->ResetBtn, &QPushButton::clicked, this,
 	        &MainWindow::resetGameAction);
-
-	connect(m_game_view->m_gameover_dialog_yes_btn, &QPushButton::clicked,
-	        this, &MainWindow::backToMainMenuAction);
 
 	connect(ui->BackToMenuBtn, &QPushButton::clicked, this,
 	        &MainWindow::backToMainMenuAction);
@@ -71,6 +65,9 @@ MainWindow::~MainWindow()
 void
 MainWindow::resetGameAction()
 {
+	if (m_game_view->isPaused()) {
+		ui->PauseBtn->setText("PAUSE");
+	}
 	m_game_view->reset();
 }
 

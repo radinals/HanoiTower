@@ -13,6 +13,8 @@
 #include <QPoint>
 #include <cmath>
 #include <qmessagebox.h>
+#include <qnamespace.h>
+#include <qpixmap.h>
 #include <qrandom.h>
 #include <random>
 
@@ -31,17 +33,11 @@ GameView::GameView(QWidget* parent) : QWidget{parent}
 	// load the placement sound effect
 	m_placement_fx.setSource(Config::get().getPlacementFXAudioPath());
 
-	// setup the gameover and it's buttons
-	m_gameover_dialog_no_btn =
-	    m_gameover_dialog.addButton(QMessageBox::Yes);
-
-	m_gameover_dialog_yes_btn =
-	    m_gameover_dialog.addButton(QMessageBox::No);
-	// m_gameover_dialog->setTextFormat(Qt::TextFormat::RichText);
-
 	m_pole_sprite = QPixmap(Config::get().getStackPoleSpritePath());
 	m_stack_base_sprite = QPixmap(Config::get().getStackBaseSpritePath());
 	m_arrow_sprite = QPixmap(Config::get().getArrowSpritePath());
+	m_win_dialog = QPixmap(Config::get().getWinScreen());
+	m_lose_dialog = QPixmap(Config::get().getLoseScreen());
 
 	// tint the sprites
 	colorizeSprite(&m_pole_sprite, Config::get().getStackTint());
@@ -52,7 +48,9 @@ GameView::GameView(QWidget* parent) : QWidget{parent}
 void
 GameView::pause()
 {
-	if (m_game_paused) {
+	if (!m_game_started || m_game_state != GameState::Normal) {
+		return;
+	} else if (m_game_paused) {
 		m_timer.start(1);
 		updateInfo();
 		m_game_paused = false;
@@ -91,6 +89,7 @@ GameView::clear()
 	m_game_paused = m_timer_started = m_game_started = false;
 	m_timer.stop();
 	m_slice_list.clear();
+	m_game_state = GameState::Normal;
 
 	// clang-format off
 
@@ -132,6 +131,9 @@ GameView::calculatesSizes()
 
 	m_stack_base_size.setWidth(m_slice_base_size.width() * 1.1f);
 	m_stack_base_size.setHeight(m_slice_base_size.height());
+
+	m_gameover_dialog_size.setWidth(width() * 0.2f);
+	m_gameover_dialog_size.setHeight(height() * 0.2f);
 }
 
 // - draw the stack's slices
@@ -333,33 +335,19 @@ GameView::colorizeSprite(QPixmap* sprite, const QColor& color)
 }
 
 void
-GameView::triggerLoseDialog()
-{
-	m_gameover_dialog.setText("GAMEOVER.. YOU LOST");
-	m_gameover_dialog.setInformativeText(
-	    "You've Failed to Complete the Puzzle!\nDo You Want to Play Again?...");
-	m_gameover_dialog.exec();
-}
-
-void
-GameView::triggerWinDialog()
-{
-	m_gameover_dialog.setText("GAMEOVER.. YOU WIN");
-	m_gameover_dialog.setInformativeText(
-	    "You've Sucessfully to Complete the Puzzle!\nDo You Want to Play Again?...");
-	m_gameover_dialog.exec();
-}
-
-void
 GameView::checkWinState()
 {
 	m_timer_elapsed++;
 	updateInfo();
 
 	if (goalStackIsComplete()) {
-		triggerWinDialog();
+		m_game_state = GameState::GameOverWon;
+		m_timer.stop();
+		repaint();
 	} else if (m_timer_elapsed >= Config::get().getTimerInterval()) {
-		triggerLoseDialog();
+		m_game_state = GameState::GameOverLost;
+		m_timer.stop();
+		repaint();
 	}
 }
 
@@ -421,6 +409,7 @@ GameView::getRandomGoalStackIndex()
 void
 GameView::paintEvent(QPaintEvent* event)
 {
+
 	if (m_game_paused || !m_game_started)
 		return;
 
@@ -455,6 +444,44 @@ GameView::paintEvent(QPaintEvent* event)
 		);
 	}
 
+
+	switch (m_game_state) {
+	case GameState::GameOverLost: {
+			QPixmap lose_dialog = m_lose_dialog.scaled(
+				m_gameover_dialog_size.toSize(),
+				Qt::KeepAspectRatioByExpanding
+			);
+
+			p.drawPixmap(
+				(width() * 0.5f) -
+					m_gameover_dialog_size.width() * 0.5f,
+				(height() * 0.5f) -
+					m_gameover_dialog_size.height() * 0.5f,
+				lose_dialog
+			);
+
+		}break;
+
+	case GameState::GameOverWon: {
+			QPixmap win_dialog = m_win_dialog.scaled(
+				m_gameover_dialog_size.toSize(),
+				Qt::KeepAspectRatioByExpanding
+			);
+
+			p.drawPixmap(
+				(width() * 0.5f) -
+					m_gameover_dialog_size.width() * 0.5f,
+				(height() * 0.5f) -
+					m_gameover_dialog_size.height() * 0.5f,
+				win_dialog
+			);
+
+		}break;
+
+	default:
+		break;
+	}
+
 	// clang-format on
 }
 
@@ -473,7 +500,8 @@ void
 GameView::mousePressEvent(QMouseEvent* event)
 {
 	if (m_selected_slice.first != nullptr ||
-	    m_selected_slice.second != nullptr || m_game_paused) {
+	    m_selected_slice.second != nullptr || m_game_paused ||
+	    m_game_state != GameState::Normal) {
 		return;
 	}
 
@@ -503,7 +531,8 @@ void
 GameView::mouseMoveEvent(QMouseEvent* event)
 {
 	if (m_selected_slice.first == nullptr ||
-	    m_selected_slice.second == nullptr || m_game_paused) {
+	    m_selected_slice.second == nullptr || m_game_paused ||
+	    m_game_state != GameState::Normal) {
 		return;
 	}
 
@@ -516,7 +545,8 @@ void
 GameView::mouseReleaseEvent(QMouseEvent* event)
 {
 	if (m_selected_slice.first == nullptr ||
-	    m_selected_slice.second == nullptr || m_game_paused) {
+	    m_selected_slice.second == nullptr || m_game_paused ||
+	    m_game_state != GameState::Normal) {
 		return;
 	}
 

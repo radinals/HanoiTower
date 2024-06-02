@@ -27,6 +27,16 @@ class GameView : public QWidget
 	Q_OBJECT
 
       private:
+	enum class GameState {
+		Normal,
+		GameOverLost,
+		GameOverWon,
+	};
+
+	GameState m_game_state = GameState::Normal;
+
+	QPixmap m_win_dialog, m_lose_dialog;
+
 	bool m_timer_started = false;
 	bool m_game_paused = false;
 	bool m_game_started = false;
@@ -39,7 +49,8 @@ class GameView : public QWidget
 	size_t m_goal_stack_index = 0;
 	unsigned int m_move_count = 0;
 
-	QSizeF m_stack_area_size, m_stack_base_size, m_slice_base_size;
+	QSizeF m_stack_area_size, m_stack_base_size, m_slice_base_size,
+	    m_gameover_dialog_size;
 
 	std::vector<HanoiStack> m_stacks;
 	LinkedList<HanoiSlice *> m_slice_list;
@@ -50,7 +61,6 @@ class GameView : public QWidget
 	QTextEdit *m_info_box = nullptr;
 
 	QTimer m_timer;
-	QMessageBox m_gameover_dialog;
 
 	SoundPlayer m_placement_fx;
 

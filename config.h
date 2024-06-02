@@ -15,6 +15,8 @@ class Config
 	const QString m_StackBaseSpritePath = ":/sprites/stack_base_sprite.png";
 	const QString m_StackPoleSpritePath = ":/sprites/stack_pole_sprite.png";
 	const QString m_ArrowSpritePath     = ":/sprites/arrow.png";
+	const QString m_WinScreenSpritePath = ":/sprites/win_screen.png";
+	const QString m_LoseScreenSpritePath = ":/sprites/lose_screen.png";
 
 	const QString m_PlacementFXAudioPath = ":/audio/placement_fx.wav";
 	QString m_BgMusicAudioPath           = ":/audio/bg_music.wav";
@@ -54,6 +56,8 @@ class Config
 	const QString& getArrowSpritePath() { return m_ArrowSpritePath; }
 	const QString& getPlacementFXAudioPath() { return m_PlacementFXAudioPath; }
 	const QString& getBgMusicAudioPath() { return m_BgMusicAudioPath; }
+	const QString& getWinScreen() { return m_WinScreenSpritePath; };
+	const QString& getLoseScreen() { return m_LoseScreenSpritePath; };
         const QColor& getStackLabelFontColor() { return m_stack_label_font_color; }
         const QColor& getHighlightColor() { return m_highlight_color; }
 	const QColor& getStackTint() { return m_StackTint; }
