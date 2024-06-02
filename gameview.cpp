@@ -90,7 +90,6 @@ GameView::clear()
 
 	m_timer_elapsed = m_move_count = 0;
 	m_game_state = GameState::GameNotRunning;
-	m_timer_started = false;
 	m_timer.stop();
 	m_slice_list.clear();
 
@@ -233,7 +232,7 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 
 		font_color = Config::get().getHighlightColor();
 
-		if (!m_timer_started) {
+		if (!m_timer.isActive()) {
 			painter->drawPixmap(
 				m_stack_area_size.width() * 0.5f,
 				pole_base_y_offset - (arrow_sprite.height()), // y
@@ -571,9 +570,8 @@ GameView::mouseReleaseEvent(QMouseEvent* event)
 		m_selected_slice.second->push(m_selected_slice.first);
 	} else {
 
-		if (m_game_state == GameState::GameRunning && !m_timer_started) {
+		if (m_game_state == GameState::GameRunning && !m_timer.isActive()) {
 		    m_timer.start(1);
-		    m_timer_started = true;
 		}
 
 		destination_stack->push(m_selected_slice.first);

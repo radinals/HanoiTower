@@ -39,8 +39,6 @@ class GameView : public QWidget
 
 	QPixmap m_win_dialog, m_lose_dialog;
 
-	bool m_timer_started = false;
-
 	QPixmap m_pole_sprite, m_stack_base_sprite, m_arrow_sprite;
 
 	const float m_slice_scale_factor = 0.9f;
