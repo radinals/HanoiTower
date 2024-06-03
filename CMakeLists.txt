@@ -23,7 +23,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         hanoistack.h hanoistack.cpp
         soundplayer.h
         linkedlist.h
-        config.h
+        config.h utils.h
         gameview.h gameview.cpp
         resources.qrc
         mainwindow.h mainwindow.cpp mainwindow.ui
