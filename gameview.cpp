@@ -234,7 +234,7 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 
 		font_color = Config::get().getHighlightColor();
 
-		if (!m_timer.isActive()) {
+		if (!m_timer.isActive() && m_game_state == GameState::GameRunning) {
 			painter->drawPixmap(
 				m_stack_area_size.width() * 0.5f,
 				pole_base_y_offset - (arrow_sprite.height()), // y
