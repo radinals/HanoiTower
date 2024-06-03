@@ -37,9 +37,8 @@ class GameView : public QWidget
 
 	GameState m_game_state = GameState::GameNotRunning;
 
-	QPixmap m_win_dialog, m_lose_dialog;
-
-	QPixmap m_pole_sprite, m_stack_base_sprite, m_arrow_sprite;
+	QPixmap m_win_dialog, m_lose_dialog, m_pole_sprite, m_stack_base_sprite,
+	    m_arrow_sprite;
 
 	const float m_slice_scale_factor = 0.9f;
 
