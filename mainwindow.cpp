@@ -5,7 +5,6 @@
 #include "soundplayer.h"
 #include "ui_mainwindow.h"
 
-#include <QFile>
 #include <qpushbutton.h>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -13,10 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
 	ui->setupUi(this);
 
-	QFile file(Config::get().getDefaultStyleSheet());
-	file.open(QFile::ReadOnly);
-	QString styleSheet = QLatin1String(file.readAll());
-	this->setStyleSheet(styleSheet);
+	this->setStyleSheet(Config::get().getDefaultStylesheet());
 
 	m_game_view = new GameView(ui->GameViewFrame);
 	m_game_view->setGameInfoOutputs(ui->GameTimer, ui->GameMoveCountOut,

@@ -4,7 +4,6 @@
 #include "ui_settingswindow.h"
 #include "utils.h"
 
-#include <QFile>
 #include <QSize>
 
 SettingsWindow::SettingsWindow(QWidget* parent)
@@ -12,10 +11,7 @@ SettingsWindow::SettingsWindow(QWidget* parent)
 {
 	ui->setupUi(this);
 
-	QFile file(Config::get().getDefaultStyleSheet());
-	file.open(QFile::ReadOnly);
-	QString styleSheet = QLatin1String(file.readAll());
-	this->setStyleSheet(styleSheet);
+	this->setStyleSheet(Config::get().getDefaultStylesheet());
 
 	Settings.stack_amount = Config::get().getStackAmount();
 	Settings.slice_amount = Config::get().getSliceAmount();

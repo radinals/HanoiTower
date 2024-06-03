@@ -4,6 +4,7 @@
 #include "soundplayer.h"
 
 #include <QColor>
+#include <QFile>
 #include <QString>
 
 class Config
@@ -21,7 +22,7 @@ class Config
 	const QString m_PlacementFXAudioPath = ":/audio/placement_fx.wav";
 	QString m_BgMusicAudioPath           = ":/audio/bg_music.wav";
 
-	QString m_defaultStylesheet = ":/style/default.qss";
+	const QString m_defaultStylesheet = ":/style/default.qss";
 
 	QString m_stack_label_font = "monospace";
 
@@ -49,7 +50,16 @@ class Config
 	static Config& get() { static Config instance; return instance; }
 
 	const QString& getProgramLogo() { return m_ProgramLogo; }
-	const QString& getDefaultStyleSheet() { return m_defaultStylesheet; }
+	inline const QString& getDefaultStylesheet()
+	{
+		static QString style_sheet;
+		if (style_sheet.isEmpty()) {
+			QFile file(m_defaultStylesheet);
+			file.open(QFile::ReadOnly);
+			style_sheet = QLatin1String(file.readAll());
+		}
+		return style_sheet;
+	}
 	const QString& getStackLabelFont() { return m_stack_label_font; }
 	const QString& getSliceSpritePath() { return m_SliceSpritePath; }
 	const QString& getStackBaseSpritePath() { return m_StackBaseSpritePath; }
@@ -75,7 +85,6 @@ class Config
 
 	void setStackLabelFont(const QString& f) { m_stack_label_font = f; }
 	void setBgMusicAudioPath(const QString& p) { m_BgMusicAudioPath = p; }
-	void setDefaultStyleSheet(const QString& f ) { m_defaultStylesheet = f; }
         void setStackLabelFontColor(const QColor& c) { m_stack_label_font_color = c; }
         void setHighlightColor(const QColor& c) { m_highlight_color = c; }
 	void setStackTint(const QColor& c) { m_StackTint = c; }
