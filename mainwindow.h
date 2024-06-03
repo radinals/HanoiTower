@@ -9,7 +9,6 @@
 #include <QMainWindow>
 #include <QMediaPlayer>
 #include <qmediaplayer.h>
-#include <qsoundeffect.h>
 
 namespace Ui
 {

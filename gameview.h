@@ -4,7 +4,6 @@
 #include "config.h"
 #include "hanoistack.h"
 #include "linkedlist.h"
-#include "soundplayer.h"
 
 #include <QLabel>
 #include <QMessageBox>

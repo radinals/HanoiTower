@@ -3,7 +3,6 @@
 #include "config.h"
 #include "hanoistack.h"
 #include "linkedlist.h"
-#include "soundplayer.h"
 #include "utils.h"
 
 #include <QFont>

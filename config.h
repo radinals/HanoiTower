@@ -1,8 +1,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include "soundplayer.h"
-
 #include <QColor>
 #include <QFile>
 #include <QString>

@@ -4,8 +4,8 @@
 #include "settingswindow.h"
 #include "ui_mainwindow.h"
 
+#include <qmediaplayer.h>
 #include <qpushbutton.h>
-#include <qsoundeffect.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
