@@ -19,6 +19,7 @@
 #include <qmediaplayer.h>
 #include <qpoint.h>
 #include <qpushbutton.h>
+#include <qsoundeffect.h>
 #include <string>
 #include <vector>
 
@@ -60,10 +61,11 @@ class GameView : public QWidget
 
 	QTimer m_timer;
 
-	SoundPlayer m_placement_fx;
+	QSoundEffect *m_placement_fx = nullptr;
 
       public:
 	explicit GameView(QWidget *parent = nullptr);
+	~GameView() override { delete m_placement_fx; }
 
 	// button events are set in MainWindow
 	// ~GameView() override {};

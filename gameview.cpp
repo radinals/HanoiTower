@@ -13,6 +13,7 @@
 #include <QPainter>
 #include <QPoint>
 #include <cmath>
+#include <qaccessible_base.h>
 #include <qmessagebox.h>
 #include <qnamespace.h>
 #include <qpixmap.h>
@@ -32,7 +33,10 @@ GameView::GameView(QWidget* parent) : QWidget{parent}
 	connect(&m_timer, &QTimer::timeout, this, &GameView::checkWinState);
 
 	// load the placement sound effect
-	m_placement_fx.setSource(Config::get().getPlacementFXAudioPath());
+	m_placement_fx = new QSoundEffect(this);
+	m_placement_fx->setSource("qrc" +
+	                          Config::get().getPlacementFXAudioPath());
+	m_placement_fx->setVolume(Config::get().getAudioFXVolumeLevel());
 
 	m_pole_sprite = QPixmap(Config::get().getStackPoleSpritePath());
 	m_stack_base_sprite = QPixmap(Config::get().getStackBaseSpritePath());
@@ -85,9 +89,6 @@ GameView::clear()
 	m_info_box->setText("Move All Slice to Stack " +
 	                    numToChar(m_goal_stack_index));
 	m_info_box->setAlignment(Qt::AlignCenter);
-
-	m_placement_fx.getSound()->setVolume(
-	    Config::get().getAudioFXVolumeLevel());
 
 	m_timer_elapsed = m_move_count = 0;
 	m_game_state = GameState::GameNotRunning;
@@ -572,7 +573,7 @@ GameView::mouseReleaseEvent(QMouseEvent* event)
 
 	update();
 
-	if (!m_placement_fx.getSound()->isPlaying()) {
-		m_placement_fx.getSound()->play();
+	if (!m_placement_fx->isPlaying()) {
+		m_placement_fx->play();
 	}
 }

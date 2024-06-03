@@ -2,10 +2,10 @@
 
 #include "gameview.h"
 #include "settingswindow.h"
-#include "soundplayer.h"
 #include "ui_mainwindow.h"
 
 #include <qpushbutton.h>
+#include <qsoundeffect.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -35,20 +35,15 @@ MainWindow::MainWindow(QWidget *parent)
 
 	ui->GameTitle->setPixmap(m_logo);
 
-	m_bg_music.setSource(Config::get().getBgMusicAudioPath());
-	m_bg_music.getSound()->setVolume(
-	    Config::get().getAudioMusicVolumeLevel());
-	m_bg_music.getSound()->setLoopCount(QSoundEffect::Infinite);
-
-	Config::get().setBgMusicPlayerInstance(&m_bg_music);
-
 	m_settings_window->hide();
 	ui->GameSideBarFrame->hide();
 	ui->LeaderboardsFrame->hide();
 	ui->GameViewFrame->hide();
 	ui->GameMenuFrame->show();
 
-	m_bg_music.getSound()->play();
+	Config::get().setBackgroundMusicInstance(
+	    m_background_music.m_audio_output);
+	m_background_music.m_media_player->play();
 }
 
 MainWindow::~MainWindow()

@@ -6,6 +6,7 @@
 #include <QColor>
 #include <QFile>
 #include <QString>
+#include <qaudiooutput.h>
 
 class Config
 {
@@ -20,7 +21,7 @@ class Config
 	const QString m_LoseScreenSpritePath = ":/sprites/lose_screen.png";
 
 	const QString m_PlacementFXAudioPath = ":/audio/placement_fx.wav";
-	QString m_BgMusicAudioPath           = ":/audio/bg_music.wav";
+	const QString m_BgMusicAudioPath     = ":/audio/bg_music.wav";
 
 	const QString m_defaultStylesheet = ":/style/default.qss";
 
@@ -44,7 +45,7 @@ class Config
 	unsigned long long int m_timer_min = 60000 * 3;
 
 	// FIXME: shouldn't be here
-	SoundPlayer* m_bg_music_player_instance = nullptr;
+	QAudioOutput* m_backgroundMusicInstance = nullptr;
 
       public:
 	static Config& get() { static Config instance; return instance; }
@@ -66,7 +67,7 @@ class Config
 	const QString& getStackPoleSpritePath() { return m_StackPoleSpritePath; }
 	const QString& getArrowSpritePath() { return m_ArrowSpritePath; }
 	const QString& getPlacementFXAudioPath() { return m_PlacementFXAudioPath; }
-	const QString& getBgMusicAudioPath() { return m_BgMusicAudioPath; }
+	const QString& getBackgroundMusicAudioPath() { return m_BgMusicAudioPath; }
 	const QString& getWinScreen() { return m_WinScreenSpritePath; };
 	const QString& getLoseScreen() { return m_LoseScreenSpritePath; };
         const QColor& getStackLabelFontColor() { return m_stack_label_font_color; }
@@ -80,7 +81,6 @@ class Config
         size_t getStackAmount() { return m_stack_amount; }
 	float getAudioFXVolumeLevel() { return m_AudioFXVolumeLevel; }
 	float getAudioMusicVolumeLevel() { return m_AudioMusicVolumeLevel; }
-	SoundPlayer* const getBgMusicPlayerInstance() { return m_bg_music_player_instance; }
 	unsigned long long int getTimerInterval() { return m_timer_interval_ms; }
 
 	void setStackLabelFont(const QString& f) { m_stack_label_font = f; }
@@ -92,9 +92,9 @@ class Config
 	void setTimerInterval(unsigned long long int ms) {m_timer_interval_ms = ms; }
 	void setAudioMusicVolumeLevel(float l) { m_AudioMusicVolumeLevel = l; }
 	void setAudioFXVolumeLevel(float l) { m_AudioFXVolumeLevel = l; }
+	void setBackgroundMusicInstance(QAudioOutput* i) { m_backgroundMusicInstance = i;}
         void setSliceAmount(size_t n) { m_slice_amount = n; }
         void setStackAmount(size_t n) { m_stack_amount = n; }
-	void setBgMusicPlayerInstance(SoundPlayer* i) { m_bg_music_player_instance = i; }
 	// clang-format on
 };
 
