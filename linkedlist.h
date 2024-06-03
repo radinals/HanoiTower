@@ -9,7 +9,7 @@ template <typename T> struct LinkedListNode {
 template <typename T> class LinkedList
 {
       public:
-	LinkedListNode<T>* m_head = nullptr;
+	LinkedListNode<T>*m_head = nullptr, *m_tail = nullptr;
 
 	LinkedList(LinkedList&&) = delete;
 	LinkedList() {}
@@ -23,6 +23,7 @@ template <typename T> class LinkedList
 		new_node->data = d;
 		if (isEmpty()) {
 			m_head = new_node;
+			m_tail = m_head;
 		} else {
 			LinkedListNode<T>* old_head = m_head;
 			new_node->next = old_head;

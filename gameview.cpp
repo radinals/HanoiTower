@@ -25,7 +25,11 @@ GameView::GameView(QWidget* parent) : QWidget{parent}
 	m_selected_slice.first = nullptr;
 	m_selected_slice.second = nullptr;
 
-	m_stacks = std::vector(Config::get().getStackMax(), HanoiStack());
+	// m_stacks = std::vector(Config::get().getStackMax(), HanoiStack());
+
+	for (int i = Config::get().getStackMax(); i >= 0; i--) {
+		m_stacks.append(std::make_pair(i, HanoiStack()));
+	}
 
 	// init timer.
 	// timer will call checkWinState every tick (should be every 1ms).
@@ -98,14 +102,25 @@ GameView::clear()
 	// clang-format off
 
 	// clear all stack
-	for (size_t label = 0; label < Config::get().getStackAmount(); label++) {
-		m_stacks.at(label).clearStack();
+	{
+		auto* node = m_stacks.m_head;
+		while(node != nullptr) {
+
+			if (m_goal_stack == nullptr &&
+				node->data.first == m_goal_stack_index)
+			{
+				m_goal_stack = &node->data.second;
+			}
+
+			node->data.second.clearStack();
+			node = node->next;
+		}
 	}
 
 	// populate the first stack
-	HanoiStack::generate_stack(&m_stacks.at(0), Config::get().getSliceAmount());
+	HanoiStack::generate_stack(&m_stacks.m_head->data.second, Config::get().getSliceAmount());
 
-	HanoiSlice* slice = m_stacks.at(0).getHead();
+	HanoiSlice* slice = m_stacks.m_head->data.second.getHead();
 	while (slice != nullptr) {
 		colorizeSprite(&slice->getPixmap(), Config::get().getSliceTint());
 		m_slice_list.append(slice); // save the slices for ease of access
@@ -293,15 +308,18 @@ GameView::calculateStackByPos(QPointF point)
 	float x_area = m_stack_area_size.width(),
 	      y_area = m_stack_area_size.height();
 
-	for (size_t label = 0; label < Config::get().getStackAmount(); label++) {
+	auto* node = m_stacks.m_head;
 
+	while(node != nullptr) {
+		// x and y should be 1 if the point is in the stack area
 		float x = x_area / point.x(), y = y_area / point.y();
 
-		// x and y should be 1 if the point is in the stack area
-		if ((x >= 1) && (y >= 1) ) { return &m_stacks.at(label); }
+		if ((x >= 1) && (y >= 1) ) { return &node->data.second; }
 
 		// shift to the right, by stack area width
 		x_area += m_stack_area_size.width();
+
+		node = node->next;
 	}
 
 	// clang-format on
@@ -409,18 +427,22 @@ GameView::paintEvent(QPaintEvent* event)
 	// clang-format off
 
 	float offset = m_stack_area_size.width() * 0.5f;
-	for (size_t label = 0; label < Config::get().getStackAmount(); label++) {
 
-		HanoiStack* stack = &m_stacks.at(label);
+	auto* node = m_stacks.m_head;
+	while(node != nullptr &&
+		node->data.first < Config::get().getStackAmount())
+	{
 
 		// draw the stack base
-		drawStackBase(label, offset, &p);
+		drawStackBase(node->data.first, offset, &p);
 
 		// render the stack
-		drawStack(offset, stack, &p);
+		drawStack(offset, &node->data.second, &p);
 
 		// shift to the right for the next stack
 		offset += m_stack_area_size.width();
+
+		node = node->next;
 	}
 
 	// render the selected stack

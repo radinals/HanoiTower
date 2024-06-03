@@ -20,7 +20,7 @@
 #include <qpushbutton.h>
 #include <qsoundeffect.h>
 #include <string>
-#include <vector>
+#include <utility>
 
 class GameView : public QWidget
 {
@@ -49,8 +49,9 @@ class GameView : public QWidget
 	QSizeF m_stack_area_size, m_stack_base_size, m_slice_base_size,
 	    m_gameover_dialog_size;
 
-	std::vector<HanoiStack> m_stacks;
+	LinkedList<std::pair<int, HanoiStack>> m_stacks;
 	LinkedList<HanoiSlice *> m_slice_list;
+	HanoiStack *m_goal_stack = nullptr;
 
 	std::pair<HanoiSlice *, HanoiStack *> m_selected_slice;
 
@@ -102,7 +103,7 @@ class GameView : public QWidget
 	}
 
 	inline bool goalStackIsComplete() { ;
-		return ( m_stacks.at(m_goal_stack_index).getSliceCount() ==
+		return ( m_goal_stack->getSliceCount() ==
 				Config::get().getSliceAmount() );
 	}
 
