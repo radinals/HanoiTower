@@ -7,6 +7,7 @@
 #include <QFile>
 #include <QString>
 #include <qaudiooutput.h>
+#include <qsoundeffect.h>
 
 class Config
 {
@@ -51,7 +52,8 @@ class Config
 	static Config& get() { static Config instance; return instance; }
 
 	const QString& getProgramLogo() { return m_ProgramLogo; }
-	inline const QString& getDefaultStylesheet()
+
+	const QString& getDefaultStylesheet()
 	{
 		static QString style_sheet;
 		if (style_sheet.isEmpty()) {
@@ -61,6 +63,7 @@ class Config
 		}
 		return style_sheet;
 	}
+
 	const QString& getStackLabelFont() { return m_stack_label_font; }
 	const QString& getSliceSpritePath() { return m_SliceSpritePath; }
 	const QString& getStackBaseSpritePath() { return m_StackBaseSpritePath; }
@@ -74,6 +77,7 @@ class Config
         const QColor& getHighlightColor() { return m_highlight_color; }
 	const QColor& getStackTint() { return m_StackTint; }
 	const QColor& getSliceTint() { return m_SliceTint; }
+	QAudioOutput* const getBackgroundMusicInstance() {return m_backgroundMusicInstance;}
 	unsigned long long int getTimerMin() { return m_timer_min; }
         size_t getSliceMax() { return m_slice_max; }
         size_t getStackMax() { return m_stack_max; }
@@ -83,10 +87,9 @@ class Config
 	float getAudioMusicVolumeLevel() { return m_AudioMusicVolumeLevel; }
 	unsigned long long int getTimerInterval() { return m_timer_interval_ms; }
 
-	void setStackLabelFont(const QString& f) { m_stack_label_font = f; }
-	void setBgMusicAudioPath(const QString& p) { m_BgMusicAudioPath = p; }
-        void setStackLabelFontColor(const QColor& c) { m_stack_label_font_color = c; }
-        void setHighlightColor(const QColor& c) { m_highlight_color = c; }
+	// void setStackLabelFont(const QString& f) { m_stack_label_font = f; }
+        // void setStackLabelFontColor(const QColor& c) { m_stack_label_font_color = c; }
+        // void setHighlightColor(const QColor& c) { m_highlight_color = c; }
 	void setStackTint(const QColor& c) { m_StackTint = c; }
 	void setSliceTint(const QColor& c) { m_SliceTint = c; }
 	void setTimerInterval(unsigned long long int ms) {m_timer_interval_ms = ms; }
