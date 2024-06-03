@@ -40,6 +40,7 @@ class Config
 	float m_AudioMusicVolumeLevel = 1.0f;
 
 	unsigned long long int m_timer_interval_ms = 60000 * 5;
+	unsigned long long int m_timer_min = 60000 * 3;
 
 	// FIXME: shouldn't be here
 	SoundPlayer* m_bg_music_player_instance = nullptr;
@@ -62,6 +63,7 @@ class Config
         const QColor& getHighlightColor() { return m_highlight_color; }
 	const QColor& getStackTint() { return m_StackTint; }
 	const QColor& getSliceTint() { return m_SliceTint; }
+	unsigned long long int getTimerMin() { return m_timer_min; }
         size_t getSliceMax() { return m_slice_max; }
         size_t getStackMax() { return m_stack_max; }
         size_t getSliceAmount() { return m_slice_amount; }
