@@ -2,6 +2,7 @@
 
 #include "config.h"
 #include "ui_settingswindow.h"
+#include "utils.h"
 
 #include <QFile>
 #include <QSize>
@@ -57,24 +58,11 @@ SettingsWindow::update_options()
 	ui->ThemeSliceColorSettingsInput->setText(
 	    Settings.slice_color.toRgb().name());
 
-	long long int ms = 0, hours = 0, minutes = 0, seconds = 0,
-	              total_seconds = 0;
+	auto hh_mm_ss = Utils::extractTimeFromMs(Settings.timer_ms);
 
-	ms = Settings.timer_ms;
-
-	// Calculate total seconds from milliseconds
-	total_seconds = ms / 1000;
-
-	// Calculate hours
-	hours = total_seconds / 3600;
-
-	// Calculate remaining minutes
-	minutes = (total_seconds % 3600) / 60;
-
-	// Calculate remaining seconds
-	seconds = (ms % 60000) / 1000.0;
-
-	ui->GameTimerInput->setTime(QTime(hours, minutes, seconds));
+	ui->GameTimerInput->setTime(QTime(std::get<0>(hh_mm_ss),
+	                                  std::get<1>(hh_mm_ss),
+	                                  std::get<2>(hh_mm_ss)));
 }
 
 void
@@ -104,17 +92,37 @@ SettingsWindow::on_ThemeStackColorSettingsInput_editingFinished()
 }
 
 void
+SettingsWindow::on_GameTimerInput_userTimeChanged(const QTime& time)
+{
+	if (time.isValid()) {
+		long long int ms;
+		ms = Utils::extractMsFromTime(time.hour(), time.minute(),
+		                              time.second());
+
+		if (ms <= 0 || ms < Config::get().getTimerMin()) {
+			update_options();
+			return;
+		}
+	}
+}
+
+void
 SettingsWindow::on_GameTimerInput_editingFinished()
 {
-	if (ui->GameTimerInput->time().isValid()) {
-		unsigned long long int h, m, s;
+	QTime time = ui->GameTimerInput->time();
 
-		h = ui->GameTimerInput->time().hour();
-		m = ui->GameTimerInput->time().minute();
-		s = ui->GameTimerInput->time().second();
-
-		Settings.timer_ms = ((h * 3600000) + (m * 60000) + (s * 1000));
+	// clang-format off
+	long long int ms;
+	ms = Utils::extractMsFromTime(time.hour(),
+				      time.minute(),
+				      time.second());
+	// clang-format on
+	//
+	if (ms > 0 && ms >= Config::get().getTimerMin()) {
+		Settings.timer_ms = (ms);
 	}
+
+	update_options();
 }
 
 void
@@ -156,12 +164,12 @@ SettingsWindow::drawPreview()
 	static const unsigned int hpadding = 5;
 
 	// clang-format off
-	QSize base_slice_size(
-		(Winsize.width() / Settings.stack_amount) * 0.5f,
-		(Winsize.height() / Settings.slice_amount) * 0.3f
+	QSizeF base_slice_size(
+		(float(Winsize.width()) / Settings.stack_amount) * 0.5f,
+		(float(Winsize.height()) / Settings.slice_amount) * 0.3f
 	);
 
-	QSize stack_pole_size(
+	QSizeF stack_pole_size(
 		base_slice_size.width() * 0.1f,
 		base_slice_size.height() * Settings.slice_amount
 	);
@@ -173,7 +181,7 @@ SettingsWindow::drawPreview()
 	float x_offset = Winsize.width() * 0.5f;
 	for (int i = 0; i < Settings.stack_amount; i++) {
 
-		QSize slice_size = base_slice_size;
+		QSizeF slice_size = base_slice_size;
 		bool drawn_base = false;
 
 		float y_offset = Winsize.height();

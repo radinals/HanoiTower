@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>517</height>
+    <height>600</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -48,7 +48,26 @@
     </widget>
    </item>
    <item>
+    <spacer name="horizontalSpacer_3">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -57,8 +76,62 @@
        <string>Game Options</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="5" column="1">
-        <widget class="QSlider" name="GameStackAmountSlider">
+       <item row="5" column="0">
+        <widget class="QLabel" name="GameStackAmountLabel">
+         <property name="maximumSize">
+          <size>
+           <width>150</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Stack Amount</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="6">
+        <widget class="QLabel" name="ThemeStackColorSettingsLabel">
+         <property name="maximumSize">
+          <size>
+           <width>150</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Stack Color</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="GameSliceAmountLabel">
+         <property name="maximumSize">
+          <size>
+           <width>150</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Slice Amount</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QSlider" name="GameSliceAmountSlider">
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -72,7 +145,7 @@
           </size>
          </property>
          <property name="minimum">
-          <number>3</number>
+          <number>1</number>
          </property>
          <property name="maximum">
           <number>10</number>
@@ -80,16 +153,34 @@
          <property name="pageStep">
           <number>2</number>
          </property>
-         <property name="value">
-          <number>3</number>
-         </property>
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
         </widget>
        </item>
+       <item row="5" column="7">
+        <widget class="QLineEdit" name="ThemeStackColorSettingsInput">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>120</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+        </widget>
+       </item>
        <item row="4" column="3" rowspan="3">
-        <spacer name="verticalSpacer">
+        <spacer name="verticalSpacer_2">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
@@ -122,77 +213,6 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
-        <widget class="QSlider" name="GameSliceAmountSlider">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="minimum">
-          <number>1</number>
-         </property>
-         <property name="maximum">
-          <number>10</number>
-         </property>
-         <property name="pageStep">
-          <number>2</number>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="5">
-        <widget class="QLineEdit" name="ThemeSliceColorSettingsInput">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>120</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0" colspan="6">
-        <widget class="QGraphicsView" name="PreviewOut">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>500</width>
-           <height>200</height>
-          </size>
-         </property>
-         <property name="horizontalScrollBarPolicy">
-          <enum>Qt::ScrollBarAsNeeded</enum>
-         </property>
-         <property name="sizeAdjustPolicy">
-          <enum>QAbstractScrollArea::AdjustToContents</enum>
-         </property>
-        </widget>
-       </item>
        <item row="6" column="1">
         <widget class="QTimeEdit" name="GameTimerInput">
          <property name="sizePolicy">
@@ -203,28 +223,55 @@
          </property>
          <property name="minimumSize">
           <size>
-           <width>80</width>
+           <width>120</width>
            <height>0</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>75</width>
+           <width>100</width>
            <height>16777215</height>
           </size>
          </property>
          <property name="font">
           <font>
-           <pointsize>12</pointsize>
+           <pointsize>18</pointsize>
           </font>
+         </property>
+         <property name="buttonSymbols">
+          <enum>QAbstractSpinBox::PlusMinus</enum>
+         </property>
+         <property name="showGroupSeparator" stdset="0">
+          <bool>false</bool>
          </property>
          <property name="displayFormat">
-          <string>h:mm:ss</string>
+          <string>hh:mm:ss</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="GameSliceAmountLabel">
+       <item row="4" column="2">
+        <widget class="QLabel" name="GameSliceAmountOut">
+         <property name="minimumSize">
+          <size>
+           <width>28</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>0</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="GameTimerLabel">
          <property name="maximumSize">
           <size>
            <width>150</width>
@@ -237,33 +284,25 @@
           </font>
          </property>
          <property name="text">
-          <string>Slice Amount</string>
+          <string>Game Timer </string>
          </property>
         </widget>
        </item>
-       <item row="5" column="5">
-        <widget class="QLineEdit" name="ThemeStackColorSettingsInput">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+       <item row="4" column="5" rowspan="3">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
          </property>
-         <property name="maximumSize">
+         <property name="sizeHint" stdset="0">
           <size>
-           <width>120</width>
-           <height>16777215</height>
+           <width>20</width>
+           <height>40</height>
           </size>
          </property>
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-        </widget>
+        </spacer>
        </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="GameStackAmountLabel">
+       <item row="4" column="6">
+        <widget class="QLabel" name="ThemeSliceColorSettingsLabel">
          <property name="maximumSize">
           <size>
            <width>150</width>
@@ -276,11 +315,11 @@
           </font>
          </property>
          <property name="text">
-          <string>Stack Amount</string>
+          <string>Slice Color</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="0" colspan="6">
+       <item row="0" column="0" colspan="8">
         <widget class="QLabel" name="GamePreviewLabel">
          <property name="minimumSize">
           <size>
@@ -307,11 +346,17 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="0">
-        <widget class="QLabel" name="GameTimerLabel">
+       <item row="4" column="7">
+        <widget class="QLineEdit" name="ThemeSliceColorSettingsInput">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="maximumSize">
           <size>
-           <width>150</width>
+           <width>120</width>
            <height>16777215</height>
           </size>
          </property>
@@ -320,65 +365,77 @@
            <pointsize>12</pointsize>
           </font>
          </property>
-         <property name="text">
-          <string>Game Timer </string>
-         </property>
         </widget>
        </item>
-       <item row="4" column="2">
-        <widget class="QLabel" name="GameSliceAmountOut">
+       <item row="5" column="1">
+        <widget class="QSlider" name="GameStackAmountSlider">
          <property name="minimumSize">
           <size>
-           <width>28</width>
+           <width>0</width>
            <height>0</height>
           </size>
          </property>
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>0</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="4">
-        <widget class="QLabel" name="ThemeStackColorSettingsLabel">
          <property name="maximumSize">
           <size>
-           <width>150</width>
+           <width>16777215</width>
            <height>16777215</height>
           </size>
          </property>
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
+         <property name="minimum">
+          <number>3</number>
          </property>
-         <property name="text">
-          <string>Stack Color</string>
+         <property name="maximum">
+          <number>10</number>
+         </property>
+         <property name="pageStep">
+          <number>2</number>
+         </property>
+         <property name="value">
+          <number>3</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
         </widget>
        </item>
-       <item row="4" column="4">
-        <widget class="QLabel" name="ThemeSliceColorSettingsLabel">
-         <property name="maximumSize">
+       <item row="2" column="0" colspan="8">
+        <widget class="QGraphicsView" name="PreviewOut">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
           <size>
-           <width>150</width>
-           <height>16777215</height>
+           <width>500</width>
+           <height>200</height>
           </size>
          </property>
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
+         <property name="horizontalScrollBarPolicy">
+          <enum>Qt::ScrollBarAsNeeded</enum>
          </property>
-         <property name="text">
-          <string>Slice Color</string>
+         <property name="sizeAdjustPolicy">
+          <enum>QAbstractScrollArea::AdjustToContents</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="4" rowspan="3">
+        <widget class="Line" name="line">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <property name="lineWidth">
+          <number>5</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
          </property>
         </widget>
        </item>
@@ -480,6 +537,9 @@
     <spacer name="horizontalSpacer_2">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Minimum</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
