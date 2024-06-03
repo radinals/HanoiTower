@@ -74,6 +74,7 @@ GameView::reset()
 {
 	clear();
 	updateInfo();
+	m_placement_fx->setVolume(Config::get().getAudioFXVolumeLevel());
 	m_game_state = GameState::GameRunning;
 	repaint();
 }
