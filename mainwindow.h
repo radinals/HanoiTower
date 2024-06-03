@@ -18,10 +18,16 @@ namespace Ui
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
+
+      public:
+	explicit MainWindow(QWidget *parent = nullptr);
+	~MainWindow() override;
+
       private:
 	SettingsWindow *m_settings_window = nullptr;
-	const QPixmap m_logo = QPixmap(Config::get().getProgramLogo());
 	GameView *m_game_view = nullptr;
+
+	const QPixmap m_logo = QPixmap(Config::get().getProgramLogo());
 
 	struct BackgroundAudio_t {
 		QMediaPlayer *m_media_player = nullptr;
@@ -53,10 +59,6 @@ class MainWindow : public QMainWindow
 		}
 
 	} m_background_music;
-
-      public:
-	explicit MainWindow(QWidget *parent = nullptr);
-	~MainWindow() override;
 
       private slots:
 	void exitAction();
