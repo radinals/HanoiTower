@@ -4,6 +4,7 @@
 #include "hanoistack.h"
 #include "linkedlist.h"
 #include "soundplayer.h"
+#include "utils.h"
 
 #include <QFont>
 #include <QMediaPlayer>
@@ -361,33 +362,18 @@ GameView::updateInfo()
 {
 	if (m_time_output != nullptr) {
 
-		const unsigned long long int ms =
-		    Config::get().getTimerInterval() - m_timer_elapsed;
+		auto hh_mm_ss = Utils::extractTimeFromMs(
+		    Config::get().getTimerInterval() - m_timer_elapsed);
 
 		QString h, m, s;
-
-		unsigned long long int hours = 0, minutes = 0, seconds = 0;
-
-		// Calculate total seconds from milliseconds
-		unsigned long long int total_seconds = ms / 1000;
-
-		// Calculate hours
-		hours = total_seconds / 3600;
-
-		// Calculate remaining minutes
-		minutes = (total_seconds % 3600) / 60;
-
-		// Calculate remaining seconds
-		seconds = (ms % 60000) / 1000.0;
-
-		h = QString::number(hours);
-		m = QString::number(minutes);
-		s = QString::number(seconds);
+		h = QString::number(std::get<0>(hh_mm_ss));
+		m = QString::number(std::get<1>(hh_mm_ss));
+		s = QString::number(std::get<2>(hh_mm_ss));
 
 		// clang-format off
-		if (hours < 10) { h = '0' + h; }
-		if (minutes < 10) { m = '0' + m; }
-		if (seconds < 10) { s = '0' + s; }
+		if (std::get<0>(hh_mm_ss) < 10) { h = '0' + h; }
+		if (std::get<1>(hh_mm_ss) < 10) { m = '0' + m; }
+		if (std::get<2>(hh_mm_ss) < 10) { s = '0' + s; }
 		// clang-format on
 
 		m_time_output->setText(h + ":" + m + ":" + s);
