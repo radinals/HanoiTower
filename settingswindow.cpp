@@ -43,6 +43,11 @@ SettingsWindow::update_options()
 	ui->AudioMusicVolOut->setText(
 	    QString::number(int(Settings.music_volume_level * 100)) + "%");
 
+	if (Config::get().getBackgroundMusicInstance() != nullptr) {
+		Config::get().getBackgroundMusicInstance()->setVolume(
+		    Settings.music_volume_level);
+	}
+
 	ui->AudioSFXVolOut->setText(
 	    QString::number(int(Settings.sfx_volume_level * 100)) + "%");
 
@@ -261,5 +266,12 @@ void
 SettingsWindow::on_AudioMusicVolSlider_valueChanged(int value)
 {
 	Settings.music_volume_level = (value * 0.01f);
+	update_options();
+}
+
+void
+SettingsWindow::on_AudioMusicVolSlider_sliderMoved(int position)
+{
+	Settings.music_volume_level = (position * 0.01f);
 	update_options();
 }

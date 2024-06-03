@@ -53,6 +53,8 @@ class SettingsWindow : public QWidget
 
 	void on_AudioMusicVolSlider_valueChanged(int value);
 
+	void on_AudioMusicVolSlider_sliderMoved(int position);
+
       private:
 	Ui::SettingsWindow *ui;
 };
