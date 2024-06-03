@@ -111,15 +111,17 @@ SettingsWindow::on_GameTimerInput_editingFinished()
 {
 	QTime time = ui->GameTimerInput->time();
 
-	// clang-format off
-	long long int ms;
-	ms = Utils::extractMsFromTime(time.hour(),
-				      time.minute(),
-				      time.second());
-	// clang-format on
-	//
-	if (ms > 0 && ms >= Config::get().getTimerMin()) {
-		Settings.timer_ms = (ms);
+	if (time.isValid()) {
+		// clang-format off
+		long long int ms;
+		ms = Utils::extractMsFromTime(time.hour(),
+					      time.minute(),
+					      time.second());
+		// clang-format on
+		//
+		if (ms > 0 && ms >= Config::get().getTimerMin()) {
+			Settings.timer_ms = (ms);
+		}
 	}
 
 	update_options();
