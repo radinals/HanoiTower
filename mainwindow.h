@@ -43,6 +43,7 @@ class MainWindow : public QMainWindow
 			    Config::get().getBackgroundMusicAudioPath());
 			m_audio_output->setVolume(
 			    Config::get().getAudioMusicVolumeLevel());
+			m_media_player->setLoops(QMediaPlayer::Infinite);
 		};
 
 		~BackgroundAudio_t()
