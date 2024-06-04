@@ -31,7 +31,7 @@ private:
 
     QColor m_highlight_color = "#e8d81c";
     QColor m_StackTint       = "#71391c";
-    QColor m_SliceTint       = "#892828";
+    QColor m_SliceTint       = "#7e1313";
 
     size_t m_slice_amount = 5;
     size_t m_stack_amount = 3;
