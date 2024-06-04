@@ -119,8 +119,6 @@ private:
     static size_t getRandomGoalStackIndex();
 
     void updateInfo();
-    void triggerLoseDialog();
-    void triggerWinDialog();
 
     static void                     colorizeSprite(QPixmap *, const QColor &);
     std::pair<size_t, HanoiStack *> calculateStackByPos(const QPointF &);

@@ -10,13 +10,11 @@
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QPen>
+#include <QPixmap>
 #include <QPoint>
 #include <cmath>
 #include <qaccessible_base.h>
-#include <qmessagebox.h>
-#include <qnamespace.h>
-#include <qpixmap.h>
-#include <qrandom.h>
 #include <random>
 
 GameView::GameView(QWidget* parent) : QWidget { parent }

@@ -69,16 +69,17 @@ public:
     const QColor&  getStackTint() { return m_StackTint; }
     const QColor&  getSliceTint() { return m_SliceTint; }
 
-    void          setStackTint(const QColor& c) { m_StackTint = c; }
-    void          setSliceTint(const QColor& c) { m_SliceTint = c; }
-    float         getAudioFXVolumeLevel() { return m_AudioFXVolumeLevel; }
-    float         getAudioMusicVolumeLevel() { return m_AudioMusicVolumeLevel; }
-    size_t        getSliceMax() { return m_slice_max; }
-    size_t        getStackMax() { return m_stack_max; }
-    size_t        getSliceAmount() { return m_slice_amount; }
-    size_t        getStackAmount() { return m_stack_amount; }
     long long int getTimerMin() { return m_timer_min; }
     long long int getTimerInterval() { return m_timer_interval_ms; }
+
+    void   setStackTint(const QColor& c) { m_StackTint = c; }
+    void   setSliceTint(const QColor& c) { m_SliceTint = c; }
+    float  getAudioFXVolumeLevel() { return m_AudioFXVolumeLevel; }
+    float  getAudioMusicVolumeLevel() { return m_AudioMusicVolumeLevel; }
+    size_t getSliceMax() { return m_slice_max; }
+    size_t getStackMax() { return m_stack_max; }
+    size_t getSliceAmount() { return m_slice_amount; }
+    size_t getStackAmount() { return m_stack_amount; }
 
     const QString& getDefaultStylesheet()
     {
