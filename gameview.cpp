@@ -36,8 +36,6 @@ GameView::GameView(QWidget* parent) : QWidget { parent }
     m_pole_sprite       = QPixmap(Config::get().getStackPoleSpritePath());
     m_stack_base_sprite = QPixmap(Config::get().getStackBaseSpritePath());
     m_arrow_sprite      = QPixmap(Config::get().getArrowSpritePath());
-    m_win_dialog        = QPixmap(Config::get().getWinScreen());
-    m_lose_dialog       = QPixmap(Config::get().getLoseScreen());
 
     // tint the sprites
     colorizeSprite(&m_pole_sprite, Config::get().getStackTint());
@@ -136,8 +134,8 @@ GameView::calculatesSizes()
     m_stack_base_size.setWidth(m_slice_base_size.width() * 1.1f);
     m_stack_base_size.setHeight(m_slice_base_size.height());
 
-    m_gameover_dialog_size.setWidth(width() * 0.2f);
-    m_gameover_dialog_size.setHeight(height() * 0.2f);
+    m_dialog_size.setWidth(width() * 0.4f);
+    m_dialog_size.setHeight(height() * 0.2f);
 }
 
 // - draw the stack's slices
@@ -307,6 +305,35 @@ GameView::colorizeSprite(QPixmap* sprite, const QColor& color)
 }
 
 void
+GameView::drawDialog(const QString&  text,
+                     const QColor&   color,
+                     QPainter* const painter)
+{
+    QPixmap dialog(Config::get().getDialogBaseSprite());
+    dialog = dialog.scaled(m_dialog_size.toSize());
+
+    colorizeSprite(&dialog, color);
+
+    // setup font
+    const QFont font(Config::get().getStackLabelFont(),       // fontname
+                     m_dialog_size.width() / text.length()    // size
+    );
+    painter->setFont(font);
+    const int font_size = painter->font().pointSizeF();
+
+    // set text color
+    painter->setPen(Config::get().getStackLabelFontColor());
+
+    painter->drawPixmap((width() * 0.5f) - (dialog.width() * 0.5f),
+                        (height() * 0.5f) - (m_dialog_size.height() * 0.5f),
+                        dialog);
+
+    painter->drawText((width() * 0.5f) - ((text.length() * font_size) * 0.4f),
+                      (height() * 0.5f) + m_dialog_size.height() * 0.1f,
+                      text);
+}
+
+void
 GameView::checkWinState()
 {
     m_timer_elapsed++;
@@ -397,27 +424,13 @@ GameView::paintEvent(QPaintEvent* event)
     }
 
     switch (m_game_state) {
-        case GameState::GameOverLost: {
-            const QPixmap lose_dialog
-                = m_lose_dialog.scaled(m_gameover_dialog_size.toSize(),
-                                       Qt::KeepAspectRatioByExpanding);
-            p.drawPixmap(
-                (width() * 0.5f) - m_gameover_dialog_size.width() * 0.5f,
-                (height() * 0.5f) - m_gameover_dialog_size.height() * 0.5f,
-                lose_dialog);
+        case GameState::GameOverLost:
+            drawDialog("TIME's UP!", Config::get().getLoseDialogTint(), &p);
+            break;
 
-        } break;
-
-        case GameState::GameOverWon: {
-            const QPixmap win_dialog
-                = m_win_dialog.scaled(m_gameover_dialog_size.toSize(),
-                                      Qt::KeepAspectRatioByExpanding);
-            p.drawPixmap(
-                (width() * 0.5f) - m_gameover_dialog_size.width() * 0.5f,
-                (height() * 0.5f) - m_gameover_dialog_size.height() * 0.5f,
-                win_dialog);
-
-        } break;
+        case GameState::GameOverWon:
+            drawDialog("YOU WIN", Config::get().getWinDialogTint(), &p);
+            break;
 
         default:
             break;

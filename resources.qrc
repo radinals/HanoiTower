@@ -11,5 +11,6 @@
         <file>sprites/arrow.png</file>
         <file>sprites/lose_screen.png</file>
         <file>sprites/win_screen.png</file>
+        <file>sprites/dialog_base.png</file>
     </qresource>
 </RCC>

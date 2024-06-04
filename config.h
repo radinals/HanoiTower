@@ -20,10 +20,14 @@ private:
     static const inline QString m_ProgramLogo          = ":/style/logo.png";
     static const inline QString m_PlacementFXAudioPath = ":/audio/placement_fx.wav";
     static const inline QString m_BgMusicAudioPath     = ":/audio/bg_music.wav";
+    static const inline QString m_DialogBaseSpritePath = ":/sprites/dialog_base.png";
     // clang-format on
 
     QString m_stack_label_font       = "monospace";
     QColor  m_stack_label_font_color = "#fffeee";
+
+    static const inline QColor m_win_dialog_tint  = "#28ab2b";
+    static const inline QColor m_lose_dialog_tint = "#ab282f";
 
     QColor m_highlight_color = "#e8d81c";
     QColor m_StackTint       = "#71391c";
@@ -54,6 +58,7 @@ public:
         m_backgroundMusicInstance = i;
     }
 
+    const QString& getDialogBaseSprite() { return m_DialogBaseSpritePath; }
     const QString& getProgramLogo() { return m_ProgramLogo; }
     const QString& getStackLabelFont() { return m_stack_label_font; }
     const QString& getSliceSpritePath() { return m_SliceSpritePath; }
@@ -68,6 +73,8 @@ public:
     const QColor&  getHighlightColor() { return m_highlight_color; }
     const QColor&  getStackTint() { return m_StackTint; }
     const QColor&  getSliceTint() { return m_SliceTint; }
+    const QColor&  getWinDialogTint() { return m_win_dialog_tint; }
+    const QColor&  getLoseDialogTint() { return m_lose_dialog_tint; }
 
     long long int getTimerMin() { return m_timer_min; }
     long long int getTimerInterval() { return m_timer_interval_ms; }

@@ -38,11 +38,10 @@ private:
 
     GameState m_game_state = GameState::GameNotRunning;
 
-    QPixmap m_win_dialog, m_lose_dialog, m_pole_sprite, m_stack_base_sprite,
-        m_arrow_sprite;
+    QPixmap m_pole_sprite, m_stack_base_sprite, m_arrow_sprite;
 
     QSizeF m_stack_area_size, m_stack_base_size, m_slice_base_size,
-        m_gameover_dialog_size;
+        m_dialog_size;
 
     QTimer        m_timer;
     QSoundEffect *m_placement_fx = nullptr;
@@ -115,6 +114,10 @@ private:
                    || m_selected_slice.slice->getValue()
                           > dest.second->peek()->getValue());
     }
+
+    void drawDialog(const QString  &text,
+                    const QColor   &color,
+                    QPainter *const painter);
 
     static size_t getRandomGoalStackIndex();
 
