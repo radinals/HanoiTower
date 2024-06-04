@@ -50,9 +50,9 @@ private:
     unsigned long long int m_timer_elapsed = 0;
     unsigned int           m_move_count    = 0;
 
-    LinkedList<std::pair<int, HanoiStack>> m_stacks;
-    LinkedList<HanoiSlice *>               m_slice_list;
-    std::pair<size_t, HanoiStack *>        m_goal_stack { 0, nullptr };
+    LinkedList<std::pair<size_t, HanoiStack>> m_stacks;
+    LinkedList<HanoiSlice *>                  m_slice_list;
+    std::pair<size_t, HanoiStack *>           m_goal_stack { 0, nullptr };
 
     struct selectedSliceData_t {
         HanoiStack *stack = nullptr;
