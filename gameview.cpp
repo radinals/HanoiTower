@@ -76,7 +76,7 @@ GameView::reset()
 void
 GameView::clear()
 {
-    calculatesSizes();
+    calculateBaseSizes();
 
     m_goal_stack.second = nullptr;
     m_goal_stack.first  = getRandomGoalStackIndex();
@@ -120,7 +120,7 @@ GameView::clear()
 
 // generate the base sizes to be used to render the sprites and etc.
 void
-GameView::calculatesSizes()
+GameView::calculateBaseSizes()
 {
     m_stack_area_size.setWidth(float(width()) / Config::get().getStackAmount());
 
@@ -440,7 +440,7 @@ GameView::paintEvent(QPaintEvent* event)
 void
 GameView::resizeEvent(QResizeEvent* event)
 {
-    calculatesSizes();
+    calculateBaseSizes();
     if (m_game_state != GameState::GameNotRunning) { scaleSlices(); }
 }
 

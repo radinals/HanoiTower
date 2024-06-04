@@ -124,7 +124,7 @@ private:
     static void                     colorizeSprite(QPixmap *, const QColor &);
     std::pair<size_t, HanoiStack *> calculateStackByPos(const QPointF &);
 
-    void calculatesSizes();
+    void calculateBaseSizes();
     void drawStack(float offset, HanoiStack *, QPainter *p);
     void drawStackBase(size_t label, float offset, QPainter *painter);
     void scaleSlices();
