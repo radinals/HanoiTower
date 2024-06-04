@@ -32,9 +32,9 @@ HanoiStack::push(HanoiSlice* slice)
 }
 
 void
-HanoiStack::generate_stack(HanoiStack* stack, size_t amount)
+HanoiStack::initializeStack(HanoiStack* stack, size_t amount)
 {
-    for (size_t i = 1; i <= amount; i++) { stack->push(new HanoiSlice(i)); }
+    for (size_t i = 0; i < amount; i++) { stack->push(new HanoiSlice(i)); }
 }
 
 const HanoiSlice* const

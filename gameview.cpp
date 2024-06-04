@@ -104,8 +104,8 @@ GameView::clear()
     }
 
     // populate the first stack
-    HanoiStack::generate_stack(&m_stacks.m_head->data.second,
-                               Config::get().getSliceAmount());
+    HanoiStack::initializeStack(&m_stacks.m_head->data.second,
+                                Config::get().getSliceAmount());
 
     HanoiSlice* slice = m_stacks.m_head->data.second.getHead();
     while (slice != nullptr) {

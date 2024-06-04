@@ -62,7 +62,7 @@ public:
     inline size_t getSliceCount() const { return m_stack_slice_count; };
     inline bool   isEmpty() const { return m_stack_slice_count <= 0; }
 
-    static void generate_stack(HanoiStack* stack, size_t slice_amount);
+    static void initializeStack(HanoiStack* stack, size_t slice_amount);
 };
 
 #endif    // HANOISTACK_H
