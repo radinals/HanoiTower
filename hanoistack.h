@@ -5,7 +5,6 @@
 
 #include <QPixmap>
 #include <QString>
-#include <QVector2D>
 
 class HanoiSlice {
 private:
@@ -41,14 +40,12 @@ public:
 
 class HanoiStack {
 private:
-    unsigned int m_stack_colors      = 0;
-    size_t       m_stack_slice_count = 0;
+    size_t m_size = 0;
 
     HanoiSlice *m_head = nullptr, *m_tail = nullptr;
 
 public:
     HanoiStack() {};
-    // HanoiStack(HanoiStack&&) = delete;
     ~HanoiStack() { clearStack(); };
 
     void clearStack();
@@ -59,8 +56,8 @@ public:
 
     inline HanoiSlice* const getTail() { return m_tail; }
     inline HanoiSlice* const getHead() { return m_head; }
-    inline size_t getSliceCount() const { return m_stack_slice_count; };
-    inline bool   isEmpty() const { return m_stack_slice_count <= 0; }
+    inline size_t            getSize() const { return m_size; };
+    inline bool              isEmpty() const { return m_size <= 0; }
 
     static void initializeStack(HanoiStack* stack, size_t slice_amount);
 };

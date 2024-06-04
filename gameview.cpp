@@ -148,14 +148,14 @@ GameView::drawStack(float offset, HanoiStack* stack, QPainter* painter)
 {
     if (stack == nullptr || stack->isEmpty()) { return; }
 
-    float y_axis = (height() - m_slice_base_size.height());
+    float y = height() - m_slice_base_size.height();
 
     HanoiSlice* slice = stack->getTail();
     while (slice != nullptr) {
-        y_axis -= std::floor(slice->getHeight());
+        y -= std::floor(slice->getHeight());
 
         slice->setX(offset - (slice->getWidth() * 0.5f));
-        slice->setY(y_axis);
+        slice->setY(y);
 
         painter->drawPixmap(QPointF(slice->getX(), slice->getY()),
                             slice->getScaledPixmap());
@@ -174,7 +174,7 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 
     const float pole_height
         = m_stack_base_size.height() * Config::get().getSliceMax(),
-        pole_base_y_offset = height() - pole_height;
+        pole_y = height() - pole_height;
 
     // scale the sprites
     const QPixmap pole_sprite
@@ -190,7 +190,7 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 
     // draw the pole
     painter->drawPixmap(offset - (pole_sprite.width() * 0.5f),
-                        pole_base_y_offset,
+                        pole_y,
                         pole_sprite);
 
     // draw the base
@@ -204,8 +204,6 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
                      m_stack_base_size.width() * 0.1f      // size
     );
 
-    const QString stack_label = numToChar(label);
-
     QColor font_color = Config::get().getStackLabelFontColor();
 
     // highlight + draw the indicator if current stack is the goal stack
@@ -216,13 +214,13 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 
         if (!m_timer.isActive() && m_game_state == GameState::GameRunning) {
             painter->drawPixmap(m_stack_area_size.width() * 0.5f,
-                                pole_base_y_offset - (arrow_sprite.height()),
+                                pole_y - (arrow_sprite.height()),
                                 arrow_sprite);
         } else {
-            painter->fillRect(offset - (box_size * 0.5f),                // x
-                              pole_base_y_offset - (box_size * 0.5f),    // y
-                              box_size,                                  // w
-                              box_size * 0.2f,                           // h
+            painter->fillRect(offset - (box_size * 0.5f),    // x
+                              pole_y - (box_size * 0.5f),    // y
+                              box_size,                      // w
+                              box_size * 0.2f,               // h
                               Config::get().getHighlightColor());
         }
     }
@@ -233,8 +231,8 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 
     // draw the stack label
     painter->drawText(offset - (painter->font().pointSizeF() * 0.5f),
-                      pole_base_y_offset - painter->font().pointSizeF(),
-                      stack_label);
+                      pole_y - painter->font().pointSizeF(),
+                      numToChar(label));
 }
 
 void

@@ -100,7 +100,7 @@ private:
 
     inline bool goalStackIsComplete()
     {
-        return (m_goal_stack.second->getSliceCount()
+        return (m_goal_stack.second->getSize()
                 == Config::get().getSliceAmount());
     }
 

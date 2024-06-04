@@ -1,6 +1,5 @@
 #include "hanoistack.h"
 
-#include <QPainter>
 #include <stdexcept>
 
 void
@@ -28,7 +27,7 @@ HanoiStack::push(HanoiSlice* slice)
         m_head       = slice;
         m_head->prev = nullptr;
     }
-    m_stack_slice_count++;
+    m_size++;
 }
 
 void
@@ -54,7 +53,7 @@ HanoiStack::pop()
 
     if (m_head != nullptr) { m_head->prev = nullptr; }
 
-    --m_stack_slice_count;
+    --m_size;
 
     popped->next = popped->prev = nullptr;
 
