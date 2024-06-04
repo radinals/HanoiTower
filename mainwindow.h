@@ -10,71 +10,67 @@
 #include <QMediaPlayer>
 #include <qmediaplayer.h>
 
-namespace Ui
-{
-	class MainWindow;
+namespace Ui {
+    class MainWindow;
 }
 
-class MainWindow : public QMainWindow
-{
-	Q_OBJECT
+class MainWindow : public QMainWindow {
+    Q_OBJECT
 
-      public:
-	explicit MainWindow(QWidget *parent = nullptr);
-	~MainWindow() override;
+public:
+    explicit MainWindow(QWidget *parent = nullptr);
+    ~MainWindow() override;
 
-      private:
-	SettingsWindow *m_settings_window = nullptr;
-	GameView *m_game_view = nullptr;
+private:
+    SettingsWindow *m_settings_window = nullptr;
+    GameView       *m_game_view       = nullptr;
 
-	const QPixmap m_logo = QPixmap(Config::get().getProgramLogo());
+    const QPixmap m_logo = QPixmap(Config::get().getProgramLogo());
 
-	struct BackgroundAudio_t {
-		QMediaPlayer *m_media_player = nullptr;
-		QAudioOutput *m_audio_output = nullptr;
+    struct BackgroundAudio_t {
+        QMediaPlayer *m_media_player = nullptr;
+        QAudioOutput *m_audio_output = nullptr;
 
-		// void setSource(const QString &path)
-		// {
-		// 	m_media_player->setSource("qrc" + path);
-		// }
+        // void setSource(const QString &path)
+        // {
+        // 	m_media_player->setSource("qrc" + path);
+        // }
 
-		BackgroundAudio_t()
-		{
-			m_media_player = new QMediaPlayer;
-			m_audio_output = new QAudioOutput;
+        BackgroundAudio_t()
+        {
+            m_media_player = new QMediaPlayer;
+            m_audio_output = new QAudioOutput;
 
-			m_media_player->setAudioOutput(m_audio_output);
-			m_media_player->setSource(
-			    "qrc" +
-			    Config::get().getBackgroundMusicAudioPath());
-			m_audio_output->setVolume(
-			    Config::get().getAudioMusicVolumeLevel());
-			m_media_player->setLoops(QMediaPlayer::Infinite);
-		};
+            m_media_player->setAudioOutput(m_audio_output);
+            m_media_player->setSource(
+                "qrc" + Config::get().getBackgroundMusicAudioPath());
+            m_audio_output->setVolume(Config::get().getAudioMusicVolumeLevel());
+            m_media_player->setLoops(QMediaPlayer::Infinite);
+        };
 
-		~BackgroundAudio_t()
-		{
-			delete m_audio_output;
-			delete m_media_player;
-		}
+        ~BackgroundAudio_t()
+        {
+            delete m_audio_output;
+            delete m_media_player;
+        }
 
-	} m_background_music;
+    } m_background_music;
 
-      private slots:
-	void exitAction();
+private slots:
+    void exitAction();
 
-	void resetGameAction();
+    void resetGameAction();
 
-	void backToMainMenuAction();
+    void backToMainMenuAction();
 
-	void on_StartBtn_clicked();
+    void on_StartBtn_clicked();
 
-	void on_SettingsBtn_clicked();
+    void on_SettingsBtn_clicked();
 
-	void on_PauseBtn_clicked();
+    void on_PauseBtn_clicked();
 
-      private:
-	Ui::MainWindow *ui;
+private:
+    Ui::MainWindow *ui;
 };
 
-#endif // MAINWINDOW_H
+#endif    // MAINWINDOW_H

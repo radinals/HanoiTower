@@ -7,71 +7,62 @@
 #include <QString>
 #include <QVector2D>
 
-class HanoiSlice
-{
-      private:
-	QPixmap m_pixmap = QPixmap(Config::get().getSliceSpritePath());
-	unsigned int m_value = 0;
+class HanoiSlice {
+private:
+    QPixmap m_pixmap = QPixmap(Config::get().getSliceSpritePath());
 
-	float m_x = 0, m_y = 0;
-	float m_w = 0, m_h = 0;
+    unsigned int m_value = 0;
+    float        m_x = 0, m_y = 0;
+    float        m_w = 0, m_h = 0;
 
-      public:
-	// clang-format off
-        HanoiSlice(HanoiSlice&&) = delete;
-        HanoiSlice(){};
-        HanoiSlice(unsigned int value) : m_value(value){};
+public:
+    HanoiSlice(HanoiSlice&&) = delete;
+    HanoiSlice() {};
+    HanoiSlice(unsigned int value) : m_value(value) {};
 
-        inline QPixmap& getPixmap() { return m_pixmap; }
-        inline QPixmap getScaledPixmap() const { return m_pixmap.scaled(m_w, m_h); }
+    inline QPixmap& getPixmap() { return m_pixmap; }
+    inline QPixmap getScaledPixmap() const { return m_pixmap.scaled(m_w, m_h); }
 
-        inline float getWidth() const { return m_w; }
-        inline float getHeight() const { return m_h; }
-        inline void setWidth(float w) { m_w = w; }
-        inline void setHeight(float h) { m_h = h; }
+    inline float getWidth() const { return m_w; }
+    inline float getHeight() const { return m_h; }
+    inline void  setWidth(float w) { m_w = w; }
+    inline void  setHeight(float h) { m_h = h; }
 
-	inline float getX() const { return m_x; }
-	inline float getY() const { return m_y; }
-	inline void setX(float x) { m_x = x; }
-	inline void setY(float y) { m_y = y; }
+    inline float getX() const { return m_x; }
+    inline float getY() const { return m_y; }
+    inline void  setX(float x) { m_x = x; }
+    inline void  setY(float y) { m_y = y; }
 
-        inline unsigned int getValue() const { return m_value; }
+    inline unsigned int getValue() const { return m_value; }
 
-	// clang-format on
-
-	HanoiSlice* next = nullptr;
-	HanoiSlice* prev = nullptr;
+    HanoiSlice* next = nullptr;
+    HanoiSlice* prev = nullptr;
 };
 
-class HanoiStack
-{
-      private:
-	unsigned int m_stack_colors = 0;
-	size_t m_stack_slice_count = 0;
+class HanoiStack {
+private:
+    unsigned int m_stack_colors      = 0;
+    size_t       m_stack_slice_count = 0;
 
-	HanoiSlice *m_head = nullptr, *m_tail = nullptr;
+    HanoiSlice *m_head = nullptr, *m_tail = nullptr;
 
-      public:
-	HanoiStack(){};
-	// HanoiStack(HanoiStack&&) = delete;
-	~HanoiStack() { clearStack(); };
+public:
+    HanoiStack() {};
+    // HanoiStack(HanoiStack&&) = delete;
+    ~HanoiStack() { clearStack(); };
 
-	// clang-format off
-	inline bool isEmpty() const { return m_stack_slice_count <= 0; }
-	// clang-format on
+    void clearStack();
+    void push(HanoiSlice* slice);
 
-	void clearStack();
+    HanoiSlice*             pop();
+    const HanoiSlice* const peek() const;
 
-	void push(HanoiSlice* slice);
+    inline HanoiSlice* const getTail() { return m_tail; }
+    inline HanoiSlice* const getHead() { return m_head; }
+    inline size_t getSliceCount() const { return m_stack_slice_count; };
+    inline bool   isEmpty() const { return m_stack_slice_count <= 0; }
 
-	const HanoiSlice* const peek() const;
-	HanoiSlice* pop();
-
-	inline HanoiSlice* const getTail() { return m_tail; }
-	inline HanoiSlice* const getHead() { return m_head; }
-	inline size_t getSliceCount() const { return m_stack_slice_count; };
-
-	static void generate_stack(HanoiStack* stack, size_t slice_amount);
+    static void generate_stack(HanoiStack* stack, size_t slice_amount);
 };
 
-#endif // HANOISTACK_H
+#endif    // HANOISTACK_H

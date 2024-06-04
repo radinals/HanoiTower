@@ -22,114 +22,122 @@
 #include <string>
 #include <utility>
 
-class GameView : public QWidget
-{
-	Q_OBJECT
+class GameView : public QWidget {
+    Q_OBJECT
 
-      private:
-	enum class GameState {
-		GameNotRunning,
-		GameRunning,
-		GamePaused,
-		GameOverLost,
-		GameOverWon,
-	};
+private:
+    const float m_slice_scale_factor = 0.9f;
 
-	GameState m_game_state = GameState::GameNotRunning;
+    enum class GameState {
+        GameNotRunning,
+        GameRunning,
+        GamePaused,
+        GameOverLost,
+        GameOverWon,
+    };
 
-	QPixmap m_win_dialog, m_lose_dialog, m_pole_sprite, m_stack_base_sprite,
-	    m_arrow_sprite;
+    GameState m_game_state = GameState::GameNotRunning;
 
-	const float m_slice_scale_factor = 0.9f;
+    QPixmap m_win_dialog, m_lose_dialog, m_pole_sprite, m_stack_base_sprite,
+        m_arrow_sprite;
 
-	unsigned long long int m_timer_elapsed = 0;
-	size_t m_goal_stack_index = 0;
-	unsigned int m_move_count = 0;
+    QSizeF m_stack_area_size, m_stack_base_size, m_slice_base_size,
+        m_gameover_dialog_size;
 
-	QSizeF m_stack_area_size, m_stack_base_size, m_slice_base_size,
-	    m_gameover_dialog_size;
+    QTimer        m_timer;
+    QSoundEffect *m_placement_fx = nullptr;
 
-	LinkedList<std::pair<int, HanoiStack>> m_stacks;
-	LinkedList<HanoiSlice *> m_slice_list;
-	HanoiStack *m_goal_stack = nullptr;
+    unsigned long long int m_timer_elapsed = 0;
+    unsigned int           m_move_count    = 0;
 
-	std::pair<HanoiSlice *, HanoiStack *> m_selected_slice;
+    LinkedList<std::pair<int, HanoiStack>> m_stacks;
+    LinkedList<HanoiSlice *>               m_slice_list;
+    std::pair<size_t, HanoiStack *>        m_goal_stack { 0, nullptr };
 
-	QLabel *m_time_output = nullptr, *m_move_count_output = nullptr;
-	QTextEdit *m_info_box = nullptr;
+    struct selectedSliceData_t {
+        HanoiStack *stack = nullptr;
+        HanoiSlice *slice = nullptr;
+        inline bool valid() { return stack != nullptr && slice != nullptr; }
+    } m_selected_slice;
 
-	QTimer m_timer;
+    QLabel    *m_time_output = nullptr, *m_move_count_output = nullptr;
+    QTextEdit *m_info_box = nullptr;
 
-	QSoundEffect *m_placement_fx = nullptr;
+public:
+    explicit GameView(QWidget *parent = nullptr);
+    ~GameView() override { delete m_placement_fx; }
+    // ~GameView() override {};
 
-      public:
-	explicit GameView(QWidget *parent = nullptr);
-	~GameView() override { delete m_placement_fx; }
+    void reset();    // reset the game states, and re-draw
+    void clear();    // reset the game states
+    void pause();    // halt the timer, inhibit input
 
-	// button events are set in MainWindow
-	// ~GameView() override {};
+    bool isPaused() { return m_game_state == GameState::GamePaused; }
 
-	void reset(); // reset the game states, and re-draw
-	void clear(); // reset the game states
-	void pause(); // halt the timer, inhibit input
+    void setGameInfoOutputs(QLabel *time, QLabel *moves, QTextEdit *info_box)
+    {
+        m_time_output       = time;
+        m_move_count_output = moves;
+        m_info_box          = info_box;
+    }
 
-	bool isPaused() { return m_game_state == GameState::GamePaused; }
+private slots:
+    void checkWinState();
 
-	// clang-format off
+private:
+    inline static QString numToChar(size_t n)
+    {
+        std::string str;
+        str += char('A' + n);
+        return QString::fromStdString(str);
+    };
 
-	void setGameInfoOutputs(QLabel *time, QLabel *moves, QTextEdit* info_box) {
-		m_time_output = time; m_move_count_output = moves; m_info_box = info_box;
-	}
+    inline void moveSelectedSlice(const QPoint &p)
+    {
+        m_selected_slice.slice->setX(
+            p.x() - (m_selected_slice.slice->getWidth() * 0.5f));
+        m_selected_slice.slice->setY(
+            p.y() - (m_selected_slice.slice->getHeight() * 0.5f));
+        update();
+    }
 
-	// clang-format on
+    inline bool goalStackIsComplete()
+    {
+        return (m_goal_stack.second->getSliceCount()
+                == Config::get().getSliceAmount());
+    }
 
-      private slots:
-	void checkWinState();
+    inline bool moveIsValid(std::pair<size_t, HanoiStack *> &dest)
+    {
+        return (dest.second != nullptr)
+               && dest.first < Config::get().getStackAmount()
+               && (dest.second->isEmpty()
+                   || m_selected_slice.slice->getValue()
+                          > dest.second->peek()->getValue());
+    }
 
-      private:
-	// clang-format off
+    static size_t getRandomGoalStackIndex();
 
-        inline static QString numToChar(size_t n) {
-                std::string str = ""; str += char('A' + n);
-		return QString::fromStdString(str);
-        };
+    void updateInfo();
+    void triggerLoseDialog();
+    void triggerWinDialog();
 
-	inline void moveSelectedSlice(int x, int y) {
-		m_selected_slice.first->setX(
-		    x - (m_selected_slice.first->getWidth() * 0.5));
-		m_selected_slice.first->setY(
-		    y - (m_selected_slice.first->getHeight() * 0.5));
-		update();
-	}
+    static void                     colorizeSprite(QPixmap *, const QColor &);
+    std::pair<size_t, HanoiStack *> calculateStackByPos(const QPointF &);
 
-	inline bool goalStackIsComplete() { ;
-		return ( m_goal_stack->getSliceCount() ==
-				Config::get().getSliceAmount() );
-	}
+    void calculatesSizes();
+    void drawStack(float offset, HanoiStack *, QPainter *p);
+    void drawStackBase(size_t label, float offset, QPainter *painter);
+    void scaleSlices();
 
-	// clang-format on
+    // QWidget Event Handlers
+    void mousePressEvent(QMouseEvent *) override;
+    void mouseReleaseEvent(QMouseEvent *) override;
+    void mouseMoveEvent(QMouseEvent *) override;
+    void paintEvent(QPaintEvent *) override;
+    void resizeEvent(QResizeEvent *) override;
 
-	static size_t getRandomGoalStackIndex();
-
-	void updateInfo();
-	void triggerLoseDialog();
-	void triggerWinDialog();
-
-	static void colorizeSprite(QPixmap *, const QColor &);
-	HanoiStack *calculateStackByPos(QPointF);
-	void calculatesSizes();
-	void drawStack(float offset, HanoiStack *, QPainter *p);
-	void drawStackBase(size_t label, float offset, QPainter *painter);
-	void scaleSlices();
-
-	// QWidget Event Handlers
-	void mousePressEvent(QMouseEvent *) override;
-	void mouseReleaseEvent(QMouseEvent *) override;
-	void mouseMoveEvent(QMouseEvent *) override;
-	void paintEvent(QPaintEvent *) override;
-	void resizeEvent(QResizeEvent *) override;
-
-      signals:
+signals:
 };
 
-#endif // GAMEVIEW_H
+#endif    // GAMEVIEW_H

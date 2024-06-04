@@ -8,109 +8,107 @@
 #include <qpushbutton.h>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
 {
-	ui->setupUi(this);
+    ui->setupUi(this);
 
-	this->setStyleSheet(Config::get().getDefaultStylesheet());
+    this->setStyleSheet(Config::get().getDefaultStylesheet());
 
-	m_game_view = new GameView(ui->GameViewFrame);
-	m_game_view->setGameInfoOutputs(ui->GameTimer, ui->GameMoveCountOut,
-	                                ui->GameInfoBox);
-	m_settings_window = new SettingsWindow;
+    m_game_view = new GameView(ui->GameViewFrame);
+    m_game_view->setGameInfoOutputs(ui->GameTimer,
+                                    ui->GameMoveCountOut,
+                                    ui->GameInfoBox);
+    m_settings_window = new SettingsWindow;
 
-	ui->GameViewFrame->layout()->addWidget(m_game_view);
+    ui->GameViewFrame->layout()->addWidget(m_game_view);
 
-	connect(ui->ResetBtn, &QPushButton::clicked, this,
-	        &MainWindow::resetGameAction);
+    connect(ui->ResetBtn,
+            &QPushButton::clicked,
+            this,
+            &MainWindow::resetGameAction);
 
-	connect(ui->BackToMenuBtn, &QPushButton::clicked, this,
-	        &MainWindow::backToMainMenuAction);
+    connect(ui->BackToMenuBtn,
+            &QPushButton::clicked,
+            this,
+            &MainWindow::backToMainMenuAction);
 
-	connect(ui->ExitBtn, &QPushButton::clicked, this,
-	        &MainWindow::exitAction);
+    connect(ui->ExitBtn, &QPushButton::clicked, this, &MainWindow::exitAction);
 
-	connect(ui->StartExitBtn, &QPushButton::clicked, this,
-	        &MainWindow::exitAction);
+    connect(ui->StartExitBtn,
+            &QPushButton::clicked,
+            this,
+            &MainWindow::exitAction);
 
-	ui->GameTitle->setPixmap(m_logo);
+    ui->GameTitle->setPixmap(m_logo);
 
-	m_settings_window->hide();
-	ui->GameSideBarFrame->hide();
-	ui->LeaderboardsFrame->hide();
-	ui->GameViewFrame->hide();
-	ui->GameMenuFrame->show();
+    m_settings_window->hide();
+    ui->GameSideBarFrame->hide();
+    ui->LeaderboardsFrame->hide();
+    ui->GameViewFrame->hide();
+    ui->GameMenuFrame->show();
 
-	Config::get().setBackgroundMusicInstance(
-	    m_background_music.m_audio_output);
-	m_background_music.m_media_player->play();
+    Config::get().setBackgroundMusicInstance(m_background_music.m_audio_output);
+    m_background_music.m_media_player->play();
 }
 
 MainWindow::~MainWindow()
 {
-	delete ui;
-	delete m_game_view;
-	delete m_settings_window;
+    delete ui;
+    delete m_game_view;
+    delete m_settings_window;
 }
 
 void
 MainWindow::resetGameAction()
 {
-	if (m_game_view->isPaused()) {
-		ui->PauseBtn->setText("PAUSE");
-	}
-	m_game_view->reset();
+    if (m_game_view->isPaused()) { ui->PauseBtn->setText("PAUSE"); }
+    m_game_view->reset();
 }
 
 void
 MainWindow::on_StartBtn_clicked()
 {
-	if (m_settings_window->isVisible()) {
-		return;
-	}
+    if (m_settings_window->isVisible()) { return; }
 
-	ui->GameMenuFrame->hide();
-	ui->GameSideBarFrame->show();
-	ui->GameViewFrame->show();
-	m_game_view->reset();
+    ui->GameMenuFrame->hide();
+    ui->GameSideBarFrame->show();
+    ui->GameViewFrame->show();
+    m_game_view->reset();
 }
 
 void
 MainWindow::on_SettingsBtn_clicked()
 {
-	if (m_settings_window->isVisible()) {
-		return;
-	}
+    if (m_settings_window->isVisible()) { return; }
 
-	m_settings_window->show();
+    m_settings_window->show();
 }
 
 void
 MainWindow::exitAction()
 {
-	if (m_settings_window->isVisible()) {
-		m_settings_window->close();
-	}
-	close();
+    if (m_settings_window->isVisible()) { m_settings_window->close(); }
+    close();
 }
 
 void
 MainWindow::backToMainMenuAction()
 {
-	m_game_view->clear();
-	ui->LeaderboardsFrame->hide();
-	ui->GameSideBarFrame->hide();
-	ui->GameViewFrame->hide();
-	ui->GameMenuFrame->show();
+    m_game_view->clear();
+    ui->LeaderboardsFrame->hide();
+    ui->GameSideBarFrame->hide();
+    ui->GameViewFrame->hide();
+    ui->GameMenuFrame->show();
 }
 
 void
 MainWindow::on_PauseBtn_clicked()
 {
-	m_game_view->pause();
-	if (m_game_view->isPaused()) {
-		ui->PauseBtn->setText("UN-PAUSE");
-	} else {
-		ui->PauseBtn->setText("PAUSE");
-	}
+    m_game_view->pause();
+    if (m_game_view->isPaused()) {
+        ui->PauseBtn->setText("UN-PAUSE");
+    } else {
+        ui->PauseBtn->setText("PAUSE");
+    }
 }
