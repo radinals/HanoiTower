@@ -53,11 +53,11 @@ private:
     LinkedList<HanoiSlice *>                  m_slice_list;
     std::pair<size_t, HanoiStack *>           m_goal_stack { 0, nullptr };
 
-    struct selectedSliceData_t {
+    struct SelectedData_t {
         HanoiStack *stack = nullptr;
         HanoiSlice *slice = nullptr;
         inline bool valid() { return stack != nullptr && slice != nullptr; }
-    } m_selected_slice;
+    } m_selected;
 
     QLabel    *m_time_output = nullptr, *m_move_count_output = nullptr;
     QTextEdit *m_info_box = nullptr;
@@ -93,10 +93,8 @@ private:
 
     inline void moveSelectedSlice(const QPoint &p)
     {
-        m_selected_slice.slice->setX(
-            p.x() - (m_selected_slice.slice->getWidth() * 0.5f));
-        m_selected_slice.slice->setY(
-            p.y() - (m_selected_slice.slice->getHeight() * 0.5f));
+        m_selected.slice->setX(p.x() - (m_selected.slice->getWidth() * 0.5f));
+        m_selected.slice->setY(p.y() - (m_selected.slice->getHeight() * 0.5f));
         update();
     }
 
@@ -106,12 +104,12 @@ private:
                 == Config::get().getSliceAmount());
     }
 
-    inline bool moveIsValid(std::pair<size_t, HanoiStack *> &dest)
+    inline bool moveIsValid(const std::pair<size_t, HanoiStack *> &dest)
     {
         return (dest.second != nullptr)
                && dest.first < Config::get().getStackAmount()
                && (dest.second->isEmpty()
-                   || m_selected_slice.slice->getValue()
+                   || m_selected.slice->getValue()
                           > dest.second->peek()->getValue());
     }
 

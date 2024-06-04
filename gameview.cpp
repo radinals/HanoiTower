@@ -417,10 +417,10 @@ GameView::paintEvent(QPaintEvent* event)
     }
 
     // render the selected stack
-    if (m_selected_slice.valid()) {
-        p.drawPixmap(m_selected_slice.slice->getX(),
-                     m_selected_slice.slice->getY(),
-                     m_selected_slice.slice->getScaledPixmap());
+    if (m_selected.valid()) {
+        p.drawPixmap(m_selected.slice->getX(),
+                     m_selected.slice->getY(),
+                     m_selected.slice->getScaledPixmap());
     }
 
     switch (m_game_state) {
@@ -449,7 +449,7 @@ GameView::resizeEvent(QResizeEvent* event)
 void
 GameView::mousePressEvent(QMouseEvent* event)
 {
-    if (m_selected_slice.valid() || m_game_state != GameState::GameRunning) {
+    if (m_selected.valid() || m_game_state != GameState::GameRunning) {
         return;
     }
 
@@ -466,8 +466,8 @@ GameView::mousePressEvent(QMouseEvent* event)
         return;
     }
 
-    m_selected_slice.slice = clicked_stack.second->pop();
-    m_selected_slice.stack = clicked_stack.second;
+    m_selected.slice = clicked_stack.second->pop();
+    m_selected.stack = clicked_stack.second;
 
     moveSelectedSlice(event->pos());
 }
@@ -477,7 +477,7 @@ GameView::mousePressEvent(QMouseEvent* event)
 void
 GameView::mouseMoveEvent(QMouseEvent* event)
 {
-    if (!m_selected_slice.valid() || m_game_state != GameState::GameRunning) {
+    if (!m_selected.valid() || m_game_state != GameState::GameRunning) {
         return;
     }
 
@@ -489,7 +489,7 @@ GameView::mouseMoveEvent(QMouseEvent* event)
 void
 GameView::mouseReleaseEvent(QMouseEvent* event)
 {
-    if (!m_selected_slice.valid() || m_game_state != GameState::GameRunning) {
+    if (!m_selected.valid() || m_game_state != GameState::GameRunning) {
         return;
     }
 
@@ -506,13 +506,13 @@ GameView::mouseReleaseEvent(QMouseEvent* event)
         if (m_game_state == GameState::GameRunning && !m_timer.isActive()) {
             m_timer.start(1);
         }
-        destination_stack.second->push(m_selected_slice.slice);
+        destination_stack.second->push(m_selected.slice);
         m_move_count++;
     } else {
-        m_selected_slice.stack->push(m_selected_slice.slice);
+        m_selected.stack->push(m_selected.slice);
     }
 
-    m_selected_slice = { .stack = nullptr, .slice = nullptr };
+    m_selected = { .stack = nullptr, .slice = nullptr };
 
     update();
 
