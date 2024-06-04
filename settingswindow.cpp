@@ -172,7 +172,7 @@ SettingsWindow::drawPreview()
     const QSizeF stack_pole(base_slice.width() * 0.1f,
                             base_slice.height() * (Settings.slice_amount + 2));
 
-    const QSize stack_base(base_slice.width(), base_slice.height() * 0.5f);
+    const QSizeF stack_base(base_slice.width(), base_slice.height() * 0.5f);
 
     // Draw the base and the pole -------------------------------------------
 
