@@ -80,7 +80,8 @@ GameView::clear()
 {
     calculatesSizes();
 
-    m_goal_stack.first = getRandomGoalStackIndex();
+    m_goal_stack.second = nullptr;
+    m_goal_stack.first  = getRandomGoalStackIndex();
 
     m_info_box->setText("Move All Slice to Stack "
                         + numToChar(m_goal_stack.first));
