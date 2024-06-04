@@ -147,74 +147,72 @@ SettingsWindow::on_SaveButton_clicked()
 void
 SettingsWindow::drawPreview()
 {
-    // QPainter painter(ui->PreviewOut);
-    QSize Winsize(ui->PreviewOut->size());
-
+    // scenes seems to not update correctly if not deleted first
     if (m_preview_scene != nullptr) {
         delete m_preview_scene;
         m_preview_scene = new QGraphicsScene;
     }
-
     m_preview_scene = new QGraphicsScene;
     ui->PreviewOut->setScene(m_preview_scene);
-
-    static const unsigned int vpadding = 0;
-    static const unsigned int hpadding = 5;
-
-    QSizeF base_slice_size(
-        (float(Winsize.width()) / Settings.stack_amount) * 0.5f,
-        (float(Winsize.height()) / Settings.slice_amount) * 0.3f);
-
-    QSizeF stack_pole_size(base_slice_size.width() * 0.1f,
-                           base_slice_size.height() * Settings.slice_amount);
-
-    QPen pen;
     m_preview_scene->clear();
 
-    float x_offset = Winsize.width() * 0.5f;
-    for (int i = 0; i < Settings.stack_amount; i++) {
-        QSizeF slice_size = base_slice_size;
-        bool   drawn_base = false;
+    // ----------------------------------------------------------------------
 
-        float y_offset = Winsize.height();
-        for (int j = 0; j < Settings.slice_amount; j++) {
-            // draw the base first
-            if (!drawn_base) {
-                m_preview_scene->addRect(x_offset - (slice_size.width() * 0.5f),
-                                         y_offset,
-                                         slice_size.width(),
-                                         slice_size.height() * 0.5f,
-                                         pen,
-                                         Settings.stack_color);
+    static const QPen  pen;
+    static const float slice_scale_factor = 0.9f;    // down scale
+    static const int   hpadding           = 5;       // spacing
+    // static const int   vpadding           = 0;
 
-                y_offset -= slice_size.height();
+    const QSizeF gs(ui->PreviewOut->size());    // QGraphicScene geometry
 
-                m_preview_scene->addRect(
-                    x_offset - (stack_pole_size.width() * 0.5f),
-                    y_offset - (stack_pole_size.height() - slice_size.height()),
-                    stack_pole_size.width(),
-                    stack_pole_size.height(),
-                    pen,
-                    Settings.stack_color);
+    const QSizeF base_slice((float(gs.width()) / Settings.stack_amount) * 0.5f,
+                            (float(gs.height()) / Settings.slice_amount)
+                                * 0.3f);
 
-                drawn_base = true;
-            }
+    const QSizeF stack_pole(base_slice.width() * 0.1f,
+                            base_slice.height() * (Settings.slice_amount + 2));
 
-            // draw slices only on the first stack
-            if (i == 0) {
-                m_preview_scene->addRect(x_offset - (slice_size.width() * 0.5f),
-                                         y_offset,
-                                         slice_size.width(),
-                                         slice_size.height(),
-                                         pen,
-                                         Settings.slice_color);
-            }
+    const QSize stack_base(base_slice.width(), base_slice.height() * 0.5f);
 
-            slice_size *= 0.9f;
-            y_offset -= slice_size.height() + vpadding;
-        }
-        x_offset += base_slice_size.width() + hpadding;
+    // Draw the base and the pole -------------------------------------------
+
+    float x = (gs.width() * 0.5f);    // x render start
+    for (size_t i = 0; i < Settings.stack_amount; i++) {
+        m_preview_scene->addRect(x - (stack_pole.width() * 0.5f),
+                                 gs.height() - stack_pole.height(),
+                                 stack_pole.width(),
+                                 stack_pole.height(),
+                                 pen,
+                                 Settings.stack_color);
+
+        m_preview_scene->addRect(x - (stack_base.width() * 0.5f),
+                                 gs.height() - stack_base.height(),
+                                 stack_base.width(),
+                                 stack_base.height(),
+                                 pen,
+                                 Settings.stack_color);
+
+        x += base_slice.width() + hpadding;    // shifting to right
     }
+
+    // Draw Slices on the first stack ---------------------------------------
+
+    QSizeF ssize = base_slice;                                 // scale size
+    float  y     = gs.height() - (stack_base.height() * 3);    // y render start
+
+    for (size_t i = 0; i < Settings.slice_amount; i++) {
+        m_preview_scene->addRect((gs.width() * 0.5f) - (ssize.width() * 0.5f),
+                                 y,
+                                 ssize.width(),
+                                 ssize.height(),
+                                 pen,
+                                 Settings.slice_color);
+
+        ssize *= slice_scale_factor;    // scale down
+        y -= ssize.height();            // shift up
+    }
+
+    // ----------------------------------------------------------------------
 
     ui->PreviewOut->resetTransform();
     ui->PreviewOut->viewport()->update();
