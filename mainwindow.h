@@ -25,7 +25,7 @@ private:
     SettingsWindow *m_settings_window = nullptr;
     GameView       *m_game_view       = nullptr;
 
-    const QPixmap m_logo = QPixmap(Config::get().getProgramLogo());
+    const QPixmap m_logo = QPixmap(Config::get().AssetFiles().LOGO);
 
     struct BackgroundAudio_t {
         QMediaPlayer *m_media_player = nullptr;
@@ -43,8 +43,8 @@ private:
 
             m_media_player->setAudioOutput(m_audio_output);
             m_media_player->setSource(
-                "qrc" + Config::get().getBackgroundMusicAudioPath());
-            m_audio_output->setVolume(Config::get().getAudioMusicVolumeLevel());
+                "qrc" + Config::get().AudioFiles().BACKGROUND_MUSIC);
+            m_audio_output->setVolume(Config::get().Settings().music_volume);
             m_media_player->setLoops(QMediaPlayer::Infinite);
         };
 

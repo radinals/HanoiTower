@@ -14,13 +14,13 @@ SettingsWindow::SettingsWindow(QWidget* parent)
 
     this->setStyleSheet(Config::get().getDefaultStylesheet());
 
-    Settings.stack_amount       = Config::get().getStackAmount();
-    Settings.slice_amount       = Config::get().getSliceAmount();
-    Settings.slice_color        = Config::get().getSliceTint();
-    Settings.stack_color        = Config::get().getStackTint();
-    Settings.timer_ms           = Config::get().getTimerInterval();
-    Settings.sfx_volume_level   = Config::get().getAudioFXVolumeLevel();
-    Settings.music_volume_level = Config::get().getAudioMusicVolumeLevel();
+    Settings.stack_amount       = Config::get().Settings().stack_amount;
+    Settings.slice_amount       = Config::get().Settings().slice_amount;
+    Settings.slice_color        = Config::get().Theme().slice_tint;
+    Settings.stack_color        = Config::get().Theme().stack_tint;
+    Settings.timer_ms           = Config::get().Settings().time_length_ms;
+    Settings.sfx_volume_level   = Config::get().Settings().fx_volume;
+    Settings.music_volume_level = Config::get().Settings().music_volume;
 
     update_options();
     drawPreview();
@@ -98,7 +98,7 @@ SettingsWindow::on_GameTimerInput_userTimeChanged(const QTime& time)
                                       time.minute(),
                                       time.second());
 
-        if (ms <= 0 || ms < Config::get().getTimerMin()) {
+        if (ms <= 0 || ms < Config::get().Settings().TIMER_MIN) {
             update_options();
             return;
         }
@@ -115,7 +115,7 @@ SettingsWindow::on_GameTimerInput_editingFinished()
         ms = Utils::extractMsFromTime(time.hour(),
                                       time.minute(),
                                       time.second());
-        if (ms > 0 && ms >= Config::get().getTimerMin()) {
+        if (ms > 0 && ms >= Config::get().Settings().TIMER_MIN) {
             Settings.timer_ms = (ms);
         }
     }
@@ -132,15 +132,14 @@ SettingsWindow::on_CancelButton_clicked()
 void
 SettingsWindow::on_SaveButton_clicked()
 {
-    Config::get().setStackAmount(Settings.stack_amount);
-    Config::get().setSliceAmount(Settings.slice_amount);
-    Config::get().setSliceTint(Settings.slice_color);
-    Config::get().setStackTint(Settings.stack_color);
-    Config::get().setTimerInterval(Settings.timer_ms);
-    Config::get().setAudioFXVolumeLevel(Settings.sfx_volume_level);
-    Config::get().setAudioMusicVolumeLevel(Settings.music_volume_level);
-    Config::get().getBackgroundMusicInstance()->setVolume(
-        Settings.music_volume_level);
+    Config::get().Settings().stack_amount   = Settings.stack_amount;
+    Config::get().Settings().slice_amount   = Settings.slice_amount;
+    Config::get().Theme().slice_tint        = Settings.slice_color;
+    Config::get().Theme().stack_tint        = Settings.stack_color;
+    Config::get().Settings().time_length_ms = Settings.timer_ms;
+    Config::get().Settings().fx_volume      = Settings.sfx_volume_level;
+    Config::get().Settings().music_volume   = Settings.music_volume_level;
+
     close();
 }
 
@@ -221,7 +220,7 @@ SettingsWindow::drawPreview()
 void
 SettingsWindow::on_GameSliceAmountSlider_valueChanged(int value)
 {
-    if (value > 0 && value <= Config::get().getSliceMax()) {
+    if (value > 0 && value <= Config::get().Settings().SLICE_MAX) {
         Settings.slice_amount = value;
     }
     update_options();
@@ -231,7 +230,7 @@ SettingsWindow::on_GameSliceAmountSlider_valueChanged(int value)
 void
 SettingsWindow::on_GameStackAmountSlider_valueChanged(int value)
 {
-    if (value > 0 && value <= Config::get().getStackMax()) {
+    if (value > 0 && value <= Config::get().Settings().STACK_MAX) {
         Settings.stack_amount = value;
     }
     update_options();

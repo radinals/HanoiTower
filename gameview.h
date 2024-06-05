@@ -26,7 +26,45 @@ class GameView : public QWidget {
     Q_OBJECT
 
 private:
-    const float m_slice_scale_factor = 0.9f;
+    const float   m_slice_scale_factor = 0.9f;
+    unsigned int  m_move_count         = 0;
+    QSoundEffect *m_placement_fx       = nullptr;
+
+    struct GameSprites {
+        QPixmap stack_pole, stack_base, arrow;
+    } m_sprites;
+
+    struct GameGeometry_t {
+        QSizeF stack_area, stack_base, slice, dialog;
+    } m_sizes;
+
+    struct SelectedData_t {
+        HanoiStack *stack = nullptr;    // source stack
+        HanoiSlice *slice = nullptr;    // selected slice
+        inline bool valid() { return stack != nullptr && slice != nullptr; }
+    } m_selected;
+
+    struct SidebarWidgets_t {
+        QLabel    *timer_out = nullptr, *move_count_out = nullptr;
+        QTextEdit *info_msg_out = nullptr;
+    } m_sidebar_widgets;
+
+    struct HanoiStackData_t {
+        // all slices in game
+        LinkedList<HanoiSlice *> slices;
+
+        // all stack in game
+        LinkedList<std::pair<size_t, HanoiStack>> stacks;
+
+        // points to a stack in m_stack
+        std::pair<size_t, HanoiStack> *goal_stack = nullptr;
+
+    } m_stack_data;
+
+    struct TimeInfo_t {
+        QTimer                 timer;
+        unsigned long long int elapsed = 0;    // ms
+    } m_time;
 
     enum class GameState {
         GameNotRunning,
@@ -37,30 +75,6 @@ private:
     };
 
     GameState m_game_state = GameState::GameNotRunning;
-
-    QPixmap m_pole_sprite, m_stack_base_sprite, m_arrow_sprite;
-
-    QSizeF m_stack_area_size, m_stack_base_size, m_slice_base_size,
-        m_dialog_size;
-
-    QTimer        m_timer;
-    QSoundEffect *m_placement_fx = nullptr;
-
-    unsigned long long int m_timer_elapsed = 0;
-    unsigned int           m_move_count    = 0;
-
-    LinkedList<std::pair<size_t, HanoiStack>> m_stacks;
-    LinkedList<HanoiSlice *>                  m_slice_list;
-    std::pair<size_t, HanoiStack *>           m_goal_stack { 0, nullptr };
-
-    struct SelectedData_t {
-        HanoiStack *stack = nullptr;
-        HanoiSlice *slice = nullptr;
-        inline bool valid() { return stack != nullptr && slice != nullptr; }
-    } m_selected;
-
-    QLabel    *m_time_output = nullptr, *m_move_count_output = nullptr;
-    QTextEdit *m_info_box = nullptr;
 
 public:
     explicit GameView(QWidget *parent = nullptr);
@@ -75,9 +89,9 @@ public:
 
     void setGameInfoOutputs(QLabel *time, QLabel *moves, QTextEdit *info_box)
     {
-        m_time_output       = time;
-        m_move_count_output = moves;
-        m_info_box          = info_box;
+        m_sidebar_widgets.timer_out      = time;
+        m_sidebar_widgets.move_count_out = moves;
+        m_sidebar_widgets.info_msg_out   = info_box;
     }
 
 private slots:
@@ -100,14 +114,14 @@ private:
 
     inline bool goalStackIsComplete()
     {
-        return (m_goal_stack.second->getSize()
-                == Config::get().getSliceAmount());
+        return (m_stack_data.goal_stack->second.getSize()
+                == Config::get().Settings().slice_amount);
     }
 
     inline bool moveIsValid(const std::pair<size_t, HanoiStack *> &dest)
     {
         return (dest.second != nullptr)
-               && dest.first < Config::get().getStackAmount()
+               && dest.first < Config::get().Settings().stack_amount
                && (dest.second->isEmpty()
                    || m_selected.slice->getValue()
                           > dest.second->peek()->getValue());

@@ -8,7 +8,7 @@
 
 class HanoiSlice {
 private:
-    QPixmap m_pixmap = QPixmap(Config::get().getSliceSpritePath());
+    QPixmap m_pixmap = QPixmap(Config::get().AssetFiles().SLICE);
 
     unsigned int m_value = 0;
     float        m_x = 0, m_y = 0;
