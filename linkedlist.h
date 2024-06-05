@@ -3,19 +3,19 @@
 
 template<typename T> struct LinkedListNode {
     T               data;
-    LinkedListNode *next = nullptr, *prev = nullptr;
+    LinkedListNode* next = nullptr;
 };
 
 template<typename T> class LinkedList {
 public:
-    LinkedListNode<T>*m_head = nullptr, *m_tail = nullptr;
+    LinkedListNode<T>* m_head = nullptr;
 
     LinkedList() { }
     ~LinkedList() { clear(); }
 
     bool isEmpty() { return m_head == nullptr; }
 
-    void append(T d)
+    void pushBack(T d)
     {
         LinkedListNode<T>* new_node = new LinkedListNode<T>;
 
@@ -23,11 +23,9 @@ public:
 
         if (isEmpty()) {
             m_head = new_node;
-            m_tail = m_head;
         } else {
             auto* old_head = m_head;
             new_node->next = old_head;
-            old_head->prev = new_node;
             m_head         = new_node;
         }
     }
