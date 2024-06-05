@@ -494,6 +494,19 @@ li.checked::marker { content: &quot;\2612&quot;; }
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
+          <widget class="QPushButton" name="AutoSolveBtn">
+           <property name="font">
+            <font>
+             <family>BlexMono Nerd Font Mono</family>
+             <pointsize>25</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>SOLVE</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="PauseBtn">
            <property name="font">
             <font>

@@ -72,9 +72,12 @@ private:
         GamePaused,
         GameOverLost,
         GameOverWon,
+        AutoSolving,
     };
 
     GameState m_game_state = GameState::GameNotRunning;
+
+    LinkedList<std::pair<long int, long int>> m_solving_moves;
 
 public:
     explicit GameView(QWidget *parent = nullptr);
@@ -84,8 +87,11 @@ public:
     void reset();    // reset the game states, and re-draw
     void clear();    // reset the game states
     void pause();    // halt the timer, inhibit input
+    void solve();    // solve the game automaticly
 
     bool isPaused() { return m_game_state == GameState::GamePaused; }
+    bool isAutoSolving() { return m_game_state == GameState::AutoSolving; }
+    bool isTimerRunning() { return m_time.timer.isActive(); }
 
     void setGameInfoOutputs(QLabel *time, QLabel *moves, QTextEdit *info_box)
     {
@@ -127,15 +133,33 @@ private:
                           > dest.second->peek()->getValue());
     }
 
+    static inline bool moveIsValid(HanoiStack *source, HanoiStack *dest)
+    {
+        return (!source->isEmpty())
+               && (dest->isEmpty()
+                   || source->peek()->getValue() > dest->peek()->getValue());
+    }
+
+    static void delay(int sec)
+    {
+        QTime dieTime = QTime::currentTime().addMSecs(sec);
+        while (QTime::currentTime() < dieTime)
+            QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+    }
+
     void drawDialog(const QString  &text,
                     const QColor   &color,
                     QPainter *const painter);
 
+    void          hanoiIterativeSolver();
     static size_t getRandomGoalStackIndex();
 
     void updateInfo();
 
-    static void                     colorizeSprite(QPixmap *, const QColor &);
+    static void colorizeSprite(QPixmap *, const QColor &);
+
+    HanoiStack *getStack(size_t label);
+    static void moveTopSlice(HanoiStack *source, HanoiStack *dest);
     std::pair<size_t, HanoiStack *> calculateStackByPos(const QPointF &);
 
     void calculateBaseSizes();

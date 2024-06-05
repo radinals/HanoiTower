@@ -62,6 +62,7 @@ MainWindow::~MainWindow()
 void
 MainWindow::resetGameAction()
 {
+    if (m_game_view->isAutoSolving()) return;
     if (m_game_view->isPaused()) { ui->PauseBtn->setText("PAUSE"); }
     m_game_view->reset();
 }
@@ -88,6 +89,7 @@ MainWindow::on_SettingsBtn_clicked()
 void
 MainWindow::exitAction()
 {
+    if (m_game_view->isAutoSolving()) return;
     if (m_settings_window->isVisible()) { m_settings_window->close(); }
     close();
 }
@@ -95,6 +97,7 @@ MainWindow::exitAction()
 void
 MainWindow::backToMainMenuAction()
 {
+    if (m_game_view->isAutoSolving()) return;
     m_game_view->clear();
     ui->LeaderboardsFrame->hide();
     ui->GameSideBarFrame->hide();
@@ -105,10 +108,18 @@ MainWindow::backToMainMenuAction()
 void
 MainWindow::on_PauseBtn_clicked()
 {
+    if (m_game_view->isAutoSolving()) return;
     m_game_view->pause();
     if (m_game_view->isPaused()) {
         ui->PauseBtn->setText("UN-PAUSE");
     } else {
         ui->PauseBtn->setText("PAUSE");
     }
+}
+
+void
+MainWindow::on_AutoSolveBtn_clicked()
+{
+    if (m_game_view->isAutoSolving() || m_game_view->isTimerRunning()) return;
+    m_game_view->solve();
 }

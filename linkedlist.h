@@ -3,7 +3,7 @@
 
 template<typename T> struct LinkedListNode {
     T               data;
-    LinkedListNode* next = nullptr;
+    LinkedListNode *next = nullptr, *prev = nullptr;
 };
 
 template<typename T> class LinkedList {
@@ -11,7 +11,6 @@ public:
     LinkedListNode<T>*m_head = nullptr, *m_tail = nullptr;
 
     LinkedList() { }
-    LinkedList(LinkedList&&) = delete;
     ~LinkedList() { clear(); }
 
     bool isEmpty() { return m_head == nullptr; }
@@ -28,6 +27,7 @@ public:
         } else {
             auto* old_head = m_head;
             new_node->next = old_head;
+            old_head->prev = new_node;
             m_head         = new_node;
         }
     }

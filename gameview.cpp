@@ -45,6 +45,75 @@ GameView::GameView(QWidget* parent) : QWidget { parent }
 }
 
 void
+GameView::hanoiIterativeSolver()
+{
+    const size_t n = Config::get().Settings().slice_amount;
+
+    size_t possible_moves = (1 << n) - 1;
+
+    size_t source = 0,
+           aux    = ((m_stack_data.goal_stack->first == 1)
+                         ? m_stack_data.goal_stack->first + 1
+                         : 1),
+           dest   = m_stack_data.goal_stack->first;
+
+    if (n % 2 == 0) {
+        size_t tmp;
+        tmp  = dest;
+        dest = aux;
+        aux  = tmp;
+    }
+
+    for (int i = 1; i <= possible_moves; i++) {
+        if (i % 3 == 0)
+            moveTopSlice(getStack(aux), getStack(dest));
+        else if (i % 3 == 1)
+            moveTopSlice(getStack(source), getStack(dest));
+        else
+            moveTopSlice(getStack(source), getStack(aux));
+        ++m_move_count;
+        repaint();
+        while (m_placement_fx->isPlaying()) delay(1);
+        m_placement_fx->play();
+    }
+}
+
+void
+GameView::solve()
+{
+    if (m_game_state != GameState::GameRunning || m_time.timer.isActive()) {
+        return;
+    }
+    m_game_state = GameState::AutoSolving;
+    m_sidebar_widgets.timer_out->setText("...");
+    hanoiIterativeSolver();
+    checkWinState();
+}
+
+void
+GameView::moveTopSlice(HanoiStack* source, HanoiStack* dest)
+{
+    if (source == nullptr || dest == nullptr) { return; }
+
+    if (moveIsValid(source, dest)) {
+        dest->push(source->pop());
+    } else if (!moveIsValid(source, dest) && moveIsValid(dest, source)) {
+        source->push(dest->pop());
+    }
+}
+
+HanoiStack*
+GameView::getStack(size_t label)
+{
+    auto* node = m_stack_data.stacks.m_head;
+    while (node != nullptr) {
+        if (node->data.first == label) { return &node->data.second; }
+        node = node->next;
+    }
+    return nullptr;
+}
+
+void
 GameView::pause()
 {
     switch (m_game_state) {
@@ -54,6 +123,7 @@ GameView::pause()
             m_game_state = GameState::GameRunning;
             break;
         case GameState::GameRunning:
+            if (!m_time.timer.isActive()) { return; }
             m_sidebar_widgets.timer_out->setText("PAUSED");
             m_time.timer.stop();
             m_game_state = GameState::GamePaused;
@@ -67,6 +137,7 @@ GameView::pause()
 void
 GameView::reset()
 {
+    if (m_game_state == GameState::AutoSolving) return;
     clear();
     updateInfo();
     m_placement_fx->setVolume(Config::get().Settings().fx_volume);
@@ -354,8 +425,10 @@ GameView::drawDialog(const QString&  text,
 void
 GameView::checkWinState()
 {
-    m_time.elapsed++;
-    updateInfo();
+    if (m_time.timer.isActive()) {
+        m_time.elapsed++;
+        updateInfo();
+    }
 
     if (goalStackIsComplete()) {
         m_game_state = GameState::GameOverWon;
@@ -374,7 +447,8 @@ GameView::checkWinState()
 void
 GameView::updateInfo()
 {
-    if (m_sidebar_widgets.timer_out != nullptr) {
+    if (m_sidebar_widgets.timer_out != nullptr
+        && m_game_state != GameState::AutoSolving) {
         auto hh_mm_ss = Utils::extractTimeFromMs(
             Config::get().Settings().time_length_ms - m_time.elapsed);
 

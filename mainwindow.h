@@ -69,6 +69,8 @@ private slots:
 
     void on_PauseBtn_clicked();
 
+    void on_AutoSolveBtn_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
