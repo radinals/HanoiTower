@@ -349,7 +349,8 @@ GameView::calculateStackByPos(const QPointF& point)
     auto* node = m_stack_data.stacks.m_head;
     while (node != nullptr) {
         // x and y should be 1 if the point is in the stack area
-        float x_area = stack_w / point.x(), y_area = stack_h / point.y();
+        float x_area = floor(stack_w / point.x()),
+              y_area = floor(stack_h / point.y());
 
         if ((x_area >= 1) && (y_area >= 1)) {
             return { node->data.first, &node->data.second };
@@ -544,6 +545,8 @@ void
 GameView::mousePressEvent(QMouseEvent* event)
 {
     if (m_selected.valid() || m_game_state != GameState::Running
+        || (event->pos().x() <= 0 || event->pos().y() <= 0)
+        || (event->pos().x() >= width() || event->pos().y() >= height())) {
         return;
     }
 
@@ -572,6 +575,8 @@ void
 GameView::mouseMoveEvent(QMouseEvent* event)
 {
     if (!m_selected.valid() || m_game_state != GameState::Running
+        || (event->pos().x() <= 0 || event->pos().y() <= 0)
+        || (event->pos().x() >= width() || event->pos().y() >= height())) {
         return;
     }
 
