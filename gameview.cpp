@@ -609,7 +609,7 @@ GameView::mouseReleaseEvent(QMouseEvent* event)
         m_selected.stack->push(m_selected.slice);
     }
 
-    m_selected = { .stack = nullptr, .slice = nullptr };
+    m_selected = { nullptr, nullptr };
 
     update();
 
