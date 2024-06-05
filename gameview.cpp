@@ -22,7 +22,7 @@ GameView::GameView(QWidget* parent) : QWidget { parent }
 {
     // initialize all possible stack
     for (int i = Config::get().Settings().STACK_MAX; i >= 0; i--) {
-        m_stack_data.stacks.append(std::make_pair(i, HanoiStack()));
+        m_stack_data.stacks.pushBack(std::make_pair(i, HanoiStack()));
     }
 
     // init timer.
@@ -65,12 +65,13 @@ GameView::hanoiIterativeSolver()
     }
 
     for (int i = 1; i <= possible_moves; i++) {
-        if (i % 3 == 0)
+        if (i % 3 == 0) {
             moveTopSlice(getStack(aux), getStack(dest));
-        else if (i % 3 == 1)
+        } else if (i % 3 == 1) {
             moveTopSlice(getStack(source), getStack(dest));
-        else
+        } else {
             moveTopSlice(getStack(source), getStack(aux));
+        }
         ++m_move_count;
         repaint();
         while (m_placement_fx->isPlaying()) delay(1);
@@ -191,7 +192,7 @@ GameView::clear()
     HanoiSlice* slice = m_stack_data.stacks.m_head->data.second.getHead();
     while (slice != nullptr) {
         colorizeSprite(&slice->getPixmap(), Config::get().Theme().slice_tint);
-        m_stack_data.slices.append(
+        m_stack_data.slices.pushBack(
             slice);    // save the slices for ease of access
         slice = slice->next;
     }
