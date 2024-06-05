@@ -81,7 +81,7 @@ GameView::hanoiIterativeSolver()
 void
 GameView::solve()
 {
-    if (m_game_state != GameState::GameRunning || m_time.timer.isActive()) {
+    if (m_game_state != GameState::Running || m_time.timer.isActive()) {
         return;
     }
     m_game_state = GameState::AutoSolving;
@@ -117,16 +117,16 @@ void
 GameView::pause()
 {
     switch (m_game_state) {
-        case GameState::GamePaused:
+        case GameState::Paused:
             m_time.timer.start(1);
             updateInfo();
-            m_game_state = GameState::GameRunning;
+            m_game_state = GameState::Running;
             break;
-        case GameState::GameRunning:
+        case GameState::Running:
             if (!m_time.timer.isActive()) { return; }
             m_sidebar_widgets.timer_out->setText("PAUSED");
             m_time.timer.stop();
-            m_game_state = GameState::GamePaused;
+            m_game_state = GameState::Paused;
             break;
         default:
             return;
@@ -141,7 +141,7 @@ GameView::reset()
     clear();
     updateInfo();
     m_placement_fx->setVolume(Config::get().Settings().fx_volume);
-    m_game_state = GameState::GameRunning;
+    m_game_state = GameState::Running;
     repaint();
 }
 
@@ -152,7 +152,7 @@ GameView::clear()
 
     m_time.elapsed = m_move_count = 0;
 
-    m_game_state = GameState::GameNotRunning;
+    m_game_state = GameState::NotRunning;
     m_time.timer.stop();
     m_stack_data.slices.clear();
 
@@ -298,8 +298,7 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 
         font_color = Config::get().Theme().highlight_tint;
 
-        if (!m_time.timer.isActive()
-            && m_game_state == GameState::GameRunning) {
+        if (!m_time.timer.isActive() && m_game_state == GameState::Running) {
             painter->drawPixmap(m_sizes.stack_area.width() * 0.5f,
                                 pole_y - (arrow_sprite.height()),
                                 arrow_sprite);
@@ -486,7 +485,7 @@ GameView::getRandomGoalStackIndex()
 void
 GameView::paintEvent(QPaintEvent* event)
 {
-    if (m_game_state == GameState::GameNotRunning) return;
+    if (m_game_state == GameState::NotRunning) return;
 
     QPainter p(this);
 
@@ -536,7 +535,7 @@ void
 GameView::resizeEvent(QResizeEvent* event)
 {
     calculateBaseSizes();
-    if (m_game_state != GameState::GameNotRunning) { scaleSlices(); }
+    if (m_game_state != GameState::NotRunning) { scaleSlices(); }
 }
 
 // on mouse press, pop the slice of the stack below the mouse click,
@@ -544,7 +543,7 @@ GameView::resizeEvent(QResizeEvent* event)
 void
 GameView::mousePressEvent(QMouseEvent* event)
 {
-    if (m_selected.valid() || m_game_state != GameState::GameRunning) {
+    if (m_selected.valid() || m_game_state != GameState::Running
         return;
     }
 
@@ -572,7 +571,7 @@ GameView::mousePressEvent(QMouseEvent* event)
 void
 GameView::mouseMoveEvent(QMouseEvent* event)
 {
-    if (!m_selected.valid() || m_game_state != GameState::GameRunning) {
+    if (!m_selected.valid() || m_game_state != GameState::Running
         return;
     }
 
@@ -584,9 +583,7 @@ GameView::mouseMoveEvent(QMouseEvent* event)
 void
 GameView::mouseReleaseEvent(QMouseEvent* event)
 {
-    if (!m_selected.valid() || m_game_state != GameState::GameRunning) {
-        return;
-    }
+    if (!m_selected.valid() || m_game_state != GameState::Running) { return; }
 
     std::pair<size_t, HanoiStack*> destination_stack
         = calculateStackByPos(event->position().toPoint());
@@ -598,8 +595,7 @@ GameView::mouseReleaseEvent(QMouseEvent* event)
     //     than the destination stack top value -> cancel
 
     if (moveIsValid(destination_stack)) {
-        if (m_game_state == GameState::GameRunning
-            && !m_time.timer.isActive()) {
+        if (m_game_state == GameState::Running && !m_time.timer.isActive()) {
             m_time.timer.start(1);
         }
         destination_stack.second->push(m_selected.slice);

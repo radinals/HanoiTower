@@ -67,15 +67,15 @@ private:
     } m_time;
 
     enum class GameState {
-        GameNotRunning,
-        GameRunning,
-        GamePaused,
+        NotRunning,
+        Running,
+        Paused,
         GameOverLost,
         GameOverWon,
         AutoSolving,
     };
 
-    GameState m_game_state = GameState::GameNotRunning;
+    GameState m_game_state = GameState::NotRunning;
 
     LinkedList<std::pair<long int, long int>> m_solving_moves;
 
@@ -89,7 +89,7 @@ public:
     void pause();    // halt the timer, inhibit input
     void solve();    // solve the game automaticly
 
-    bool isPaused() { return m_game_state == GameState::GamePaused; }
+    bool isPaused() { return m_game_state == GameState::Paused; }
     bool isAutoSolving() { return m_game_state == GameState::AutoSolving; }
     bool isTimerRunning() { return m_time.timer.isActive(); }
 
