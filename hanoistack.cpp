@@ -1,5 +1,7 @@
 #include "hanoistack.h"
 
+#include "hanoislice.h"
+
 #include <stdexcept>
 
 void

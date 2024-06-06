@@ -113,8 +113,10 @@ private:
 
     inline void moveSelectedSlice(const QPoint &p)
     {
-        m_selected.slice->setX(p.x() - (m_selected.slice->getWidth() * 0.5f));
-        m_selected.slice->setY(p.y() - (m_selected.slice->getHeight() * 0.5f));
+        m_selected.slice->Geometry().x
+            = (p.x() - (m_selected.slice->Geometry().width * 0.5f));
+        m_selected.slice->Geometry().y
+            = (p.y() - (m_selected.slice->Geometry().height * 0.5f));
         update();
     }
 

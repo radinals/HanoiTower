@@ -238,12 +238,12 @@ GameView::drawStack(float offset, HanoiStack* stack, QPainter* painter)
 
     HanoiSlice* slice = stack->getTail();
     while (slice != nullptr) {
-        y -= std::floor(slice->getHeight());
+        y -= std::floor(slice->Geometry().height);
 
-        slice->setX(offset - (slice->getWidth() * 0.5f));
-        slice->setY(y);
+        slice->Geometry().x = offset - (slice->Geometry().width * 0.5f);
+        slice->Geometry().y = y;
 
-        painter->drawPixmap(QPointF(slice->getX(), slice->getY()),
+        painter->drawPixmap(QPointF(slice->Geometry().x, slice->Geometry().y),
                             slice->getScaledPixmap());
 
         slice = slice->prev;
@@ -329,8 +329,9 @@ GameView::scaleSlices()
 
     auto node = m_stack_data.slices.m_head;
     while (node != nullptr) {
-        node->data->setHeight(height *= m_slice_scale_factor);
-        node->data->setWidth(width *= m_slice_scale_factor);
+        node->data->Geometry().height = (height *= m_slice_scale_factor);
+        node->data->Geometry().width  = (width *= m_slice_scale_factor);
+
         node = node->next;
     }
 }
@@ -512,8 +513,8 @@ GameView::paintEvent(QPaintEvent* event)
 
     // render the selected stack
     if (m_selected.valid()) {
-        p.drawPixmap(m_selected.slice->getX(),
-                     m_selected.slice->getY(),
+        p.drawPixmap(m_selected.slice->Geometry().x,
+                     m_selected.slice->Geometry().y,
                      m_selected.slice->getScaledPixmap());
     }
 
