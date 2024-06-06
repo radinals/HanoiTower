@@ -20,7 +20,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(HanoiTower
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        hanoistack.h hanoistack.cpp
+        hanoislice.h hanoistack.h hanoistack.cpp
         linkedlist.h
         config.h utils.h
         gameview.h gameview.cpp
