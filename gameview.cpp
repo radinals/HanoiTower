@@ -205,8 +205,6 @@ GameView::clear()
 void
 GameView::calculateBaseSizes()
 {
-    assert((float(width()) > 0) && (float(height()) > 0));
-
     m_geometry.stack_area.setWidth(float(width())
                                    / Config::get().Settings().stack_amount);
 
@@ -403,8 +401,6 @@ GameView::drawDialog(const QString&  text,
     dialog = dialog.scaled(m_geometry.dialog.toSize());
 
     colorizeSprite(&dialog, color);
-
-    assert(m_geometry.dialog.width() > 0 && text.length() > 0);
 
     // setup font
     const QFont font(Config::get().Theme().font_name,             // fontname
