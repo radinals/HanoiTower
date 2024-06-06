@@ -34,9 +34,9 @@ private:
         QPixmap stack_pole, stack_base, arrow;
     } m_sprites;
 
-    struct GameGeometry_t {
+    struct Geometry_t {
         QSizeF stack_area, stack_base, slice, dialog;
-    } m_sizes;
+    } m_geometry;
 
     struct SelectedData_t {
         HanoiStack *stack = nullptr;    // source stack

@@ -207,21 +207,21 @@ GameView::calculateBaseSizes()
 {
     assert((float(width()) > 0) && (float(height()) > 0));
 
-    m_sizes.stack_area.setWidth(float(width())
-                                / Config::get().Settings().stack_amount);
+    m_geometry.stack_area.setWidth(float(width())
+                                   / Config::get().Settings().stack_amount);
 
-    m_sizes.stack_area.setHeight(height() * 0.9f);
+    m_geometry.stack_area.setHeight(height() * 0.9f);
 
-    m_sizes.slice.setHeight(m_sizes.stack_area.height()
-                            / Config::get().Settings().SLICE_MAX);
+    m_geometry.slice.setHeight(m_geometry.stack_area.height()
+                               / Config::get().Settings().SLICE_MAX);
 
-    m_sizes.slice.setWidth(m_sizes.stack_area.width() * 0.9f);
+    m_geometry.slice.setWidth(m_geometry.stack_area.width() * 0.9f);
 
-    m_sizes.stack_base.setWidth(m_sizes.slice.width() * 1.1f);
-    m_sizes.stack_base.setHeight(m_sizes.slice.height());
+    m_geometry.stack_base.setWidth(m_geometry.slice.width() * 1.1f);
+    m_geometry.stack_base.setHeight(m_geometry.slice.height());
 
-    m_sizes.dialog.setWidth(width() * 0.4f);
-    m_sizes.dialog.setHeight(height() * 0.2f);
+    m_geometry.dialog.setWidth(width() * 0.4f);
+    m_geometry.dialog.setHeight(height() * 0.2f);
 }
 
 // - draw the stack's slices
@@ -234,7 +234,7 @@ GameView::drawStack(float offset, HanoiStack* stack, QPainter* painter)
 {
     if (stack == nullptr || stack->isEmpty()) { return; }
 
-    float y = height() - m_sizes.slice.height();
+    float y = height() - m_geometry.slice.height();
 
     HanoiSlice* slice = stack->getTail();
     while (slice != nullptr) {
@@ -259,21 +259,21 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
     //--Draw Stack Base+Pole----------------------------------------------
 
     const float pole_height
-        = m_sizes.stack_base.height() * Config::get().Settings().SLICE_MAX,
+        = m_geometry.stack_base.height() * Config::get().Settings().SLICE_MAX,
         pole_y = height() - pole_height;
 
     // scale the sprites
     const QPixmap pole_sprite
-        = m_sprites.stack_pole.scaled(m_sizes.stack_base.width() * 0.1f,
+        = m_sprites.stack_pole.scaled(m_geometry.stack_base.width() * 0.1f,
                                       pole_height);
 
     const QPixmap stack_base_sprite
-        = m_sprites.stack_base.scaled(m_sizes.stack_base.width(),
-                                      m_sizes.stack_base.height());
+        = m_sprites.stack_base.scaled(m_geometry.stack_base.width(),
+                                      m_geometry.stack_base.height());
 
     const QPixmap arrow_sprite
-        = m_sprites.arrow.scaled(offset - m_sizes.stack_area.width() * 0.5f,
-                                 m_sizes.stack_base.width() * 0.1f);
+        = m_sprites.arrow.scaled(offset - m_geometry.stack_area.width() * 0.5f,
+                                 m_geometry.stack_base.width() * 0.1f);
 
     // draw the pole
     painter->drawPixmap(offset - (pole_sprite.width() * 0.5f),
@@ -281,26 +281,26 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
                         pole_sprite);
 
     // draw the base
-    painter->drawPixmap(offset - (m_sizes.stack_base.width() * 0.5f),
-                        height() - m_sizes.stack_base.height(),
+    painter->drawPixmap(offset - (m_geometry.stack_base.width() * 0.5f),
+                        height() - m_geometry.stack_base.height(),
                         stack_base_sprite);
 
     //--Draw Stack Label--------------------------------------------------
 
-    const QFont font(Config::get().Theme().font_name,     // fontname
-                     m_sizes.stack_base.width() * 0.1f    // size
+    const QFont font(Config::get().Theme().font_name,        // fontname
+                     m_geometry.stack_base.width() * 0.1f    // size
     );
 
     QColor font_color = Config::get().Theme().font_color;
 
     // highlight + draw the indicator if current stack is the goal stack
     if (label == (m_stack_data.goal_stack->first)) {
-        const float box_size = (m_sizes.stack_base.width() * 0.1f) + 4;
+        const float box_size = (m_geometry.stack_base.width() * 0.1f) + 4;
 
         font_color = Config::get().Theme().highlight_tint;
 
         if (!m_time.timer.isActive() && m_game_state == GameState::Running) {
-            painter->drawPixmap(m_sizes.stack_area.width() * 0.5f,
+            painter->drawPixmap(m_geometry.stack_area.width() * 0.5f,
                                 pole_y - (arrow_sprite.height()),
                                 arrow_sprite);
         } else {
@@ -325,7 +325,8 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 void
 GameView::scaleSlices()
 {
-    float width = m_sizes.slice.width(), height = m_sizes.stack_base.height();
+    float width  = m_geometry.slice.width(),
+          height = m_geometry.stack_base.height();
 
     auto node = m_stack_data.slices.m_head;
     while (node != nullptr) {
@@ -342,8 +343,8 @@ GameView::scaleSlices()
 std::pair<size_t, HanoiStack*>
 GameView::calculateStackByPos(const QPointF& point)
 {
-    const float stack_h = m_sizes.stack_area.height();
-    float       stack_w = m_sizes.stack_area.width();
+    const float stack_h = m_geometry.stack_area.height();
+    float       stack_w = m_geometry.stack_area.width();
 
     assert(stack_w > 0 && stack_h > 0);
     assert(point.x() > 0 && point.y() > 0);
@@ -359,7 +360,7 @@ GameView::calculateStackByPos(const QPointF& point)
         }
 
         // shift to the right, by stack area width
-        stack_w += m_sizes.stack_area.width();
+        stack_w += m_geometry.stack_area.width();
 
         node = node->next;
     }
@@ -399,15 +400,15 @@ GameView::drawDialog(const QString&  text,
                      QPainter* const painter)
 {
     QPixmap dialog(Config::get().AssetFiles().DIALOG);
-    dialog = dialog.scaled(m_sizes.dialog.toSize());
+    dialog = dialog.scaled(m_geometry.dialog.toSize());
 
     colorizeSprite(&dialog, color);
 
-    assert(m_sizes.dialog.width() > 0 && text.length() > 0);
+    assert(m_geometry.dialog.width() > 0 && text.length() > 0);
 
     // setup font
-    const QFont font(Config::get().Theme().font_name,          // fontname
-                     m_sizes.dialog.width() / text.length()    // size
+    const QFont font(Config::get().Theme().font_name,             // fontname
+                     m_geometry.dialog.width() / text.length()    // size
     );
     painter->setFont(font);
     const int font_size = painter->font().pointSizeF();
@@ -416,11 +417,11 @@ GameView::drawDialog(const QString&  text,
     painter->setPen(Config::get().Theme().font_color);
 
     painter->drawPixmap((width() * 0.5f) - (dialog.width() * 0.5f),
-                        (height() * 0.5f) - (m_sizes.dialog.height() * 0.5f),
+                        (height() * 0.5f) - (m_geometry.dialog.height() * 0.5f),
                         dialog);
 
     painter->drawText((width() * 0.5f) - ((text.length() * font_size) * 0.4f),
-                      (height() * 0.5f) + m_sizes.dialog.height() * 0.1f,
+                      (height() * 0.5f) + m_geometry.dialog.height() * 0.1f,
                       text);
 }
 
@@ -494,7 +495,7 @@ GameView::paintEvent(QPaintEvent* event)
 
     updateInfo();
 
-    float offset = m_sizes.stack_area.width() * 0.5f;
+    float offset = m_geometry.stack_area.width() * 0.5f;
 
     auto* node = m_stack_data.stacks.m_head;
     while (node != nullptr
@@ -506,7 +507,7 @@ GameView::paintEvent(QPaintEvent* event)
         drawStack(offset, &node->data.second, &p);
 
         // shift to the right for the next stack
-        offset += m_sizes.stack_area.width();
+        offset += m_geometry.stack_area.width();
 
         node = node->next;
     }
