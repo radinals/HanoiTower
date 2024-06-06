@@ -341,24 +341,23 @@ GameView::scaleSlices()
 std::pair<size_t, HanoiStack*>
 GameView::calculateStackByPos(const QPointF& point)
 {
-    const float stack_h = m_geometry.stack_area.height();
-    float       stack_w = m_geometry.stack_area.width();
+    const float stack_area_height = m_geometry.stack_area.height();
+    const float stack_area_width  = m_geometry.stack_area.width();
 
-    assert(stack_w > 0 && stack_h > 0);
-    assert(point.x() > 0 && point.y() > 0);
+    float area_width = stack_area_width;
+    auto* node       = m_stack_data.stacks.m_head;
 
-    auto* node = m_stack_data.stacks.m_head;
     while (node != nullptr) {
-        // x and y should be 1 if the point is in the stack area
-        float x_area = floor(stack_w / point.x()),
-              y_area = floor(stack_h / point.y());
+        // normalized vector
+        const float x = (point.x() != 0) ? (point.x() / area_width) : 0;
+        const float y = (point.y() != 0) ? (point.y() / stack_area_height) : 0;
 
-        if ((x_area >= 1) && (y_area >= 1)) {
+        if ((x >= 0 && x <= 1) && (y >= 0 && y <= 1)) {
             return { node->data.first, &node->data.second };
         }
 
         // shift to the right, by stack area width
-        stack_w += m_geometry.stack_area.width();
+        area_width += stack_area_width;
 
         node = node->next;
     }
