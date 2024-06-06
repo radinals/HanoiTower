@@ -38,9 +38,6 @@ GameView::GameView(QWidget* parent) : QWidget { parent }
     m_sprites.stack_base = QPixmap(Config::get().AssetFiles().STACK_BASE);
     m_sprites.arrow      = QPixmap(Config::get().AssetFiles().ARROW);
 
-    // tint the sprites
-    colorizeSprite(&m_sprites.stack_pole, Config::get().Theme().stack_tint);
-    colorizeSprite(&m_sprites.stack_base, Config::get().Theme().stack_tint);
     colorizeSprite(&m_sprites.arrow, Config::get().Theme().highlight_tint);
 }
 
@@ -261,17 +258,21 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
         pole_y = height() - pole_height;
 
     // scale the sprites
-    const QPixmap pole_sprite
+    QPixmap pole_sprite
         = m_sprites.stack_pole.scaled(m_geometry.stack_base.width() * 0.1f,
                                       pole_height);
 
-    const QPixmap stack_base_sprite
+    QPixmap stack_base_sprite
         = m_sprites.stack_base.scaled(m_geometry.stack_base.width(),
                                       m_geometry.stack_base.height());
 
     const QPixmap arrow_sprite
         = m_sprites.arrow.scaled(offset - m_geometry.stack_area.width() * 0.5f,
                                  m_geometry.stack_base.width() * 0.1f);
+
+    // tint the sprites
+    colorizeSprite(&pole_sprite, Config::get().Theme().stack_tint);
+    colorizeSprite(&stack_base_sprite, Config::get().Theme().stack_tint);
 
     // draw the pole
     painter->drawPixmap(offset - (pole_sprite.width() * 0.5f),
