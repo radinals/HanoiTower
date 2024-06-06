@@ -4,6 +4,7 @@
 #include "settingswindow.h"
 #include "ui_mainwindow.h"
 
+#include <qcoreevent.h>
 #include <qmediaplayer.h>
 #include <qpushbutton.h>
 
@@ -21,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
                                     ui->GameInfoBox);
     m_settings_window = new SettingsWindow;
 
+    ui->SettingsViewFrame->layout()->addWidget(m_settings_window);
     ui->GameViewFrame->layout()->addWidget(m_game_view);
 
     connect(ui->ResetBtn,
@@ -40,11 +42,15 @@ MainWindow::MainWindow(QWidget *parent)
             this,
             &MainWindow::exitAction);
 
+    connect(m_settings_window,
+            &SettingsWindow::hidden,
+            this,
+            &MainWindow::backToMainMenuAction);
+
     ui->GameTitle->setPixmap(m_logo);
 
-    m_settings_window->hide();
     ui->GameSideBarFrame->hide();
-    ui->LeaderboardsFrame->hide();
+    ui->SettingsViewFrame->hide();
     ui->GameViewFrame->hide();
     ui->GameMenuFrame->show();
 
@@ -70,8 +76,6 @@ MainWindow::resetGameAction()
 void
 MainWindow::on_StartBtn_clicked()
 {
-    if (m_settings_window->isVisible()) { return; }
-
     ui->GameMenuFrame->hide();
     ui->GameSideBarFrame->show();
     ui->GameViewFrame->show();
@@ -81,8 +85,10 @@ MainWindow::on_StartBtn_clicked()
 void
 MainWindow::on_SettingsBtn_clicked()
 {
-    if (m_settings_window->isVisible()) { return; }
-
+    ui->GameSideBarFrame->hide();
+    ui->GameViewFrame->hide();
+    ui->GameMenuFrame->hide();
+    ui->SettingsViewFrame->show();
     m_settings_window->show();
 }
 
@@ -90,7 +96,6 @@ void
 MainWindow::exitAction()
 {
     if (m_game_view->isAutoSolving()) return;
-    if (m_settings_window->isVisible()) { m_settings_window->close(); }
     close();
 }
 
@@ -99,7 +104,7 @@ MainWindow::backToMainMenuAction()
 {
     if (m_game_view->isAutoSolving()) return;
     m_game_view->clear();
-    ui->LeaderboardsFrame->hide();
+    ui->SettingsViewFrame->hide();
     ui->GameSideBarFrame->hide();
     ui->GameViewFrame->hide();
     ui->GameMenuFrame->show();

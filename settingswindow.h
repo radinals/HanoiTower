@@ -3,6 +3,7 @@
 
 #include <QGraphicsScene>
 #include <QWidget>
+#include <qevent.h>
 
 namespace Ui {
     class SettingsWindow;
@@ -28,6 +29,21 @@ public:
     explicit SettingsWindow(QWidget *parent = nullptr);
     ~SettingsWindow();
 
+protected:
+    void hideEvent(QHideEvent *event) override
+    {
+        emit hidden();
+        QWidget::hideEvent(event);
+    }
+
+    void showEvent(QShowEvent *event) override
+    {
+        drawPreview();
+        QWidget::showEvent(event);
+    }
+
+    void resizeEvent(QResizeEvent *event) override { drawPreview(); }
+
 private slots:
     void on_ThemeSliceColorSettingsInput_editingFinished();
 
@@ -51,6 +67,8 @@ private slots:
 
 private:
     Ui::SettingsWindow *ui;
+signals:
+    void hidden();
 };
 
 #endif    // SETTINGSWINDOW_H

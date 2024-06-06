@@ -222,7 +222,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QFrame" name="LeaderboardsFrame">
+     <widget class="QFrame" name="SettingsViewFrame">
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
       </property>
