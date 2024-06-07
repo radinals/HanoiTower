@@ -17,6 +17,7 @@ SettingsWindow::SettingsWindow(QWidget* parent)
 {
     ui->setupUi(this);
 
+    // copy the global variables
     Settings.stack_amount = Config::get().Settings().stack_amount;
     Settings.slice_amount = Config::get().Settings().slice_amount;
     Settings.slice_color  = Config::get().Theme().slice_tint;
@@ -29,6 +30,7 @@ SettingsWindow::SettingsWindow(QWidget* parent)
     m_sfx_preview               = new QSoundEffect(this);
     m_sfx_preview->setSource("qrc" + Config::get().AudioFiles().PLACEMENT_FX);
 #else
+    // hide all audio setting options
     ui->AudioSFXVolOut->hide();
     ui->AudioMusicVolOut->hide();
     ui->AudioMusicVolLabel->hide();
@@ -39,10 +41,14 @@ SettingsWindow::SettingsWindow(QWidget* parent)
     ui->AudioSettingGroupLine->hide();
 #endif    // !DISABLE_AUDIO
 
+    // init the preview scene
     m_preview_scene = new QGraphicsScene;
     ui->PreviewOut->setScene(m_preview_scene);
 
+    // load the values
     update_options();
+
+    // update the preview
     drawPreview();
 }
 
@@ -55,9 +61,11 @@ SettingsWindow::~SettingsWindow()
     delete ui;
 }
 
+// updates the setting menu option values
 void
 SettingsWindow::update_options()
 {
+    //  Updates Game Setting Output
     ui->GameSliceAmountSlider->setValue(Settings.slice_amount);
     ui->GameStackAmountSlider->setValue(Settings.stack_amount);
 
@@ -65,6 +73,7 @@ SettingsWindow::update_options()
     ui->GameStackAmountOut->setText(QString::number(Settings.stack_amount));
 
 #ifndef DISABLE_AUDIO
+    //  Updates Audio Setting Output
     ui->AudioMusicVolOut->setText(
         QString::number(int(Settings.music_volume_level * 100)) + "%");
 
@@ -86,6 +95,7 @@ SettingsWindow::update_options()
 
 #endif    // !DISABLE_AUDIO
 
+    //  Updates Game Timer Setting Output
     ui->ThemeStackColorSettingsInput->setText(
         Settings.stack_color.toRgb().name());
     ui->ThemeSliceColorSettingsInput->setText(

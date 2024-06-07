@@ -16,6 +16,10 @@ namespace Ui {
 class SettingsWindow : public QWidget {
     Q_OBJECT
 
+public:
+    explicit SettingsWindow(QWidget *parent = nullptr);
+    ~SettingsWindow();
+
 private:
     struct Settings_t {
         size_t        stack_amount = 0, slice_amount = 0;
@@ -26,24 +30,17 @@ private:
 
     QGraphicsScene *m_preview_scene = nullptr;
 
-#ifndef DISABLE_AUDIO
-    QSoundEffect *m_sfx_preview = nullptr;
-#endif    // !DISABLE_AUDIO
-
     void drawPreview();
     void update_options();
 
-public:
-    explicit SettingsWindow(QWidget *parent = nullptr);
-    ~SettingsWindow();
-
-protected:
+    // used for handling exiting from setting window
     void hideEvent(QHideEvent *event) override
     {
         emit hidden();
         QWidget::hideEvent(event);
     }
 
+    // make sure to update the preview window everytime is 'un-hide/shown'
     void showEvent(QShowEvent *event) override
     {
         drawPreview();
@@ -51,6 +48,10 @@ protected:
     }
 
     void resizeEvent(QResizeEvent *event) override { drawPreview(); }
+
+#ifndef DISABLE_AUDIO
+    QSoundEffect *m_sfx_preview = nullptr;
+#endif    // !DISABLE_AUDIO
 
 private slots:
     void on_ThemeSliceColorSettingsInput_editingFinished();
