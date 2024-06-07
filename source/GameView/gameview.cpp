@@ -80,13 +80,7 @@ GameView::hanoiIterativeSolver()
 
         ++m_move_count;
         repaint();
-
-#ifndef DISABLE_AUDIO
-        while (m_placement_fx->isPlaying()) delay(1);
-        m_placement_fx->play();
-#else
-        delay(1);
-#endif    // !DISABLE_AUDIO
+        delay(10);
     }
 }
 
