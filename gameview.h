@@ -13,21 +13,48 @@
 #include <QTime>
 #include <QTimer>
 #include <QWidget>
+#include <string>
+#include <utility>
 
 #ifndef DISABLE_AUDIO
     #include <QSoundEffect>
     #include <QtMultimedia>
 #endif
 
-#include <string>
-#include <utility>
-
 class GameView : public QWidget {
     Q_OBJECT
 
+public:
+    explicit GameView(QWidget *parent = nullptr);
+    ~GameView() override
+    {
+#ifndef DISABLE_AUDIO
+        delete m_placement_fx;
+#endif
+    }
+
+    void reset();    // reset the game states, and re-draw
+    void clear();    // reset the game states
+    void pause();    // halt the timer, inhibit input
+    void solve();    // solve the game automaticly
+
+    // used for checking GameView current status
+    bool isPaused() { return m_game_state == GameState::Paused; }
+    bool isAutoSolving() { return m_game_state == GameState::AutoSolving; }
+    bool isTimerRunning() { return m_time.timer.isActive(); }
+
+    // define pointers to the output widgets
+    void setGameInfoOutputs(QLabel *time, QLabel *moves, QTextEdit *info_box)
+    {
+        m_sidebar_widgets.timer_out      = time;
+        m_sidebar_widgets.move_count_out = moves;
+        m_sidebar_widgets.info_msg_out   = info_box;
+    }
+
 private:
-    const float  m_slice_scale_factor = 0.9f;
-    unsigned int m_move_count         = 0;
+    // scale (down) of slices
+    const float m_slice_scale_factor = 0.9f;
+    size_t      m_move_count         = 0;
 
 #ifndef DISABLE_AUDIO
     QSoundEffect *m_placement_fx = nullptr;
@@ -65,8 +92,8 @@ private:
     } m_stack_data;
 
     struct TimeInfo_t {
-        QTimer                 timer;
-        unsigned long long int elapsed = 0;    // ms
+        QTimer        timer;
+        long long int elapsed = 0;    // ms
     } m_time;
 
     enum class GameState {
@@ -80,38 +107,47 @@ private:
 
     GameState m_game_state = GameState::NotRunning;
 
-    LinkedList<std::pair<long int, long int>> m_solving_moves;
+    // calculate click area, returns stack under click
+    std::pair<size_t, HanoiStack *> calculateStackByPos(const QPointF &);
 
-public:
-    explicit GameView(QWidget *parent = nullptr);
-    ~GameView() override
-    {
-#ifndef DISABLE_AUDIO
-        delete m_placement_fx;
-#endif
-    }
-    // ~GameView() override {};
+    // calculate the base sizes
+    void calculateBaseSizes();
 
-    void reset();    // reset the game states, and re-draw
-    void clear();    // reset the game states
-    void pause();    // halt the timer, inhibit input
-    void solve();    // solve the game automaticly
+    // updates sidebar values
+    void updateInfo();
 
-    bool isPaused() { return m_game_state == GameState::Paused; }
-    bool isAutoSolving() { return m_game_state == GameState::AutoSolving; }
-    bool isTimerRunning() { return m_time.timer.isActive(); }
+    // get pointer to stack of 'label'
+    HanoiStack *getStack(size_t label);
 
-    void setGameInfoOutputs(QLabel *time, QLabel *moves, QTextEdit *info_box)
-    {
-        m_sidebar_widgets.timer_out      = time;
-        m_sidebar_widgets.move_count_out = moves;
-        m_sidebar_widgets.info_msg_out   = info_box;
-    }
+    // handles drawing/rendering
+    void drawStack(float offset, HanoiStack *, QPainter *p);
+    void drawStackBase(size_t label, float offset, QPainter *painter);
+    void drawDialog(const QString  &text,
+                    const QColor   &color,
+                    QPainter *const painter);
 
-private slots:
-    void checkWinState();
+    void scaleSlices();    // handles slice scaling
 
-private:
+    // basic auto-solving mode (NOT THREAD SAFE)
+    void hanoiIterativeSolver();
+
+    // QWidget Event Handlers
+    void mousePressEvent(QMouseEvent *) override;
+    void mouseReleaseEvent(QMouseEvent *) override;
+    void mouseMoveEvent(QMouseEvent *) override;
+    void paintEvent(QPaintEvent *) override;
+    void resizeEvent(QResizeEvent *) override;
+
+    // tints pixmaps
+    static void colorizeSprite(QPixmap *, const QColor &);
+
+    // move/pop the top slice of a stack
+    static void moveTopSlice(HanoiStack *source, HanoiStack *dest);
+
+    // generate random stack index from 1 to n-1
+    static size_t getRandomGoalStackIndex();
+
+    // convert the numeric labels of stacks to alphabets
     inline static QString numToChar(size_t n)
     {
         std::string str;
@@ -119,6 +155,7 @@ private:
         return QString::fromStdString(str);
     };
 
+    // move slice stored by m_selected, to the QPoints x and y values
     inline void moveSelectedSlice(const QPoint &p)
     {
         m_selected.slice->Geometry().x
@@ -128,12 +165,15 @@ private:
         update();
     }
 
+    // check if the goal stack has all valid slices in it
     inline bool goalStackIsComplete()
     {
         return (m_stack_data.goal_stack->second.getSize()
                 == Config::get().Settings().slice_amount);
     }
 
+    // overloaded game movement rule check,
+    // this checks the slice in m_selected
     inline bool moveIsValid(const std::pair<size_t, HanoiStack *> &dest)
     {
         return (dest.second != nullptr)
@@ -143,6 +183,8 @@ private:
                           > dest.second->peek()->getValue());
     }
 
+    // overloaded game movement rule check,
+    // this checks the top slice in two stacks
     static inline bool moveIsValid(HanoiStack *source, HanoiStack *dest)
     {
         return (!source->isEmpty())
@@ -150,39 +192,17 @@ private:
                    || source->peek()->getValue() > dest->peek()->getValue());
     }
 
-    static void delay(int sec)
+    // delay by miliseconds
+    static void delay(int ms)
     {
-        QTime dieTime = QTime::currentTime().addMSecs(sec);
+        QTime dieTime = QTime::currentTime().addMSecs(ms);
         while (QTime::currentTime() < dieTime)
             QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
     }
 
-    void drawDialog(const QString  &text,
-                    const QColor   &color,
-                    QPainter *const painter);
-
-    void          hanoiIterativeSolver();
-    static size_t getRandomGoalStackIndex();
-
-    void updateInfo();
-
-    static void colorizeSprite(QPixmap *, const QColor &);
-
-    HanoiStack *getStack(size_t label);
-    static void moveTopSlice(HanoiStack *source, HanoiStack *dest);
-    std::pair<size_t, HanoiStack *> calculateStackByPos(const QPointF &);
-
-    void calculateBaseSizes();
-    void drawStack(float offset, HanoiStack *, QPainter *p);
-    void drawStackBase(size_t label, float offset, QPainter *painter);
-    void scaleSlices();
-
-    // QWidget Event Handlers
-    void mousePressEvent(QMouseEvent *) override;
-    void mouseReleaseEvent(QMouseEvent *) override;
-    void mouseMoveEvent(QMouseEvent *) override;
-    void paintEvent(QPaintEvent *) override;
-    void resizeEvent(QResizeEvent *) override;
+private slots:
+    // called by timer in every ms
+    void checkWinState();
 
 signals:
 };
