@@ -5,9 +5,12 @@
 #include "gameview.h"
 #include "settingswindow.h"
 
-#include <QAudioOutput>
 #include <QMainWindow>
-#include <QMediaPlayer>
+
+#ifndef DISABLE_AUDIO
+    #include <QAudioOutput>
+    #include <QMediaPlayer>
+#endif    // !DISABLE_AUDIO
 
 namespace Ui {
     class MainWindow;
@@ -26,6 +29,7 @@ private:
 
     const QPixmap m_logo = QPixmap(Config::get().AssetFiles().LOGO);
 
+#ifndef DISABLE_AUDIO
     struct BackgroundAudio_t {
         QMediaPlayer *m_media_player = nullptr;
         QAudioOutput *m_audio_output = nullptr;
@@ -52,8 +56,8 @@ private:
             delete m_audio_output;
             delete m_media_player;
         }
-
     } m_background_music;
+#endif
 
 private slots:
     void exitAction();

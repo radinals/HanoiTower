@@ -5,6 +5,11 @@
 #include <QFile>
 #include <QString>
 
+#ifndef DISABLE_AUDIO
+    #include <QAudioOutput>
+    #include <QSoundEffect>
+#endif    // !DISABLE_AUDIO
+
 class Config {
 private:
     // clang-format off
@@ -17,10 +22,12 @@ private:
         static const inline QString DIALOG      = ":/sprites/dialog_base.png";
     } m_Assetsfiles;
 
+#ifndef DISABLE_AUDIO
     struct AudioFiles_t {
         static const inline QString PLACEMENT_FX     = ":/audio/placement_fx.wav";
         static const inline QString BACKGROUND_MUSIC = ":/audio/bg_music.wav";
     } m_Audiofiles;
+#endif // !DISABLE_AUDIO
     // clang-format on
 
     static const inline QString m_defaultStylesheet = ":/style/default.qss";
@@ -46,9 +53,12 @@ private:
         static inline long long int       time_length_ms = 60000 * 5;
     } m_settings;
 
+#ifndef DISABLE_AUDIO
     QAudioOutput* m_backgroundMusicInstance = nullptr;
+#endif    // !DISABLE_AUDIO
 
 public:
+#ifndef DISABLE_AUDIO
     void setBackgroundMusicInstance(QAudioOutput* i)
     {
         m_backgroundMusicInstance = i;
@@ -57,6 +67,7 @@ public:
     {
         return m_backgroundMusicInstance;
     }
+#endif    // !DISABLE_AUDIO
 
     const QString& getDefaultStylesheet()
     {
@@ -76,9 +87,11 @@ public:
     }
 
     const AssetsFiles_t& AssetFiles() { return m_Assetsfiles; }
-    const AudioFiles_t&  AudioFiles() { return m_Audiofiles; }
-    Theme_t&             Theme() { return m_theme; }
-    GameSettings_t&      Settings() { return m_settings; }
+#ifndef DISABLE_AUDIO
+    const AudioFiles_t& AudioFiles() { return m_Audiofiles; }
+#endif    // !DISABLE_AUDIO
+    Theme_t&        Theme() { return m_theme; }
+    GameSettings_t& Settings() { return m_settings; }
 };
 
 #endif    // CONFIG_H

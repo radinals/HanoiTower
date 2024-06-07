@@ -6,16 +6,20 @@
 #include "utils.h"
 
 #include <QFont>
-#include <QMediaPlayer>
+
+#ifndef DISABLE_AUDIO
+    #include <QSoundEffect>
+#endif    // !DISABLE_AUDIO
+
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPen>
 #include <QPixmap>
 #include <QPoint>
+#include <QTimer>
 #include <cassert>
 #include <cmath>
-#include <qaccessible_base.h>
 #include <random>
 
 GameView::GameView(QWidget* parent) : QWidget { parent }
@@ -29,10 +33,12 @@ GameView::GameView(QWidget* parent) : QWidget { parent }
     // timer will call checkWinState every tick (should be every 1ms).
     connect(&m_time.timer, &QTimer::timeout, this, &GameView::checkWinState);
 
-    // load the placement sound effect
+// load the placement sound effect
+#ifndef DISABLE_AUDIO
     m_placement_fx = new QSoundEffect(this);
     m_placement_fx->setSource("qrc" + Config::get().AudioFiles().PLACEMENT_FX);
     m_placement_fx->setVolume(Config::get().Settings().fx_volume);
+#endif
 
     m_sprites.stack_pole = QPixmap(Config::get().AssetFiles().STACK_POLE);
     m_sprites.stack_base = QPixmap(Config::get().AssetFiles().STACK_BASE);
@@ -69,10 +75,16 @@ GameView::hanoiIterativeSolver()
         } else {
             moveTopSlice(getStack(source), getStack(aux));
         }
+
         ++m_move_count;
         repaint();
+
+#ifndef DISABLE_AUDIO
         while (m_placement_fx->isPlaying()) delay(1);
         m_placement_fx->play();
+#else
+        delay(1);
+#endif    // !DISABLE_AUDIO
     }
 }
 
@@ -138,7 +150,9 @@ GameView::reset()
     if (m_game_state == GameState::AutoSolving) return;
     clear();
     updateInfo();
+#ifndef DISABLE_AUDIO
     m_placement_fx->setVolume(Config::get().Settings().fx_volume);
+#endif
     m_game_state = GameState::Running;
     repaint();
 }
@@ -331,8 +345,7 @@ GameView::scaleSlices()
     while (node != nullptr) {
         node->data->Geometry().height = (height *= m_slice_scale_factor);
         node->data->Geometry().width  = (width *= m_slice_scale_factor);
-
-        node = node->next;
+        node                          = node->next;
     }
 }
 
@@ -612,5 +625,7 @@ GameView::mouseReleaseEvent(QMouseEvent* event)
 
     update();
 
+#ifndef DISABLE_AUDIO
     if (!m_placement_fx->isPlaying()) { m_placement_fx->play(); }
+#endif
 }

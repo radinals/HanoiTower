@@ -5,13 +5,20 @@
 #include "hanoistack.h"
 #include "linkedlist.h"
 
+#include <QCoreApplication>
 #include <QLabel>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QTextEdit>
+#include <QTime>
 #include <QTimer>
 #include <QWidget>
-#include <QtMultimedia>
+
+#ifndef DISABLE_AUDIO
+    #include <QSoundEffect>
+    #include <QtMultimedia>
+#endif
+
 #include <string>
 #include <utility>
 
@@ -19,9 +26,12 @@ class GameView : public QWidget {
     Q_OBJECT
 
 private:
-    const float   m_slice_scale_factor = 0.9f;
-    unsigned int  m_move_count         = 0;
-    QSoundEffect *m_placement_fx       = nullptr;
+    const float  m_slice_scale_factor = 0.9f;
+    unsigned int m_move_count         = 0;
+
+#ifndef DISABLE_AUDIO
+    QSoundEffect *m_placement_fx = nullptr;
+#endif
 
     struct GameSprites {
         QPixmap stack_pole, stack_base, arrow;
@@ -74,7 +84,12 @@ private:
 
 public:
     explicit GameView(QWidget *parent = nullptr);
-    ~GameView() override { delete m_placement_fx; }
+    ~GameView() override
+    {
+#ifndef DISABLE_AUDIO
+        delete m_placement_fx;
+#endif
+    }
     // ~GameView() override {};
 
     void reset();    // reset the game states, and re-draw

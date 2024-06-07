@@ -14,13 +14,25 @@ SettingsWindow::SettingsWindow(QWidget* parent)
 
     this->setStyleSheet(Config::get().getDefaultStylesheet());
 
-    Settings.stack_amount       = Config::get().Settings().stack_amount;
-    Settings.slice_amount       = Config::get().Settings().slice_amount;
-    Settings.slice_color        = Config::get().Theme().slice_tint;
-    Settings.stack_color        = Config::get().Theme().stack_tint;
-    Settings.timer_ms           = Config::get().Settings().time_length_ms;
+    Settings.stack_amount = Config::get().Settings().stack_amount;
+    Settings.slice_amount = Config::get().Settings().slice_amount;
+    Settings.slice_color  = Config::get().Theme().slice_tint;
+    Settings.stack_color  = Config::get().Theme().stack_tint;
+    Settings.timer_ms     = Config::get().Settings().time_length_ms;
+
+#ifndef DISABLE_AUDIO
     Settings.sfx_volume_level   = Config::get().Settings().fx_volume;
     Settings.music_volume_level = Config::get().Settings().music_volume;
+#else
+    ui->AudioSFXVolOut->hide();
+    ui->AudioMusicVolOut->hide();
+    ui->AudioMusicVolLabel->hide();
+    ui->AudioSFXVolLabel->hide();
+    ui->AudioMusicVolSlider->hide();
+    ui->AudioSFXVolSlider->hide();
+    ui->GameAudioSetupGroupLabel->hide();
+    ui->AudioSettingGroupLine->hide();
+#endif    // !DISABLE_AUDIO
 
     m_preview_scene = new QGraphicsScene;
     ui->PreviewOut->setScene(m_preview_scene);
@@ -44,6 +56,7 @@ SettingsWindow::update_options()
     ui->GameSliceAmountOut->setText(QString::number(Settings.slice_amount));
     ui->GameStackAmountOut->setText(QString::number(Settings.stack_amount));
 
+#ifndef DISABLE_AUDIO
     ui->AudioMusicVolOut->setText(
         QString::number(int(Settings.music_volume_level * 100)) + "%");
 
@@ -57,6 +70,7 @@ SettingsWindow::update_options()
 
     ui->AudioMusicVolSlider->setValue(Settings.music_volume_level * 100);
     ui->AudioSFXVolSlider->setValue(Settings.sfx_volume_level * 100);
+#endif    // !DISABLE_AUDIO
 
     ui->ThemeStackColorSettingsInput->setText(
         Settings.stack_color.toRgb().name());
@@ -140,8 +154,10 @@ SettingsWindow::on_SaveButton_clicked()
     Config::get().Theme().slice_tint        = Settings.slice_color;
     Config::get().Theme().stack_tint        = Settings.stack_color;
     Config::get().Settings().time_length_ms = Settings.timer_ms;
-    Config::get().Settings().fx_volume      = Settings.sfx_volume_level;
-    Config::get().Settings().music_volume   = Settings.music_volume_level;
+#ifndef DISABLE_AUDIO
+    Config::get().Settings().fx_volume    = Settings.sfx_volume_level;
+    Config::get().Settings().music_volume = Settings.music_volume_level;
+#endif
     hide();
 }
 
@@ -257,13 +273,17 @@ SettingsWindow::on_GameStackAmountSlider_valueChanged(int value)
 void
 SettingsWindow::on_AudioSFXVolSlider_valueChanged(int value)
 {
+#ifndef DISABLE_AUDIO
     Settings.sfx_volume_level = (value * 0.01f);
     update_options();
+#endif
 }
 
 void
 SettingsWindow::on_AudioMusicVolSlider_sliderMoved(int position)
 {
+#ifndef DISABLE_AUDIO
     Settings.music_volume_level = (position * 0.01f);
     update_options();
+#endif
 }

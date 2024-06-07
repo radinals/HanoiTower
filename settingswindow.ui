@@ -153,7 +153,7 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
       <item row="9" column="0">
-       <widget class="Line" name="line">
+       <widget class="Line" name="AudioSettingGroupLine">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
           <horstretch>0</horstretch>

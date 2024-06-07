@@ -50,8 +50,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->GameViewFrame->hide();
     ui->GameMenuFrame->show();
 
+#ifndef DISABLE_AUDIO
     Config::get().setBackgroundMusicInstance(m_background_music.m_audio_output);
     m_background_music.m_media_player->play();
+#endif
 }
 
 MainWindow::~MainWindow()
