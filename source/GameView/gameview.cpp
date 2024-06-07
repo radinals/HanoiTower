@@ -22,6 +22,10 @@
 
 GameView::GameView(QWidget* parent) : QWidget { parent }
 {
+    // allocate spaces for all possible slices and stacks
+    m_hanoi.slices = new HanoiSlice*[Config::get().Settings().SLICE_MAX];
+    m_hanoi.stacks = new HanoiStack[Config::get().Settings().STACK_MAX];
+
     // initialize all possible stack
     for (int i = Config::get().Settings().STACK_MAX - 1; i >= 0; i--) {
         m_hanoi.stacks[i] = (HanoiStack(i));

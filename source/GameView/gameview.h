@@ -24,8 +24,11 @@ class GameView : public QWidget {
 
 public:
     explicit GameView(QWidget *parent = nullptr);
+
     ~GameView() override
     {
+        delete[] m_hanoi.stacks;
+        delete[] m_hanoi.slices;
 #ifndef DISABLE_AUDIO
         delete m_placement_fx;
 #endif
@@ -87,18 +90,6 @@ private:
 
         // points to a stack in m_stack
         HanoiStack *goal_stack = nullptr;
-
-        HanoiData_t()
-        {
-            stacks = new HanoiStack[Config::get().Settings().STACK_MAX];
-            slices = new HanoiSlice *[Config::get().Settings().SLICE_MAX];
-        }
-
-        ~HanoiData_t()
-        {
-            delete[] stacks;
-            delete[] slices;
-        }
 
     } m_hanoi;
 
