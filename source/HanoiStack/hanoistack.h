@@ -24,7 +24,7 @@ public:
     inline bool              isEmpty() const { return m_size <= 0; }
 
     // initialize a stack with 'slice_amount' of slices
-    static void initializeStack(HanoiStack* stack, size_t slice_amount);
+    static void fillStack(HanoiStack* stack, size_t slice_amount);
 
     size_t m_label = 0;
 

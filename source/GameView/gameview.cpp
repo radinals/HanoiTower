@@ -189,8 +189,8 @@ GameView::clear()
     assert(Config::get().Settings().slice_amount > 0);
 
     // populate the first stack
-    HanoiStack::initializeStack(&m_hanoi.stacks[0],
-                                Config::get().Settings().slice_amount);
+    HanoiStack::fillStack(&m_hanoi.stacks[0],
+                          Config::get().Settings().slice_amount);
 
     assert(m_hanoi.stacks[0].getSize()
            == Config::get().Settings().slice_amount);
