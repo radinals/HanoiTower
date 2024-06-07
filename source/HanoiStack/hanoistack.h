@@ -26,10 +26,11 @@ public:
     // initialize a stack with 'slice_amount' of slices
     static void fillStack(HanoiStack* stack, size_t slice_amount);
 
-    size_t m_label = 0;
+    inline size_t& label() { return m_label; };
 
 private:
-    size_t m_size = 0;
+    size_t m_size  = 0;
+    size_t m_label = 0;
 
     HanoiSlice *m_head = nullptr, *m_tail = nullptr;
 };

@@ -54,10 +54,10 @@ GameView::hanoiIterativeSolver()
     size_t possible_moves = (1 << n) - 1;
 
     size_t source = 0,
-           aux    = ((m_hanoi.goal_stack->m_label == 1)
-                         ? m_hanoi.goal_stack->m_label + 1
+           aux    = ((m_hanoi.goal_stack->label() == 1)
+                         ? m_hanoi.goal_stack->label() + 1
                          : 1),
-           dest   = m_hanoi.goal_stack->m_label;
+           dest   = m_hanoi.goal_stack->label();
 
     if (n % 2 == 0) {
         size_t tmp;
@@ -115,7 +115,7 @@ HanoiStack*
 GameView::getStack(size_t label)
 {
     for (size_t i = 0; i < Config::get().Settings().stack_amount; i++) {
-        if (m_hanoi.stacks[i].m_label == label) { return &m_hanoi.stacks[i]; }
+        if (m_hanoi.stacks[i].label() == label) { return &m_hanoi.stacks[i]; }
     }
     return nullptr;
 }
@@ -172,17 +172,17 @@ GameView::clear()
     // clear all stack
     // search for the goal stack node
     for (size_t i = 0; i < Config::get().Settings().stack_amount; i++) {
-        if (m_hanoi.stacks[i].m_label == goalStackLabel) {
+        if (m_hanoi.stacks[i].label() == goalStackLabel) {
             m_hanoi.goal_stack = &m_hanoi.stacks[i];
         }
         m_hanoi.stacks[i].clearStack();
     }
 
     assert(m_hanoi.goal_stack != nullptr);
-    assert(m_hanoi.goal_stack->m_label == goalStackLabel);
+    assert(m_hanoi.goal_stack->label() == goalStackLabel);
 
     m_sidebar_widgets.info_msg_out->setText(
-        "Move All Slice to Stack " + numToChar(m_hanoi.goal_stack->m_label));
+        "Move All Slice to Stack " + numToChar(m_hanoi.goal_stack->label()));
 
     m_sidebar_widgets.info_msg_out->setAlignment(Qt::AlignCenter);
 
@@ -301,7 +301,7 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
     QColor font_color = Config::get().Theme().font_color;
 
     // highlight + draw the indicator if current stack is the goal stack
-    if (label == (m_hanoi.goal_stack->m_label)) {
+    if (label == (m_hanoi.goal_stack->label())) {
         const float box_size = (m_geometry.stack_base.width() * 0.1f) + 4;
 
         font_color = Config::get().Theme().highlight_tint;
@@ -496,7 +496,7 @@ GameView::paintEvent(QPaintEvent* event)
 
     for (size_t i = 0; i < Config::get().Settings().stack_amount; i++) {
         // draw the stack base
-        drawStackBase(m_hanoi.stacks[i].m_label, offset, &p);
+        drawStackBase(m_hanoi.stacks[i].label(), offset, &p);
 
         // render the stack
         drawStack(offset, &m_hanoi.stacks[i], &p);
