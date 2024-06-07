@@ -4,12 +4,11 @@
 #include "../Utils/utils.h"
 #include "ui_settingswindow.h"
 
-#include <QSize>
-#include <qsoundeffect.h>
-
 #ifndef DISABLE_AUDIO
     #include <QSoundEffect>
 #endif    // !DISABLE_AUDIOLN
+
+#include <QSizeF>
 
 SettingsWindow::SettingsWindow(QWidget* parent)
     : QWidget(parent)

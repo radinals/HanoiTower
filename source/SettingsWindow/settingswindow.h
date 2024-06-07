@@ -1,9 +1,9 @@
 #ifndef SETTINGSWINDOW_H
 #define SETTINGSWINDOW_H
 
+#include <QEvent>
 #include <QGraphicsScene>
 #include <QWidget>
-#include <qevent.h>
 
 #ifndef DISABLE_AUDIO
     #include <QSoundEffect>

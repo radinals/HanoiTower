@@ -5,12 +5,11 @@
 #include "../LinkedList/linkedlist.h"
 #include "../Utils/utils.h"
 
-#include <QFont>
-
 #ifndef DISABLE_AUDIO
     #include <QSoundEffect>
 #endif    // !DISABLE_AUDIO
 
+#include <QFont>
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QPainter>
