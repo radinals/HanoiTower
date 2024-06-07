@@ -77,18 +77,8 @@ SettingsWindow::update_options()
     ui->AudioMusicVolOut->setText(
         QString::number(int(Settings.music_volume_level * 100)) + "%");
 
-    if (Config::get().getBackgroundMusicInstance() != nullptr) {
-        Config::get().getBackgroundMusicInstance()->setVolume(
-            Settings.music_volume_level);
-    }
-
     ui->AudioSFXVolOut->setText(
         QString::number(int(Settings.sfx_volume_level * 100)) + "%");
-
-    if (this->isVisible()) {
-        m_sfx_preview->setVolume(Settings.sfx_volume_level);
-        if (!m_sfx_preview->isPlaying()) { m_sfx_preview->play(); }
-    }
 
     ui->AudioMusicVolSlider->setValue(Settings.music_volume_level * 100);
     ui->AudioSFXVolSlider->setValue(Settings.sfx_volume_level * 100);
@@ -300,6 +290,10 @@ SettingsWindow::on_AudioMusicVolSlider_sliderMoved(int position)
 #ifndef DISABLE_AUDIO
     Settings.music_volume_level = (position * 0.01f);
     update_options();
+    if (Config::get().getBackgroundMusicInstance() != nullptr) {
+        Config::get().getBackgroundMusicInstance()->setVolume(
+            Settings.music_volume_level);
+    }
 #endif
 }
 
@@ -309,5 +303,9 @@ SettingsWindow::on_AudioSFXVolSlider_sliderMoved(int position)
 #ifndef DISABLE_AUDIO
     Settings.sfx_volume_level = (position * 0.01f);
     update_options();
+    if (this->isVisible()) {
+        m_sfx_preview->setVolume(Settings.sfx_volume_level);
+        if (!m_sfx_preview->isPlaying()) { m_sfx_preview->play(); }
+    }
 #endif
 }
