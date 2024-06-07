@@ -7,11 +7,6 @@
 #include <QString>
 
 class HanoiStack {
-private:
-    size_t m_size = 0;
-
-    HanoiSlice *m_head = nullptr, *m_tail = nullptr;
-
 public:
     HanoiStack() {};
     ~HanoiStack() { clearStack(); };
@@ -28,6 +23,11 @@ public:
     inline bool              isEmpty() const { return m_size <= 0; }
 
     static void initializeStack(HanoiStack* stack, size_t slice_amount);
+
+private:
+    size_t m_size = 0;
+
+    HanoiSlice *m_head = nullptr, *m_tail = nullptr;
 };
 
 #endif    // HANOISTACK_H

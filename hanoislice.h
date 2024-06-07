@@ -8,12 +8,7 @@
 
 class HanoiSlice {
 private:
-    QPixmap      m_pixmap = QPixmap(Config::get().AssetFiles().SLICE);
-    unsigned int m_value  = 0;
-
-    struct Geometry_t {
-        float x = 0, y = 0, width = 0, height = 0;
-    } m_geometry;
+    struct Geometry_t;
 
 public:
     HanoiSlice(HanoiSlice&&) = delete;
@@ -30,6 +25,14 @@ public:
 
     HanoiSlice* next = nullptr;
     HanoiSlice* prev = nullptr;
+
+private:
+    QPixmap      m_pixmap = QPixmap(Config::get().AssetFiles().SLICE);
+    unsigned int m_value  = 0;
+
+    struct Geometry_t {
+        float x = 0, y = 0, width = 0, height = 0;
+    } m_geometry;
 };
 
 #endif    // HANOISLICE_H
