@@ -5,6 +5,11 @@
 #include "utils.h"
 
 #include <QSize>
+#include <qsoundeffect.h>
+
+#ifndef DISABLE_AUDIO
+    #include <QSoundEffect>
+#endif    // !DISABLE_AUDIOLN
 
 SettingsWindow::SettingsWindow(QWidget* parent)
     : QWidget(parent)
@@ -21,6 +26,8 @@ SettingsWindow::SettingsWindow(QWidget* parent)
 #ifndef DISABLE_AUDIO
     Settings.sfx_volume_level   = Config::get().Settings().fx_volume;
     Settings.music_volume_level = Config::get().Settings().music_volume;
+    m_sfx_preview               = new QSoundEffect(this);
+    m_sfx_preview->setSource("qrc" + Config::get().AudioFiles().PLACEMENT_FX);
 #else
     ui->AudioSFXVolOut->hide();
     ui->AudioMusicVolOut->hide();
@@ -41,6 +48,9 @@ SettingsWindow::SettingsWindow(QWidget* parent)
 
 SettingsWindow::~SettingsWindow()
 {
+#ifndef DISABLE_AUDIO
+    delete m_sfx_preview;
+#endif    // !DISABLE_AUDIO
     delete m_preview_scene;
     delete ui;
 }
@@ -66,8 +76,14 @@ SettingsWindow::update_options()
     ui->AudioSFXVolOut->setText(
         QString::number(int(Settings.sfx_volume_level * 100)) + "%");
 
+    if (this->isVisible()) {
+        m_sfx_preview->setVolume(Settings.sfx_volume_level);
+        if (!m_sfx_preview->isPlaying()) { m_sfx_preview->play(); }
+    }
+
     ui->AudioMusicVolSlider->setValue(Settings.music_volume_level * 100);
     ui->AudioSFXVolSlider->setValue(Settings.sfx_volume_level * 100);
+
 #endif    // !DISABLE_AUDIO
 
     ui->ThemeStackColorSettingsInput->setText(
@@ -269,19 +285,19 @@ SettingsWindow::on_GameStackAmountSlider_valueChanged(int value)
 }
 
 void
-SettingsWindow::on_AudioSFXVolSlider_valueChanged(int value)
+SettingsWindow::on_AudioMusicVolSlider_sliderMoved(int position)
 {
 #ifndef DISABLE_AUDIO
-    Settings.sfx_volume_level = (value * 0.01f);
+    Settings.music_volume_level = (position * 0.01f);
     update_options();
 #endif
 }
 
 void
-SettingsWindow::on_AudioMusicVolSlider_sliderMoved(int position)
+SettingsWindow::on_AudioSFXVolSlider_sliderMoved(int position)
 {
 #ifndef DISABLE_AUDIO
-    Settings.music_volume_level = (position * 0.01f);
+    Settings.sfx_volume_level = (position * 0.01f);
     update_options();
 #endif
 }

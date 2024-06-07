@@ -5,6 +5,10 @@
 #include <QWidget>
 #include <qevent.h>
 
+#ifndef DISABLE_AUDIO
+    #include <QSoundEffect>
+#endif    // !DISABLE_AUDIO
+
 namespace Ui {
     class SettingsWindow;
 }
@@ -21,6 +25,10 @@ private:
     } Settings;
 
     QGraphicsScene *m_preview_scene = nullptr;
+
+#ifndef DISABLE_AUDIO
+    QSoundEffect *m_sfx_preview = nullptr;
+#endif    // !DISABLE_AUDIO
 
     void drawPreview();
     void update_options();
@@ -61,9 +69,9 @@ private slots:
 
     void on_GameStackAmountSlider_valueChanged(int value);
 
-    void on_AudioSFXVolSlider_valueChanged(int value);
-
     void on_AudioMusicVolSlider_sliderMoved(int position);
+
+    void on_AudioSFXVolSlider_sliderMoved(int position);
 
 private:
     Ui::SettingsWindow *ui;
