@@ -61,7 +61,7 @@ private:
     QSoundEffect *m_placement_fx = nullptr;
 #endif
 
-    struct GameSprites {
+    struct GameSprites_t {
         QPixmap stack_pole, stack_base, arrow;
     } m_sprites;
 
@@ -72,7 +72,10 @@ private:
     struct SelectedData_t {
         HanoiStack *stack = nullptr;    // source stack
         HanoiSlice *slice = nullptr;    // selected slice
-        inline bool valid() { return stack != nullptr && slice != nullptr; }
+        inline bool hasSelected()
+        {
+            return stack != nullptr && slice != nullptr;
+        }
     } m_selected;
 
     struct SidebarWidgets_t {

@@ -3,6 +3,7 @@
 #include "../Config/config.h"
 #include "../HanoiStack/hanoistack.h"
 #include "../Utils/utils.h"
+#include <stdexcept>
 
 #ifndef DISABLE_AUDIO
     #include <QSoundEffect>
@@ -16,7 +17,6 @@
 #include <QPixmap>
 #include <QPoint>
 #include <QTimer>
-#include <cassert>
 #include <cmath>
 #include <random>
 
@@ -99,7 +99,9 @@ GameView::solve()
 void
 GameView::moveTopSlice(HanoiStack* source, HanoiStack* dest)
 {
-    if (source == nullptr || dest == nullptr) { return; }
+    if (source == nullptr || dest == nullptr) {
+        std::invalid_argument("moveTopSlice(): null stack was passed");
+    }
 
     if (moveIsValid(source, dest)) {
         dest->push(source->pop());
@@ -114,7 +116,7 @@ GameView::getStack(size_t label)
     for (size_t i = 0; i < Config::get().Settings().stack_amount; i++) {
         if (m_hanoi.stacks[i].label() == label) { return &m_hanoi.stacks[i]; }
     }
-    return nullptr;
+    throw std::runtime_error("getStack(): failed to find stack");
 }
 
 void
@@ -176,22 +178,27 @@ GameView::clear()
         m_hanoi.stacks[i].clearStack();
     }
 
-    assert(m_hanoi.goal_stack != nullptr);
-    assert(m_hanoi.goal_stack->label() == goalStackLabel);
+    if (m_hanoi.goal_stack == nullptr
+        || m_hanoi.goal_stack->label() != goalStackLabel) {
+        std::runtime_error("clear(): failed to find goal stack");
+    }
 
     m_sidebar_widgets.info_msg_out->setText(
         "Move All Slice to Stack " + numToChar(m_hanoi.goal_stack->label()));
 
     m_sidebar_widgets.info_msg_out->setAlignment(Qt::AlignCenter);
 
-    assert(Config::get().Settings().slice_amount > 0);
+    if (Config::get().Settings().slice_amount <= 0) {
+        std::runtime_error("clear(): invalid slice amount");
+    }
 
     // populate the first stack
     HanoiStack::fillStack(&m_hanoi.stacks[0],
                           Config::get().Settings().slice_amount);
 
-    assert(m_hanoi.stacks[0].getSize()
-           == Config::get().Settings().slice_amount);
+    if (m_hanoi.stacks[0].getSize() != Config::get().Settings().slice_amount) {
+        std::runtime_error("clear(): failed to fill starting stack");
+    }
 
     HanoiSlice* slice = m_hanoi.stacks[0].getHead();
     while (slice != nullptr) {
@@ -234,7 +241,11 @@ GameView::calculateBaseSizes()
 void
 GameView::drawStack(float offset, HanoiStack* stack, QPainter* painter)
 {
-    if (stack == nullptr || stack->isEmpty()) { return; }
+    if (stack == nullptr) {
+        throw std::invalid_argument("drawStack(): null stack was passed");
+    }
+
+    if (stack->isEmpty()) { return; }
 
     float y = height() - m_geometry.slice.height();
 
@@ -256,7 +267,11 @@ GameView::drawStack(float offset, HanoiStack* stack, QPainter* painter)
 void
 GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 {
-    if (painter == nullptr || !painter->isActive()) { return; }
+    if (painter == nullptr) {
+        std::invalid_argument("drawStackBase(): null painter was passed");
+    }
+
+    if (!painter->isActive()) { return; }
 
     //--Draw Stack Base+Pole----------------------------------------------
 
@@ -368,7 +383,9 @@ GameView::calculateStackByPos(const QPointF& point)
 void
 GameView::colorizeSprite(QPixmap* sprite, const QColor& color)
 {
-    if (sprite == nullptr) { return; }
+    if (sprite == nullptr || sprite->isNull()) {
+        std::runtime_error("colorizeSprite(): invalid pixmap was passed");
+    }
 
     QPixmap  mask(*sprite);
     QPainter painter;
@@ -503,7 +520,7 @@ GameView::paintEvent(QPaintEvent* event)
     }
 
     // render the selected stack
-    if (m_selected.valid()) {
+    if (m_selected.hasSelected()) {
         p.drawPixmap(m_selected.slice->Geometry().x,
                      m_selected.slice->Geometry().y,
                      m_selected.slice->getScaledPixmap());
@@ -537,7 +554,7 @@ GameView::resizeEvent(QResizeEvent* event)
 void
 GameView::mousePressEvent(QMouseEvent* event)
 {
-    if (m_selected.valid() || m_game_state != GameState::Running
+    if (m_selected.hasSelected() || m_game_state != GameState::Running
         || (event->pos().x() <= 0 || event->pos().y() <= 0)
         || (event->pos().x() >= width() || event->pos().y() >= height())) {
         return;
@@ -565,7 +582,7 @@ GameView::mousePressEvent(QMouseEvent* event)
 void
 GameView::mouseMoveEvent(QMouseEvent* event)
 {
-    if (!m_selected.valid() || m_game_state != GameState::Running
+    if (!m_selected.hasSelected() || m_game_state != GameState::Running
         || (event->pos().x() <= 0 || event->pos().y() <= 0)
         || (event->pos().x() >= width() || event->pos().y() >= height())) {
         return;
@@ -579,7 +596,9 @@ GameView::mouseMoveEvent(QMouseEvent* event)
 void
 GameView::mouseReleaseEvent(QMouseEvent* event)
 {
-    if (!m_selected.valid() || m_game_state != GameState::Running) { return; }
+    if (!m_selected.hasSelected() || m_game_state != GameState::Running) {
+        return;
+    }
 
     HanoiStack* destination_stack
         = calculateStackByPos(event->position().toPoint());
