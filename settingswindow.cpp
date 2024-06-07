@@ -12,8 +12,6 @@ SettingsWindow::SettingsWindow(QWidget* parent)
 {
     ui->setupUi(this);
 
-    this->setStyleSheet(Config::get().getDefaultStylesheet());
-
     Settings.stack_amount = Config::get().Settings().stack_amount;
     Settings.slice_amount = Config::get().Settings().slice_amount;
     Settings.slice_color  = Config::get().Theme().slice_tint;
