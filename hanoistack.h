@@ -22,6 +22,7 @@ public:
     inline size_t            getSize() const { return m_size; };
     inline bool              isEmpty() const { return m_size <= 0; }
 
+    // initialize a stack with 'slice_amount' of slices
     static void initializeStack(HanoiStack* stack, size_t slice_amount);
 
 private:

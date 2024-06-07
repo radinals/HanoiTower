@@ -13,6 +13,7 @@
 class Config {
 private:
     // clang-format off
+
     struct AssetsFiles_t {
         static const inline QString SLICE       = ":/sprites/base_slice_sprite.png";
         static const inline QString STACK_BASE  = ":/sprites/stack_base_sprite.png";
@@ -22,12 +23,6 @@ private:
         static const inline QString DIALOG      = ":/sprites/dialog_base.png";
     } m_Assetsfiles;
 
-#ifndef DISABLE_AUDIO
-    struct AudioFiles_t {
-        static const inline QString PLACEMENT_FX     = ":/audio/placement_fx.wav";
-        static const inline QString BACKGROUND_MUSIC = ":/audio/bg_music.wav";
-    } m_Audiofiles;
-#endif // !DISABLE_AUDIO
     // clang-format on
 
     static const inline QString m_defaultStylesheet = ":/style/default.qss";
@@ -55,20 +50,23 @@ private:
 
 #ifndef DISABLE_AUDIO
     QAudioOutput* m_backgroundMusicInstance = nullptr;
+
+    struct AudioFiles_t {
+        static const inline QString PLACEMENT_FX = ":/audio/placement_fx.wav";
+        static const inline QString BACKGROUND_MUSIC = ":/audio/bg_music.wav";
+    } m_Audiofiles;
 #endif    // !DISABLE_AUDIO
 
 public:
-#ifndef DISABLE_AUDIO
-    void setBackgroundMusicInstance(QAudioOutput* i)
-    {
-        m_backgroundMusicInstance = i;
-    }
-    QAudioOutput* const getBackgroundMusicInstance()
-    {
-        return m_backgroundMusicInstance;
-    }
-#endif    // !DISABLE_AUDIO
+    //------------------------------------------------------------------------
 
+    const AssetsFiles_t& AssetFiles() { return m_Assetsfiles; }
+    Theme_t&             Theme() { return m_theme; }
+    GameSettings_t&      Settings() { return m_settings; }
+
+    //------------------------------------------------------------------------
+
+    // load and get stylesheet
     const QString& getDefaultStylesheet()
     {
         static QString style_sheet;
@@ -80,18 +78,28 @@ public:
         return style_sheet;
     }
 
+    // get static instance
     static Config& get()
     {
         static Config instance;
         return instance;
     }
 
-    const AssetsFiles_t& AssetFiles() { return m_Assetsfiles; }
+    //------------------------------------------------------------------------
+
 #ifndef DISABLE_AUDIO
     const AudioFiles_t& AudioFiles() { return m_Audiofiles; }
+
+    void setBackgroundMusicInstance(QAudioOutput* i)
+    {
+        m_backgroundMusicInstance = i;
+    }
+
+    QAudioOutput* const getBackgroundMusicInstance()
+    {
+        return m_backgroundMusicInstance;
+    }
 #endif    // !DISABLE_AUDIO
-    Theme_t&        Theme() { return m_theme; }
-    GameSettings_t& Settings() { return m_settings; }
 };
 
 #endif    // CONFIG_H
