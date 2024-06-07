@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Multimedia)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Multimedia)
 
-set(SOURCE_DIR src)
+set(SOURCE_DIR source)
 
 set(PROJECT_SOURCES
   ${SOURCE_DIR}/main.cpp
