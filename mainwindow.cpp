@@ -4,10 +4,6 @@
 #include "settingswindow.h"
 #include "ui_mainwindow.h"
 
-#include <qcoreevent.h>
-#include <qmediaplayer.h>
-#include <qpushbutton.h>
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)

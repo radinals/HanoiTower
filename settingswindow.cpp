@@ -5,9 +5,6 @@
 #include "utils.h"
 
 #include <QSize>
-#include <qbuffer.h>
-#include <qnamespace.h>
-#include <qsizepolicy.h>
 
 SettingsWindow::SettingsWindow(QWidget* parent)
     : QWidget(parent)

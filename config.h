@@ -4,8 +4,6 @@
 #include <QColor>
 #include <QFile>
 #include <QString>
-#include <qaudiooutput.h>
-#include <qsoundeffect.h>
 
 class Config {
 private:

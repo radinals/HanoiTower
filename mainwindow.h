@@ -8,7 +8,6 @@
 #include <QAudioOutput>
 #include <QMainWindow>
 #include <QMediaPlayer>
-#include <qmediaplayer.h>
 
 namespace Ui {
     class MainWindow;

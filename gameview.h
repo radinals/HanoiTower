@@ -12,13 +12,6 @@
 #include <QTimer>
 #include <QWidget>
 #include <QtMultimedia>
-#include <qaccessible_base.h>
-#include <qaudiooutput.h>
-#include <qmainwindow.h>
-#include <qmediaplayer.h>
-#include <qpoint.h>
-#include <qpushbutton.h>
-#include <qsoundeffect.h>
 #include <string>
 #include <utility>
 
