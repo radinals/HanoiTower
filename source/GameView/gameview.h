@@ -3,7 +3,6 @@
 
 #include "../Config/config.h"
 #include "../HanoiStack/hanoistack.h"
-#include "../LinkedList/linkedlist.h"
 
 #include <QCoreApplication>
 #include <QLabel>
@@ -80,10 +79,11 @@ private:
 
     struct HanoiData_t {
         // all slices in game
-        LinkedList<HanoiSlice *> slices;
+        // LinkedList<HanoiSlice *> slices;
+        HanoiSlice **slices = nullptr;
 
         // all stack in game
-        HanoiStack *stacks;
+        HanoiStack *stacks = nullptr;
 
         // points to a stack in m_stack
         HanoiStack *goal_stack = nullptr;
@@ -91,9 +91,14 @@ private:
         HanoiData_t()
         {
             stacks = new HanoiStack[Config::get().Settings().STACK_MAX];
+            slices = new HanoiSlice *[Config::get().Settings().SLICE_MAX];
         }
 
-        ~HanoiData_t() { delete[] stacks; }
+        ~HanoiData_t()
+        {
+            delete[] stacks;
+            delete[] slices;
+        }
 
     } m_hanoi;
 

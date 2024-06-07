@@ -2,7 +2,6 @@
 
 #include "../Config/config.h"
 #include "../HanoiStack/hanoistack.h"
-#include "../LinkedList/linkedlist.h"
 #include "../Utils/utils.h"
 
 #ifndef DISABLE_AUDIO
@@ -163,7 +162,8 @@ GameView::clear()
 
     m_game_state = GameState::NotRunning;
     m_time.timer.stop();
-    m_hanoi.slices.clear();
+
+    std::memset(m_hanoi.slices, 0, Config::get().Settings().SLICE_MAX);
 
     const size_t goalStackLabel = getRandomGoalStackIndex();
 
@@ -198,7 +198,8 @@ GameView::clear()
     HanoiSlice* slice = m_hanoi.stacks[0].getHead();
     while (slice != nullptr) {
         colorizeSprite(&slice->getPixmap(), Config::get().Theme().slice_tint);
-        m_hanoi.slices.pushBack(slice);    // save the slices for ease of access
+        m_hanoi.slices[slice->getValue()]
+            = slice;    // save the slices for ease of access
         slice = slice->next;
     }
 
@@ -335,11 +336,9 @@ GameView::scaleSlices()
     float width  = m_geometry.slice.width(),
           height = m_geometry.stack_base.height();
 
-    auto node = m_hanoi.slices.m_head;
-    while (node != nullptr) {
-        node->data->Geometry().height = (height *= m_slice_scale_factor);
-        node->data->Geometry().width  = (width *= m_slice_scale_factor);
-        node                          = node->next;
+    for (size_t i = 0; i < Config::get().Settings().slice_amount; i++) {
+        m_hanoi.slices[i]->Geometry().height = (height *= m_slice_scale_factor);
+        m_hanoi.slices[i]->Geometry().width  = (width *= m_slice_scale_factor);
     }
 }
 

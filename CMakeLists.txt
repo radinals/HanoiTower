@@ -30,8 +30,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${SOURCE_DIR}/HanoiStack/hanoistack.h
         ${SOURCE_DIR}/HanoiStack/hanoistack.cpp
 
-        ${SOURCE_DIR}/LinkedList/linkedlist.h
-
         ${SOURCE_DIR}/Config/config.h
 
         ${SOURCE_DIR}/Utils/utils.h
