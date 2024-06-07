@@ -19,7 +19,7 @@ private:
         static const inline QString STACK_BASE  = ":/sprites/stack_base_sprite.png";
         static const inline QString STACK_POLE  = ":/sprites/stack_pole_sprite.png";
         static const inline QString ARROW       = ":/sprites/arrow.png";
-        static const inline QString LOGO        = ":/style/logo.png";
+        static const inline QString LOGO        = ":/ui/logo.png";
         static const inline QString DIALOG      = ":/sprites/dialog_base.png";
     } m_Assetsfiles;
 

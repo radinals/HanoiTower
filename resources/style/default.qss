@@ -92,14 +92,14 @@ QSlider::handle:horizontal {
 
 QTimeEdit::up-arrow {
     background: #59637c;
-    image: url(:/sprites/up_arrow.png);
+    image: url(:/ui/up_arrow.png);
     width: 100px;
     height: 100px;
 }
 
 QTimeEdit::down-arrow {
     background: #59637c;
-    image: url(:/sprites/down_arrow.png);
+    image: url(:/ui/down_arrow.png);
     width: 100px;
     height: 100px;
 }

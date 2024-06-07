@@ -1,9 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "config.h"
-#include "gameview.h"
-#include "settingswindow.h"
+#include "../Config/config.h"
+#include "../GameView/gameview.h"
+#include "../SettingsWindow/settingswindow.h"
 
 #include <QMainWindow>
 

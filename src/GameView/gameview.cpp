@@ -1,9 +1,9 @@
 #include "gameview.h"
 
-#include "config.h"
-#include "hanoistack.h"
-#include "linkedlist.h"
-#include "utils.h"
+#include "../Config/config.h"
+#include "../HanoiStack/hanoistack.h"
+#include "../LinkedList/linkedlist.h"
+#include "../Utils/utils.h"
 
 #include <QFont>
 

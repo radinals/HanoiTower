@@ -1,9 +1,9 @@
 #ifndef GAMEVIEW_H
 #define GAMEVIEW_H
 
-#include "config.h"
-#include "hanoistack.h"
-#include "linkedlist.h"
+#include "../Config/config.h"
+#include "../HanoiStack/hanoistack.h"
+#include "../LinkedList/linkedlist.h"
 
 #include <QCoreApplication>
 #include <QLabel>

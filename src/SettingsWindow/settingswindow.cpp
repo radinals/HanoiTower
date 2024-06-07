@@ -1,8 +1,8 @@
-#include "settingswindow.h"
+#include "../SettingsWindow/settingswindow.h"
 
-#include "config.h"
+#include "../Config/config.h"
+#include "../Utils/utils.h"
 #include "ui_settingswindow.h"
-#include "utils.h"
 
 #include <QSize>
 #include <qsoundeffect.h>

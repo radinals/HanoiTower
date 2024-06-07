@@ -1,7 +1,7 @@
 #ifndef HANOISLICE_H
 #define HANOISLICE_H
 
-#include "config.h"
+#include "../Config/config.h"
 
 #include <QPixmap>
 #include <QString>

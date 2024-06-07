@@ -12,24 +12,41 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Multimedia)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Multimedia)
 
+set(SOURCE_DIR src)
+
 set(PROJECT_SOURCES
-        main.cpp
+  ${SOURCE_DIR}/main.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(HanoiTower
         MANUAL_FINALIZATION
+
+        resources/resources.qrc
+
         ${PROJECT_SOURCES}
-        hanoislice.h hanoistack.h hanoistack.cpp
-        linkedlist.h
-        config.h utils.h
-        gameview.h gameview.cpp
-        resources.qrc
-        mainwindow.h mainwindow.cpp mainwindow.ui
-        settingswindow.h settingswindow.cpp settingswindow.ui
+
+        ${SOURCE_DIR}/HanoiStack/hanoislice.h
+        ${SOURCE_DIR}/HanoiStack/hanoistack.h
+        ${SOURCE_DIR}/HanoiStack/hanoistack.cpp
+
+        ${SOURCE_DIR}/LinkedList/linkedlist.h
+
+        ${SOURCE_DIR}/Config/config.h
+
+        ${SOURCE_DIR}/Utils/utils.h
+
+        ${SOURCE_DIR}/GameView/gameview.h
+        ${SOURCE_DIR}/GameView/gameview.cpp
 
 
+        ${SOURCE_DIR}/MainWindow/mainwindow.h
+        ${SOURCE_DIR}/MainWindow/mainwindow.cpp
+        ${SOURCE_DIR}/MainWindow/mainwindow.ui
 
+        ${SOURCE_DIR}/SettingsWindow/settingswindow.h
+        ${SOURCE_DIR}/SettingsWindow/settingswindow.cpp
+        ${SOURCE_DIR}/SettingsWindow/settingswindow.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET HanoiTower APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

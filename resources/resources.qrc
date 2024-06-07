@@ -3,13 +3,13 @@
         <file>sprites/base_slice_sprite.png</file>
         <file>sprites/stack_base_sprite.png</file>
         <file>sprites/stack_pole_sprite.png</file>
-        <file>style/default.qss</file>
-        <file>audio/placement_fx.wav</file>
-        <file>audio/bg_music.wav</file>
-        <file>style/logo.png</file>
         <file>sprites/arrow.png</file>
         <file>sprites/dialog_base.png</file>
-        <file>sprites/up_arrow.png</file>
-        <file>sprites/down_arrow.png</file>
+        <file>audio/placement_fx.wav</file>
+        <file>audio/bg_music.wav</file>
+        <file>style/default.qss</file>
+        <file>ui/up_arrow.png</file>
+        <file>ui/logo.png</file>
+        <file>ui/down_arrow.png</file>
     </qresource>
 </RCC>

@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 
-#include "gameview.h"
-#include "settingswindow.h"
+#include "../GameView/gameview.h"
+#include "../SettingsWindow/settingswindow.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
