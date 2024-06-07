@@ -9,6 +9,7 @@
 class HanoiStack {
 public:
     HanoiStack() {};
+    HanoiStack(size_t label) : m_label(label) {};
     ~HanoiStack() { clearStack(); };
 
     void clearStack();
@@ -24,6 +25,8 @@ public:
 
     // initialize a stack with 'slice_amount' of slices
     static void initializeStack(HanoiStack* stack, size_t slice_amount);
+
+    size_t m_label = 0;
 
 private:
     size_t m_size = 0;

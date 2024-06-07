@@ -14,7 +14,6 @@
 #include <QTimer>
 #include <QWidget>
 #include <string>
-#include <utility>
 
 #ifndef DISABLE_AUDIO
     #include <QSoundEffect>
@@ -79,17 +78,24 @@ private:
         QTextEdit *info_msg_out = nullptr;
     } m_sidebar_widgets;
 
-    struct HanoiStackData_t {
+    struct HanoiData_t {
         // all slices in game
         LinkedList<HanoiSlice *> slices;
 
         // all stack in game
-        LinkedList<std::pair<size_t, HanoiStack>> stacks;
+        HanoiStack *stacks;
 
         // points to a stack in m_stack
-        std::pair<size_t, HanoiStack> *goal_stack = nullptr;
+        HanoiStack *goal_stack = nullptr;
 
-    } m_stack_data;
+        HanoiData_t()
+        {
+            stacks = new HanoiStack[Config::get().Settings().STACK_MAX];
+        }
+
+        ~HanoiData_t() { delete[] stacks; }
+
+    } m_hanoi;
 
     struct TimeInfo_t {
         QTimer        timer;
@@ -108,7 +114,7 @@ private:
     GameState m_game_state = GameState::NotRunning;
 
     // calculate click area, returns stack under click
-    std::pair<size_t, HanoiStack *> calculateStackByPos(const QPointF &);
+    HanoiStack *calculateStackByPos(const QPointF &);
 
     // calculate the base sizes
     void calculateBaseSizes();
@@ -168,19 +174,17 @@ private:
     // check if the goal stack has all valid slices in it
     inline bool goalStackIsComplete()
     {
-        return (m_stack_data.goal_stack->second.getSize()
+        return (m_hanoi.goal_stack->getSize()
                 == Config::get().Settings().slice_amount);
     }
 
     // overloaded game movement rule check,
     // this checks the slice in m_selected
-    inline bool moveIsValid(const std::pair<size_t, HanoiStack *> &dest)
+    inline bool moveIsValid(HanoiStack *&dest)
     {
-        return (dest.second != nullptr)
-               && dest.first < Config::get().Settings().stack_amount
-               && (dest.second->isEmpty()
-                   || m_selected.slice->getValue()
-                          > dest.second->peek()->getValue());
+        return (dest != nullptr)
+               && (dest->isEmpty()
+                   || m_selected.slice->getValue() > dest->peek()->getValue());
     }
 
     // overloaded game movement rule check,

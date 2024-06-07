@@ -24,8 +24,8 @@
 GameView::GameView(QWidget* parent) : QWidget { parent }
 {
     // initialize all possible stack
-    for (int i = Config::get().Settings().STACK_MAX; i >= 0; i--) {
-        m_stack_data.stacks.pushBack(std::make_pair(i, HanoiStack()));
+    for (int i = Config::get().Settings().STACK_MAX - 1; i >= 0; i--) {
+        m_hanoi.stacks[i] = (HanoiStack(i));
     }
 
     // init timer.
@@ -54,10 +54,10 @@ GameView::hanoiIterativeSolver()
     size_t possible_moves = (1 << n) - 1;
 
     size_t source = 0,
-           aux    = ((m_stack_data.goal_stack->first == 1)
-                         ? m_stack_data.goal_stack->first + 1
+           aux    = ((m_hanoi.goal_stack->m_label == 1)
+                         ? m_hanoi.goal_stack->m_label + 1
                          : 1),
-           dest   = m_stack_data.goal_stack->first;
+           dest   = m_hanoi.goal_stack->m_label;
 
     if (n % 2 == 0) {
         size_t tmp;
@@ -114,10 +114,8 @@ GameView::moveTopSlice(HanoiStack* source, HanoiStack* dest)
 HanoiStack*
 GameView::getStack(size_t label)
 {
-    auto* node = m_stack_data.stacks.m_head;
-    while (node != nullptr) {
-        if (node->data.first == label) { return &node->data.second; }
-        node = node->next;
+    for (size_t i = 0; i < Config::get().Settings().stack_amount; i++) {
+        if (m_hanoi.stacks[i].m_label == label) { return &m_hanoi.stacks[i]; }
     }
     return nullptr;
 }
@@ -165,45 +163,42 @@ GameView::clear()
 
     m_game_state = GameState::NotRunning;
     m_time.timer.stop();
-    m_stack_data.slices.clear();
+    m_hanoi.slices.clear();
 
     const size_t goalStackLabel = getRandomGoalStackIndex();
 
-    m_stack_data.goal_stack = nullptr;
+    m_hanoi.goal_stack = nullptr;
 
     // clear all stack
     // search for the goal stack node
-    auto* node = m_stack_data.stacks.m_head;
-    while (node != nullptr) {
-        if (node->data.first == goalStackLabel) {
-            m_stack_data.goal_stack = &node->data;
+    for (size_t i = 0; i < Config::get().Settings().stack_amount; i++) {
+        if (m_hanoi.stacks[i].m_label == goalStackLabel) {
+            m_hanoi.goal_stack = &m_hanoi.stacks[i];
         }
-        node->data.second.clearStack();
-        node = node->next;
+        m_hanoi.stacks[i].clearStack();
     }
 
-    assert(m_stack_data.goal_stack != nullptr);
-    assert(m_stack_data.goal_stack->first == goalStackLabel);
+    assert(m_hanoi.goal_stack != nullptr);
+    assert(m_hanoi.goal_stack->m_label == goalStackLabel);
 
     m_sidebar_widgets.info_msg_out->setText(
-        "Move All Slice to Stack " + numToChar(m_stack_data.goal_stack->first));
+        "Move All Slice to Stack " + numToChar(m_hanoi.goal_stack->m_label));
 
     m_sidebar_widgets.info_msg_out->setAlignment(Qt::AlignCenter);
 
     assert(Config::get().Settings().slice_amount > 0);
 
     // populate the first stack
-    HanoiStack::initializeStack(&m_stack_data.stacks.m_head->data.second,
+    HanoiStack::initializeStack(&m_hanoi.stacks[0],
                                 Config::get().Settings().slice_amount);
 
-    assert(m_stack_data.stacks.m_head->data.second.getSize()
+    assert(m_hanoi.stacks[0].getSize()
            == Config::get().Settings().slice_amount);
 
-    HanoiSlice* slice = m_stack_data.stacks.m_head->data.second.getHead();
+    HanoiSlice* slice = m_hanoi.stacks[0].getHead();
     while (slice != nullptr) {
         colorizeSprite(&slice->getPixmap(), Config::get().Theme().slice_tint);
-        m_stack_data.slices.pushBack(
-            slice);    // save the slices for ease of access
+        m_hanoi.slices.pushBack(slice);    // save the slices for ease of access
         slice = slice->next;
     }
 
@@ -306,7 +301,7 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
     QColor font_color = Config::get().Theme().font_color;
 
     // highlight + draw the indicator if current stack is the goal stack
-    if (label == (m_stack_data.goal_stack->first)) {
+    if (label == (m_hanoi.goal_stack->m_label)) {
         const float box_size = (m_geometry.stack_base.width() * 0.1f) + 4;
 
         font_color = Config::get().Theme().highlight_tint;
@@ -340,7 +335,7 @@ GameView::scaleSlices()
     float width  = m_geometry.slice.width(),
           height = m_geometry.stack_base.height();
 
-    auto node = m_stack_data.slices.m_head;
+    auto node = m_hanoi.slices.m_head;
     while (node != nullptr) {
         node->data->Geometry().height = (height *= m_slice_scale_factor);
         node->data->Geometry().width  = (width *= m_slice_scale_factor);
@@ -351,31 +346,25 @@ GameView::scaleSlices()
 // compare the QPointF x and y values to a stack's area, if
 // if said point is in a stack's area, return the pointer
 // to the stack
-std::pair<size_t, HanoiStack*>
+HanoiStack*
 GameView::calculateStackByPos(const QPointF& point)
 {
     const float stack_area_height = m_geometry.stack_area.height();
     const float stack_area_width  = m_geometry.stack_area.width();
 
     float area_width = stack_area_width;
-    auto* node       = m_stack_data.stacks.m_head;
 
-    while (node != nullptr) {
-        // normalized vector
+    for (size_t i = 0; i < Config::get().Settings().stack_amount; i++) {
         const float x = (point.x() != 0) ? (point.x() / area_width) : 0;
         const float y = (point.y() != 0) ? (point.y() / stack_area_height) : 0;
 
         if ((x >= 0 && x <= 1) && (y >= 0 && y <= 1)) {
-            return { node->data.first, &node->data.second };
+            return &m_hanoi.stacks[i];
         }
 
-        // shift to the right, by stack area width
         area_width += stack_area_width;
-
-        node = node->next;
     }
-
-    return { 0, nullptr };
+    return nullptr;
 }
 
 // add tint to a pixmap, by using masks
@@ -505,19 +494,15 @@ GameView::paintEvent(QPaintEvent* event)
 
     float offset = m_geometry.stack_area.width() * 0.5f;
 
-    auto* node = m_stack_data.stacks.m_head;
-    while (node != nullptr
-           && node->data.first < Config::get().Settings().stack_amount) {
+    for (size_t i = 0; i < Config::get().Settings().stack_amount; i++) {
         // draw the stack base
-        drawStackBase(node->data.first, offset, &p);
+        drawStackBase(m_hanoi.stacks[i].m_label, offset, &p);
 
         // render the stack
-        drawStack(offset, &node->data.second, &p);
+        drawStack(offset, &m_hanoi.stacks[i], &p);
 
         // shift to the right for the next stack
         offset += m_geometry.stack_area.width();
-
-        node = node->next;
     }
 
     // render the selected stack
@@ -561,7 +546,7 @@ GameView::mousePressEvent(QMouseEvent* event)
         return;
     }
 
-    std::pair<size_t, HanoiStack*> clicked_stack;
+    HanoiStack* clicked_stack;
     switch (event->button()) {
         case Qt::LeftButton:
             clicked_stack = calculateStackByPos(event->position().toPoint());
@@ -570,12 +555,10 @@ GameView::mousePressEvent(QMouseEvent* event)
             return;
     }
 
-    if (clicked_stack.second == nullptr || clicked_stack.second->isEmpty()) {
-        return;
-    }
+    if (clicked_stack == nullptr || clicked_stack->isEmpty()) { return; }
 
-    m_selected.slice = clicked_stack.second->pop();
-    m_selected.stack = clicked_stack.second;
+    m_selected.slice = clicked_stack->pop();
+    m_selected.stack = clicked_stack;
 
     moveSelectedSlice(event->pos());
 }
@@ -601,7 +584,7 @@ GameView::mouseReleaseEvent(QMouseEvent* event)
 {
     if (!m_selected.valid() || m_game_state != GameState::Running) { return; }
 
-    std::pair<size_t, HanoiStack*> destination_stack
+    HanoiStack* destination_stack
         = calculateStackByPos(event->position().toPoint());
 
     // checks:
@@ -614,7 +597,7 @@ GameView::mouseReleaseEvent(QMouseEvent* event)
         if (m_game_state == GameState::Running && !m_time.timer.isActive()) {
             m_time.timer.start(1);
         }
-        destination_stack.second->push(m_selected.slice);
+        destination_stack->push(m_selected.slice);
         m_move_count++;
     } else {
         m_selected.stack->push(m_selected.slice);
