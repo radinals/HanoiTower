@@ -7,6 +7,7 @@
 #include "gameview.h"
 #include <random>
 
+// get the pointer to a stack
 HanoiStack *
 GameView::getStack(size_t label)
 {
@@ -14,8 +15,11 @@ GameView::getStack(size_t label)
         if (m_hanoi.stacks[i].label() == label) { return &m_hanoi.stacks[i]; }
     }
     throw std::runtime_error("getStack(): failed to find stack");
+
+    return &m_hanoi.stacks[label];
 }
 
+// move the top slice between two stacks
 void
 GameView::moveTopSlice(HanoiStack *source, HanoiStack *dest)
 {
@@ -30,6 +34,7 @@ GameView::moveTopSlice(HanoiStack *source, HanoiStack *dest)
     }
 }
 
+// generate a random stack label for the goal stack
 size_t
 GameView::getRandomGoalStackIndex()
 {
@@ -43,6 +48,7 @@ GameView::getRandomGoalStackIndex()
     return distr(gen);
 }
 
+// check the win state, is called by the timer every 1ms
 void
 GameView::checkWinState()
 {

@@ -16,12 +16,20 @@ GameView::hanoiIterativeSolver()
 
     size_t possible_moves = (1 << n) - 1;
 
-    size_t source = 0,
-           aux    = ((m_hanoi.goal_stack->label() == 1)
-                         ? m_hanoi.goal_stack->label() + 1
-                         : 1),
-           dest   = m_hanoi.goal_stack->label();
+    // starting stack
+    size_t source = 0;
 
+    // this should be either the slice after the first one,
+    // or the slice after the goal stack
+    size_t aux = (m_hanoi.goal_stack->label() == 1)
+                     ? m_hanoi.goal_stack->label() + 1
+                     : 1;
+
+    // the goal of the slices
+    size_t dest = m_hanoi.goal_stack->label();
+
+    // swap dest with aux if
+    // n is an even number
     if (n % 2 == 0) {
         size_t tmp;
         tmp  = dest;
@@ -30,13 +38,13 @@ GameView::hanoiIterativeSolver()
     }
 
     for (int i = 1; i <= possible_moves && !m_solver_task.stop_solving; i++) {
-        {
-            while (m_solver_task.pause_solving) {
-                std::this_thread::sleep_for(std::chrono::milliseconds(1));
-                if (m_solver_task.stop_solving) { return; }
-            }
+        // pauses the loop in place
+        while (m_solver_task.pause_solving) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            if (m_solver_task.stop_solving) { return; }
         }
 
+        // main algorithm
         if (i % 3 == 0) {
             moveTopSlice(getStack(aux), getStack(dest));
         } else if (i % 3 == 1) {
@@ -47,11 +55,16 @@ GameView::hanoiIterativeSolver()
 
         ++m_move_count;
 
+        // redraw screeen
         QMetaObject::invokeMethod(this, "repaint", Qt::QueuedConnection);
 
+        // wait for some time
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }
+
+// NOTE: the solver is ran on a different thread so it's does not interrupt with
+// the widget process.
 
 bool
 GameView::has_solver_task()
@@ -65,6 +78,7 @@ GameView::has_paused_solver_task()
     return has_solver_task() && m_solver_task.pause_solving;
 }
 
+// starts or stops the solver task
 void
 GameView::stop_solver_task()
 {
@@ -104,6 +118,8 @@ GameView::start_solver_task()
     m_solver_task.work_thread
         = new std::thread(&GameView::hanoiIterativeSolver, this);
 }
+
+// change the state to be pause/un-pause
 
 void
 GameView::unpause_solver_task()
