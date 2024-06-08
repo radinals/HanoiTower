@@ -41,6 +41,7 @@ private:
         static inline const size_t        SLICE_MAX      = 10;
         static inline const size_t        STACK_MAX      = 10;
         static inline const long long int TIMER_MIN      = 60000 * 3;
+        static inline const float         SCALE_FACTOR   = 0.9f;
         static inline size_t              slice_amount   = 5;
         static inline size_t              stack_amount   = 3;
         static inline float               fx_volume      = 1.0f;

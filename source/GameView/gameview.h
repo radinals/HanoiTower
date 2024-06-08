@@ -53,9 +53,7 @@ public:
     }
 
 private:
-    // scale (down) of slices
-    const float m_slice_scale_factor = 0.9f;
-    size_t      m_move_count         = 0;
+    size_t m_move_count = 0;
 
 #ifndef DISABLE_AUDIO
     QSoundEffect *m_placement_fx = nullptr;

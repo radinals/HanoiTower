@@ -350,8 +350,10 @@ GameView::scaleSlices()
           height = m_geometry.stack_base.height();
 
     for (size_t i = 0; i < Config::get().Settings().slice_amount; i++) {
-        m_hanoi.slices[i]->Geometry().height = (height *= m_slice_scale_factor);
-        m_hanoi.slices[i]->Geometry().width  = (width *= m_slice_scale_factor);
+        m_hanoi.slices[i]->Geometry().height
+            = (height *= Config::get().Settings().SCALE_FACTOR);
+        m_hanoi.slices[i]->Geometry().width
+            = (width *= Config::get().Settings().SCALE_FACTOR);
     }
 }
 
