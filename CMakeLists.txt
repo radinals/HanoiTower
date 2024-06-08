@@ -39,6 +39,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 
         ${SOURCE_DIR}/GameView/gameview.cpp
         ${SOURCE_DIR}/GameView/gameview.h
+        ${SOURCE_DIR}/GameView/gameview_init.cpp
         ${SOURCE_DIR}/GameView/gameview_game_mechanics.cpp
         ${SOURCE_DIR}/GameView/gameview_input_handling.cpp
         ${SOURCE_DIR}/GameView/gameview_rendering.cpp

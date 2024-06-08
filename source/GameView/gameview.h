@@ -134,6 +134,9 @@ private:
     void pause_solver_task();
     void unpause_solver_task();
 
+    void init_stacks();
+    void init_slices();
+
     // calculate click area, returns stack under click
     HanoiStack *calculateStackByPos(const QPointF &);
 
