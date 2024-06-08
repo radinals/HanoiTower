@@ -12,7 +12,10 @@
 #include <QTime>
 #include <QTimer>
 #include <QWidget>
+#include <atomic>
+#include <qobject.h>
 #include <string>
+#include <thread>
 
 #ifndef DISABLE_AUDIO
     #include <QSoundEffect>
@@ -27,6 +30,7 @@ public:
 
     ~GameView() override
     {
+        if (m_game_state == GameState::AutoSolving) { stop_solver_task(); }
         delete[] m_hanoi.stacks;
         delete[] m_hanoi.slices;
 #ifndef DISABLE_AUDIO
@@ -111,6 +115,23 @@ private:
 
     GameState m_game_state = GameState::NotRunning;
 
+    struct SolverTask_t {
+        std::atomic_bool stop_solving  = false;
+        std::atomic_bool pause_solving = false;
+        std::thread     *work_thread   = nullptr;
+        SolverTask_t() {};
+    } m_solver_task;
+
+    // clang-format off
+    bool has_solver_task() { return m_solver_task.work_thread != nullptr; }
+    bool has_paused_solver_task() { return has_solver_task() && m_solver_task.pause_solving; }
+    // clang-format on
+
+    void stop_solver_task();
+    void start_solver_task();
+    void pause_solver_task();
+    void unpause_solver_task();
+
     // calculate click area, returns stack under click
     HanoiStack *calculateStackByPos(const QPointF &);
 
@@ -133,7 +154,6 @@ private:
     void scaleSlices();    // handles slice scaling
     void scaleStack();     // handles stack scaling
 
-    // basic auto-solving mode (NOT THREAD SAFE)
     void hanoiIterativeSolver();
 
     // QWidget Event Handlers
@@ -193,14 +213,6 @@ private:
         return (!source->isEmpty())
                && (dest->isEmpty()
                    || source->peek()->getValue() > dest->peek()->getValue());
-    }
-
-    // delay by miliseconds
-    static void delay(int ms)
-    {
-        QTime dieTime = QTime::currentTime().addMSecs(ms);
-        while (QTime::currentTime() < dieTime)
-            QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
     }
 
 private slots:

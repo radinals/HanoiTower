@@ -3,7 +3,6 @@
 #include "../Config/config.h"
 #include "../HanoiStack/hanoistack.h"
 #include "../Utils/utils.h"
-#include <stdexcept>
 
 #ifndef DISABLE_AUDIO
     #include <QSoundEffect>
@@ -17,8 +16,11 @@
 #include <QPixmap>
 #include <QPoint>
 #include <QTimer>
+#include <chrono>
 #include <cmath>
 #include <random>
+#include <stdexcept>
+#include <thread>
 
 GameView::GameView(QWidget* parent) : QWidget { parent }
 {
@@ -68,7 +70,14 @@ GameView::hanoiIterativeSolver()
         aux  = tmp;
     }
 
-    for (int i = 1; i <= possible_moves; i++) {
+    for (int i = 1; i <= possible_moves && !m_solver_task.stop_solving; i++) {
+        {
+            while (m_solver_task.pause_solving) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+                if (m_solver_task.stop_solving) { return; }
+            }
+        }
+
         if (i % 3 == 0) {
             moveTopSlice(getStack(aux), getStack(dest));
         } else if (i % 3 == 1) {
@@ -78,8 +87,10 @@ GameView::hanoiIterativeSolver()
         }
 
         ++m_move_count;
-        repaint();
-        delay(10);
+
+        QMetaObject::invokeMethod(this, "repaint", Qt::QueuedConnection);
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }
 
@@ -89,10 +100,72 @@ GameView::solve()
     if (m_game_state != GameState::Running || m_time.timer.isActive()) {
         return;
     }
+
     m_game_state = GameState::AutoSolving;
-    m_sidebar_widgets.timer_out->setText("...");
-    hanoiIterativeSolver();
-    checkWinState();
+
+    m_time.timer.start(1);    // start timer
+
+    start_solver_task();    // start the solver in a new thread
+}
+
+void
+GameView::stop_solver_task()
+{
+    if (!has_solver_task()) {
+        throw std::runtime_error(
+            "GameView::start_solver_task(): failed to stop solving "
+            "task, no task is currently running");
+    }
+
+    m_solver_task.stop_solving = true;
+
+    // wait for the thread to exit
+    if (m_solver_task.work_thread->joinable()) {
+        m_solver_task.work_thread->join();
+    }
+
+    // de-allocate the thread
+    delete m_solver_task.work_thread;
+
+    // reset the states
+    m_solver_task.pause_solving = false;
+    m_solver_task.stop_solving  = false;
+
+    m_solver_task.work_thread = nullptr;
+}
+
+void
+GameView::start_solver_task()
+{
+    if (has_solver_task()) {
+        throw std::runtime_error(
+            "GameView::start_solver_task(): failed to init a new solving "
+            "task, a task is already present");
+    }
+
+    // start the thread;
+    m_solver_task.work_thread
+        = new std::thread(&GameView::hanoiIterativeSolver, this);
+}
+
+void
+GameView::unpause_solver_task()
+{
+    if (!has_paused_solver_task()) {
+        throw std::runtime_error("GameView::unpause_solver_task(): failed to "
+                                 "un-pause task");
+    }
+    m_solver_task.pause_solving = false;
+}
+
+void
+GameView::pause_solver_task()
+{
+    if (has_paused_solver_task()) {
+        throw std::runtime_error("GameView::pause_solver_task(): failed to "
+                                 "pause task");
+    }
+    m_solver_task.pause_solving = true;
 }
 
 void
@@ -125,8 +198,15 @@ GameView::pause()
         case GameState::Paused:
             m_time.timer.start(1);
             updateInfo();
-            m_game_state = GameState::Running;
+            if (has_paused_solver_task()) {
+                unpause_solver_task();
+                m_game_state = GameState::AutoSolving;
+            } else {
+                m_game_state = GameState::Running;
+            }
             break;
+        case GameState::AutoSolving:
+            pause_solver_task();
         case GameState::Running:
             if (!m_time.timer.isActive()) { return; }
             m_sidebar_widgets.timer_out->setText("PAUSED");
@@ -142,7 +222,6 @@ GameView::pause()
 void
 GameView::reset()
 {
-    if (m_game_state == GameState::AutoSolving) return;
     clear();
     updateInfo();
 #ifndef DISABLE_AUDIO
@@ -156,6 +235,8 @@ void
 GameView::clear()
 {
     calculateBaseSizes();
+
+    if (has_solver_task()) { stop_solver_task(); }
 
     m_time.elapsed = m_move_count = 0;
 
@@ -479,26 +560,29 @@ GameView::checkWinState()
 void
 GameView::updateInfo()
 {
-    if (m_sidebar_widgets.timer_out != nullptr
-        && m_game_state != GameState::AutoSolving) {
-        auto hh_mm_ss = Utils::extractTimeFromMs(
-            Config::get().Settings().time_length_ms - m_time.elapsed);
+    if (m_sidebar_widgets.timer_out != nullptr) {
+        if (has_solver_task()) {
+            m_sidebar_widgets.timer_out->setText(".....");
+        } else {
+            auto hh_mm_ss = Utils::extractTimeFromMs(
+                Config::get().Settings().time_length_ms - m_time.elapsed);
 
-        QString h, m, s;
-        h = QString::number(std::get<0>(hh_mm_ss));
-        m = QString::number(std::get<1>(hh_mm_ss));
-        s = QString::number(std::get<2>(hh_mm_ss));
+            QString h, m, s;
+            h = QString::number(std::get<0>(hh_mm_ss));
+            m = QString::number(std::get<1>(hh_mm_ss));
+            s = QString::number(std::get<2>(hh_mm_ss));
 
-        if (std::get<0>(hh_mm_ss) < 10) { h = '0' + h; }
-        if (std::get<1>(hh_mm_ss) < 10) { m = '0' + m; }
-        if (std::get<2>(hh_mm_ss) < 10) { s = '0' + s; }
+            if (std::get<0>(hh_mm_ss) < 10) { h = '0' + h; }
+            if (std::get<1>(hh_mm_ss) < 10) { m = '0' + m; }
+            if (std::get<2>(hh_mm_ss) < 10) { s = '0' + s; }
 
-        m_sidebar_widgets.timer_out->setText(h + ":" + m + ":" + s);
-    }
+            m_sidebar_widgets.timer_out->setText(h + ":" + m + ":" + s);
+        }
 
-    if (m_sidebar_widgets.move_count_out != nullptr) {
-        m_sidebar_widgets.move_count_out->setText(
-            QString::number(m_move_count));
+        if (m_sidebar_widgets.move_count_out != nullptr) {
+            m_sidebar_widgets.move_count_out->setText(
+                QString::number(m_move_count));
+        }
     }
 }
 

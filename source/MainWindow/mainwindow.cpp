@@ -66,7 +66,6 @@ MainWindow::~MainWindow()
 void
 MainWindow::resetGameAction()
 {
-    if (m_game_view->isAutoSolving()) return;
     if (m_game_view->isPaused()) { ui->PauseBtn->setText("PAUSE"); }
     m_game_view->reset();
 }
@@ -111,7 +110,6 @@ MainWindow::backToMainMenuAction()
 void
 MainWindow::on_PauseBtn_clicked()
 {
-    if (m_game_view->isAutoSolving()) return;
     m_game_view->pause();
     if (m_game_view->isPaused()) {
         ui->PauseBtn->setText("UN-PAUSE");
