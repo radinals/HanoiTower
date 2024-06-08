@@ -363,21 +363,17 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 
     //--Draw Stack Base+Pole----------------------------------------------
 
-    // copy the sprite
-    QPixmap pole_sprite       = m_sprites.stack_pole;
-    QPixmap stack_base_sprite = m_sprites.stack_base;
-
     const float pole_y = height() - m_sprites.stack_pole.height();
 
     // draw the pole
-    painter->drawPixmap(offset - (pole_sprite.width() * 0.5f),
+    painter->drawPixmap(offset - (m_sprites.stack_pole.width() * 0.5f),
                         pole_y,
-                        pole_sprite);
+                        m_sprites.stack_pole);
 
     // draw the base
     painter->drawPixmap(offset - (m_geometry.stack_base.width() * 0.5f),
                         height() - m_geometry.stack_base.height(),
-                        stack_base_sprite);
+                        m_sprites.stack_base);
 
     //--Draw Stack Label--------------------------------------------------
 
