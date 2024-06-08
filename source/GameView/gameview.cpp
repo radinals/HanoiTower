@@ -42,10 +42,8 @@ GameView::GameView(QWidget* parent) : QWidget { parent }
     m_placement_fx->setVolume(Config::get().Settings().fx_volume);
 #endif
 
-    m_sprites.stack_pole = QPixmap(Config::get().AssetFiles().STACK_POLE);
-    m_sprites.stack_base = QPixmap(Config::get().AssetFiles().STACK_BASE);
-    m_sprites.arrow      = QPixmap(Config::get().AssetFiles().ARROW);
-    m_sprites.slice      = QPixmap(Config::get().AssetFiles().SLICE);
+    m_sprites.arrow = QPixmap(Config::get().AssetFiles().ARROW);
+    m_sprites.slice = QPixmap(Config::get().AssetFiles().SLICE);
 
     colorizeSprite(&m_sprites.arrow, Config::get().Theme().highlight_tint);
 }
@@ -217,6 +215,9 @@ GameView::clear()
         slice = slice->next;
     }
 
+    // scale the stacks
+    scaleStack();
+
     // scale the slices
     scaleSlices();
 }
@@ -281,22 +282,11 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 
     //--Draw Stack Base+Pole----------------------------------------------
 
-    const float pole_height
-        = m_geometry.stack_base.height() * Config::get().Settings().SLICE_MAX,
-        pole_y = height() - pole_height;
+    // copy the sprite
+    QPixmap pole_sprite       = m_sprites.stack_pole;
+    QPixmap stack_base_sprite = m_sprites.stack_base;
 
-    // scale the sprites
-    QPixmap pole_sprite
-        = m_sprites.stack_pole.scaled(m_geometry.stack_base.width() * 0.1f,
-                                      pole_height);
-
-    QPixmap stack_base_sprite
-        = m_sprites.stack_base.scaled(m_geometry.stack_base.width(),
-                                      m_geometry.stack_base.height());
-
-    const QPixmap arrow_sprite
-        = m_sprites.arrow.scaled(offset - m_geometry.stack_area.width() * 0.5f,
-                                 m_geometry.stack_base.width() * 0.1f);
+    const float pole_y = height() - m_sprites.stack_pole.height();
 
     // tint the sprites
     colorizeSprite(&pole_sprite, Config::get().Theme().stack_tint);
@@ -327,6 +317,10 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
         font_color = Config::get().Theme().highlight_tint;
 
         if (!m_time.timer.isActive() && m_game_state == GameState::Running) {
+            const QPixmap arrow_sprite = m_sprites.arrow.scaled(
+                offset - m_geometry.stack_area.width() * 0.5f,
+                m_geometry.stack_base.width() * 0.1f);
+
             painter->drawPixmap(m_geometry.stack_area.width() * 0.5f,
                                 pole_y - (arrow_sprite.height()),
                                 arrow_sprite);
@@ -350,11 +344,27 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 }
 
 void
+GameView::scaleStack()
+{
+    m_sprites.stack_pole = QPixmap(Config::get().AssetFiles().STACK_POLE);
+    m_sprites.stack_base = QPixmap(Config::get().AssetFiles().STACK_BASE);
+
+    m_sprites.stack_pole = m_sprites.stack_pole.scaled(
+        m_geometry.stack_base.width() * 0.1f,
+        m_geometry.stack_base.height() * Config::get().Settings().SLICE_MAX);
+
+    m_sprites.stack_base
+        = m_sprites.stack_base.scaled(m_geometry.stack_base.width(),
+                                      m_geometry.stack_base.height());
+}
+
+void
 GameView::scaleSlices()
 {
     float width  = m_geometry.slice.width(),
           height = m_geometry.stack_base.height();
 
+    // every slice has a different size
     for (size_t i = 0; i < Config::get().Settings().slice_amount; i++) {
         m_hanoi.slices[i]->Geometry().height
             = (height *= Config::get().Settings().SCALE_FACTOR);
@@ -558,7 +568,10 @@ void
 GameView::resizeEvent(QResizeEvent* event)
 {
     calculateBaseSizes();
-    if (m_game_state != GameState::NotRunning) { scaleSlices(); }
+    if (m_game_state != GameState::NotRunning) {
+        scaleStack();
+        scaleSlices();
+    }
 }
 
 // on mouse press, pop the slice of the stack below the mouse click,

@@ -131,6 +131,7 @@ private:
                     QPainter *const painter);
 
     void scaleSlices();    // handles slice scaling
+    void scaleStack();     // handles stack scaling
 
     // basic auto-solving mode (NOT THREAD SAFE)
     void hanoiIterativeSolver();
