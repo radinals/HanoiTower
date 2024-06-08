@@ -1,7 +1,6 @@
 #ifndef GAMEVIEW_H
 #define GAMEVIEW_H
 
-#include "../Config/config.h"
 #include "../HanoiStack/hanoistack.h"
 
 #include <QCoreApplication>
@@ -13,8 +12,6 @@
 #include <QTimer>
 #include <QWidget>
 #include <atomic>
-#include <qobject.h>
-#include <string>
 #include <thread>
 
 #ifndef DISABLE_AUDIO
@@ -122,10 +119,8 @@ private:
         SolverTask_t() {};
     } m_solver_task;
 
-    // clang-format off
-    bool has_solver_task() { return m_solver_task.work_thread != nullptr; }
-    bool has_paused_solver_task() { return has_solver_task() && m_solver_task.pause_solving; }
-    // clang-format on
+    bool has_solver_task();
+    bool has_paused_solver_task();
 
     void stop_solver_task();
     void start_solver_task();
@@ -173,47 +168,21 @@ private:
     static size_t getRandomGoalStackIndex();
 
     // convert the numeric labels of stacks to alphabets
-    inline static QString numToChar(size_t n)
-    {
-        std::string str;
-        str += char('A' + n);
-        return QString::fromStdString(str);
-    };
+    static QString numToChar(size_t);
 
     // move slice stored by m_selected, to the QPoints x and y values
-    inline void moveSelectedSlice(const QPoint &p)
-    {
-        m_selected.slice->Geometry().x
-            = (p.x() - (m_selected.slice->Geometry().width * 0.5f));
-        m_selected.slice->Geometry().y
-            = (p.y() - (m_selected.slice->Geometry().height * 0.5f));
-        update();
-    }
+    void moveSelectedSlice(const QPoint &p);
 
     // check if the goal stack has all valid slices in it
-    inline bool goalStackIsComplete()
-    {
-        return (m_hanoi.goal_stack->getSize()
-                == Config::get().Settings().slice_amount);
-    }
+    bool goalStackIsComplete();
 
     // overloaded game movement rule check,
     // this checks the slice in m_selected
-    inline bool moveIsValid(HanoiStack *&dest)
-    {
-        return (dest != nullptr)
-               && (dest->isEmpty()
-                   || m_selected.slice->getValue() > dest->peek()->getValue());
-    }
+    bool moveIsValid(HanoiStack *&dest);
 
     // overloaded game movement rule check,
     // this checks the top slice in two stacks
-    static inline bool moveIsValid(HanoiStack *source, HanoiStack *dest)
-    {
-        return (!source->isEmpty())
-               && (dest->isEmpty()
-                   || source->peek()->getValue() > dest->peek()->getValue());
-    }
+    static bool moveIsValid(HanoiStack *source, HanoiStack *dest);
 
 private slots:
     // called by timer in every ms
