@@ -106,13 +106,6 @@ GameView::clear()
     init_stacks();
     init_slices();
 
-    HanoiSlice* slice = m_hanoi.stacks[0].getHead();
-    while (slice != nullptr) {
-        // save the slices for ease of access
-        m_hanoi.slices[slice->getValue()] = slice;
-        slice                             = slice->next;
-    }
-
     m_sidebar_widgets.info_msg_out->setText(
         "Move All Slice to Stack "
         + Utils::numToChar(m_hanoi.goal_stack->label()));
