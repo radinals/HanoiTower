@@ -1,3 +1,8 @@
+//-- Description -------------------------------------------------------------/
+// methods that determines the size of the sprites                            /
+// to be rendered.                                                            /
+//----------------------------------------------------------------------------/
+
 #include "gameview.h"
 
 #include "../Config/config.h"
@@ -56,5 +61,15 @@ GameView::scaleSlices()
             = (height *= Config::get().Settings().SCALE_FACTOR);
         m_hanoi.slices[i]->Geometry().width
             = (width *= Config::get().Settings().SCALE_FACTOR);
+    }
+}
+
+void
+GameView::resizeEvent(QResizeEvent* event)
+{
+    calculateBaseSizes();
+    if (m_game_state != GameState::NotRunning) {
+        scaleStack();
+        scaleSlices();
     }
 }

@@ -1,6 +1,12 @@
+//-- Description -------------------------------------------------------------/
+// methods that handles the click events                                      /
+//----------------------------------------------------------------------------/
+
 #include "gameview.h"
 
 #include <QMouseEvent>
+
+#include "../Config/config.h"
 
 // on mouse press, pop the slice of the stack below the mouse click,
 // and store it.
@@ -79,4 +85,28 @@ GameView::mouseReleaseEvent(QMouseEvent* event)
 #ifndef DISABLE_AUDIO
     if (!m_placement_fx->isPlaying()) { m_placement_fx->play(); }
 #endif
+}
+
+// compare the QPointF x and y values to a stack's area, if
+// if said point is in a stack's area, return the pointer
+// to the stack
+HanoiStack*
+GameView::calculateStackByPos(const QPointF& point)
+{
+    const float stack_area_height = m_geometry.stack_area.height();
+    const float stack_area_width  = m_geometry.stack_area.width();
+
+    float area_width = stack_area_width;
+
+    for (size_t i = 0; i < Config::get().Settings().stack_amount; i++) {
+        const float x = (point.x() != 0) ? (point.x() / area_width) : 0;
+        const float y = (point.y() != 0) ? (point.y() / stack_area_height) : 0;
+
+        if ((x >= 0 && x <= 1) && (y >= 0 && y <= 1)) {
+            return &m_hanoi.stacks[i];
+        }
+
+        area_width += stack_area_width;
+    }
+    return nullptr;
 }

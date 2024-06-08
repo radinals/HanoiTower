@@ -1,3 +1,7 @@
+//-- Description -------------------------------------------------------------/
+// methods that handles the auto-solving process                              /
+//----------------------------------------------------------------------------/
+
 #include "gameview.h"
 
 #include "../Config/config.h"

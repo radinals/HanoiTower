@@ -1,3 +1,7 @@
+//-- Description -------------------------------------------------------------/
+// The Hanoi Tower Widget                                                     /
+//----------------------------------------------------------------------------/
+
 #ifndef GAMEVIEW_H
 #define GAMEVIEW_H
 
@@ -166,9 +170,6 @@ private:
 
     // generate random stack index from 1 to n-1
     static size_t getRandomGoalStackIndex();
-
-    // convert the numeric labels of stacks to alphabets
-    static QString numToChar(size_t);
 
     // move slice stored by m_selected, to the QPoints x and y values
     void moveSelectedSlice(const QPoint &p);

@@ -1,6 +1,12 @@
+//-- Description -------------------------------------------------------------/
+// methods thar hanldes the rendering process, is called by the widget paint  /
+// event.                                                                     /
+//----------------------------------------------------------------------------/
+
 #include "gameview.h"
 
 #include "../Config/config.h"
+#include "../Utils/utils.h"
 
 // - draw the stack's slices
 // - configure each slice placement in the screen, starting from the bottom
@@ -91,7 +97,7 @@ GameView::drawStackBase(size_t label, float offset, QPainter* painter)
     // draw the stack label
     painter->drawText(offset - (painter->font().pointSizeF() * 0.5f),
                       pole_y - painter->font().pointSizeF(),
-                      numToChar(label));
+                      Utils::numToChar(label));
 }
 
 void
@@ -121,4 +127,81 @@ GameView::drawDialog(const QString&  text,
     painter->drawText((width() * 0.5f) - ((text.length() * font_size) * 0.4f),
                       (height() * 0.5f) + m_geometry.dialog.height() * 0.1f,
                       text);
+}
+
+// add tint to a pixmap, by using masks
+void
+GameView::colorizeSprite(QPixmap* sprite, const QColor& color)
+{
+    if (sprite == nullptr || sprite->isNull()) {
+        std::runtime_error("colorizeSprite(): invalid pixmap was passed");
+    }
+
+    QPixmap  mask(*sprite);
+    QPainter painter;
+
+    // create the mask
+    painter.begin(&mask);
+    if (painter.isActive()) {
+        painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
+        painter.fillRect(mask.rect(), color);
+        painter.end();
+    }
+
+    // apply the mask
+    painter.begin(sprite);
+    if (painter.isActive()) {
+        painter.setCompositionMode(QPainter::CompositionMode_Overlay);
+        painter.drawImage(0, 0, mask.toImage());
+        painter.end();
+    }
+}
+
+void
+GameView::paintEvent(QPaintEvent* event)
+{
+    if (m_game_state == GameState::NotRunning) return;
+
+    QPainter p(this);
+
+    updateInfo();
+
+    float offset = m_geometry.stack_area.width() * 0.5f;
+
+    for (size_t i = 0; i < Config::get().Settings().stack_amount; i++) {
+        HanoiStack& current_stack = m_hanoi.stacks[i];
+
+        // draw the stack base
+        drawStackBase(current_stack.label(), offset, &p);
+
+        // render the stack
+        if (!current_stack.isEmpty()) { drawStack(offset, &current_stack, &p); }
+
+        // shift to the right for the next stack
+        offset += m_geometry.stack_area.width();
+    }
+
+    // render the selected stack
+    if (m_selected.hasSelected()) {
+        p.drawPixmap(
+            m_selected.slice->Geometry().x,
+            m_selected.slice->Geometry().y,
+            m_sprites.slice.scaled(m_selected.slice->Geometry().width,
+                                   m_selected.slice->Geometry().height));
+    }
+
+    switch (m_game_state) {
+        case GameState::GameOverLost:
+            drawDialog("TIME's UP!",
+                       Config::get().Theme().lose_dialog_tint,
+                       &p);
+            break;
+
+        case GameState::GameOverWon:
+            drawDialog("YOU WIN", Config::get().Theme().win_dialog_tint, &p);
+            break;
+
+        default:
+            break;
+    }
 }

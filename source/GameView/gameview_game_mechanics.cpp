@@ -1,3 +1,8 @@
+//-- Description -------------------------------------------------------------/
+// methods is related to the gameplay logic, and also the modifying of stacks /
+// or slices.                                                                 /
+//----------------------------------------------------------------------------/
+
 #include "../Config/config.h"
 #include "gameview.h"
 #include <random>

@@ -1,7 +1,13 @@
+//-- Description -------------------------------------------------------------/
+// main gameview interface definitions, public method that modify or          /
+// interract with the game state.                                             /
+//----------------------------------------------------------------------------/
+
 #include "gameview.h"
 
 #include "../Config/config.h"
 #include "../HanoiStack/hanoistack.h"
+#include "../Utils/utils.h"
 
 #ifndef DISABLE_AUDIO
     #include <QSoundEffect>
@@ -128,7 +134,8 @@ GameView::clear()
     }
 
     m_sidebar_widgets.info_msg_out->setText(
-        "Move All Slice to Stack " + numToChar(m_hanoi.goal_stack->label()));
+        "Move All Slice to Stack "
+        + Utils::numToChar(m_hanoi.goal_stack->label()));
 
     m_sidebar_widgets.info_msg_out->setAlignment(Qt::AlignCenter);
 
@@ -165,63 +172,4 @@ GameView::clear()
 
     // scale the slices
     scaleSlices();
-}
-
-void
-GameView::resizeEvent(QResizeEvent* event)
-{
-    calculateBaseSizes();
-    if (m_game_state != GameState::NotRunning) {
-        scaleStack();
-        scaleSlices();
-    }
-}
-
-void
-GameView::paintEvent(QPaintEvent* event)
-{
-    if (m_game_state == GameState::NotRunning) return;
-
-    QPainter p(this);
-
-    updateInfo();
-
-    float offset = m_geometry.stack_area.width() * 0.5f;
-
-    for (size_t i = 0; i < Config::get().Settings().stack_amount; i++) {
-        HanoiStack& current_stack = m_hanoi.stacks[i];
-
-        // draw the stack base
-        drawStackBase(current_stack.label(), offset, &p);
-
-        // render the stack
-        if (!current_stack.isEmpty()) { drawStack(offset, &current_stack, &p); }
-
-        // shift to the right for the next stack
-        offset += m_geometry.stack_area.width();
-    }
-
-    // render the selected stack
-    if (m_selected.hasSelected()) {
-        p.drawPixmap(
-            m_selected.slice->Geometry().x,
-            m_selected.slice->Geometry().y,
-            m_sprites.slice.scaled(m_selected.slice->Geometry().width,
-                                   m_selected.slice->Geometry().height));
-    }
-
-    switch (m_game_state) {
-        case GameState::GameOverLost:
-            drawDialog("TIME's UP!",
-                       Config::get().Theme().lose_dialog_tint,
-                       &p);
-            break;
-
-        case GameState::GameOverWon:
-            drawDialog("YOU WIN", Config::get().Theme().win_dialog_tint, &p);
-            break;
-
-        default:
-            break;
-    }
 }
