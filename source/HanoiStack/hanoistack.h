@@ -1,3 +1,9 @@
+//-- Description -------------------------------------------------------------/
+// The Stack Implementation for Hanoi Tower, is structured to be used also as /
+// simplified double linked list.                                             /
+// Stores the very basic information of a stack instance.                     /
+//----------------------------------------------------------------------------/
+
 #ifndef HANOISTACK_H
 #define HANOISTACK_H
 

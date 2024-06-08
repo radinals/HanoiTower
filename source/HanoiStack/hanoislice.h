@@ -1,3 +1,8 @@
+//-- Description -------------------------------------------------------------/
+// The Slice of the Hanoi Stack, tracks the slice's sprites on the screen and /
+// size.
+//----------------------------------------------------------------------------/
+
 #ifndef HANOISLICE_H
 #define HANOISLICE_H
 

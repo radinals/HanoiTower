@@ -1,3 +1,6 @@
+//-- Description -------------------------------------------------------------/
+// functions that simplify some operations but is not attached to any objects /
+//----------------------------------------------------------------------------/
 #ifndef UTILS_H
 #define UTILS_H
 

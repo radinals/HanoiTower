@@ -1,3 +1,7 @@
+//-- Description -------------------------------------------------------------/
+// defines methods that give the user access to modify the game configurations/
+//----------------------------------------------------------------------------/
+
 #include "../SettingsWindow/settingswindow.h"
 
 #include "../Config/config.h"

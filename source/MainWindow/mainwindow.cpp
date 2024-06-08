@@ -1,3 +1,8 @@
+//-- Description -------------------------------------------------------------/
+// Defines the game's main window, and handles most of the buttons and other  /
+// interactions with the user.                                                /
+//----------------------------------------------------------------------------/
+
 #include "mainwindow.h"
 
 #include "../GameView/gameview.h"

@@ -1,3 +1,7 @@
+//-- Description -------------------------------------------------------------/
+// method that define the operations on a Hanoi Stack                         /
+//----------------------------------------------------------------------------/
+
 #include "hanoistack.h"
 
 #include "hanoislice.h"

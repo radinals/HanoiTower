@@ -1,3 +1,7 @@
+//-- Description -------------------------------------------------------------/
+// singleton class that holds all the global variables of the game            /
+//----------------------------------------------------------------------------/
+
 #ifndef CONFIG_H
 #define CONFIG_H
 

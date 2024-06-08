@@ -1,3 +1,7 @@
+//-- Description -------------------------------------------------------------/
+// widget that gives the interface to modify game configurations              /
+//----------------------------------------------------------------------------/
+
 #ifndef SETTINGSWINDOW_H
 #define SETTINGSWINDOW_H
 

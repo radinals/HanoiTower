@@ -1,3 +1,7 @@
+//-- Description -------------------------------------------------------------/
+// main window that holds all other widgets together                          /
+//----------------------------------------------------------------------------/
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
