@@ -162,14 +162,37 @@ SettingsWindow::on_CancelButton_clicked()
 void
 SettingsWindow::on_SaveButton_clicked()
 {
-    Config::get().Settings().stack_amount   = Settings.stack_amount;
-    Config::get().Settings().slice_amount   = Settings.slice_amount;
-    Config::get().Theme().slice_tint        = Settings.slice_color;
-    Config::get().Theme().stack_tint        = Settings.stack_color;
-    Config::get().Settings().time_length_ms = Settings.timer_ms;
+    if (Settings.stack_amount != Config::get().Settings().stack_amount) {
+        Config::get().Settings().stack_amount = Settings.stack_amount;
+    }
+
+    if (Settings.slice_amount != Config::get().Settings().slice_amount) {
+        Config::get().Settings().slice_amount = Settings.slice_amount;
+    }
+
+    if (QColor(Settings.slice_color) != Config::get().Theme().slice_tint) {
+        Config::get().Theme().slice_tint = Settings.slice_color;
+    }
+
+    if (QColor(Settings.stack_color) != Config::get().Theme().stack_tint) {
+        Config::get().Theme().stack_tint = Settings.stack_color;
+    }
+
+    if (QColor(Settings.timer_ms) != Config::get().Settings().time_length_ms) {
+        Config::get().Settings().time_length_ms = Settings.timer_ms;
+    }
+
 #ifndef DISABLE_AUDIO
-    Config::get().Settings().fx_volume    = Settings.sfx_volume_level;
-    Config::get().Settings().music_volume = Settings.music_volume_level;
+    if (QColor(Settings.sfx_volume_level)
+        != Config::get().Settings().fx_volume) {
+        Config::get().Settings().music_volume = Settings.sfx_volume_level;
+        Config::get().Settings().fx_volume    = Settings.sfx_volume_level;
+    }
+
+    if (QColor(Settings.music_volume_level)
+        != Config::get().Settings().music_volume) {
+        Config::get().Settings().music_volume = Settings.music_volume_level;
+    }
 #endif
     hide();
 }
@@ -187,9 +210,8 @@ SettingsWindow::drawPreview()
     ui->PreviewOut->centerOn(m_preview_scene->sceneRect().center());
     // ----------------------------------------------------------------------
 
-    static const QPen  pen(QBrush("#000000"), 4);
-    static const float slice_scale_factor = 0.9f;    // down scale
-    static const int   hpadding           = 5;       // spacing
+    static const QPen pen(QBrush("#000000"), 4);
+    static const int  hpadding = 5;    // spacing
 
     const float sceneW = ui->PreviewOut->width();
     const float sceneH = ui->PreviewOut->height();
@@ -253,8 +275,8 @@ SettingsWindow::drawPreview()
                                          pen,
                                          Settings.slice_color);
 
-        ssize *= slice_scale_factor;    // scale down
-        y -= ssize.height();            // shift up
+        ssize *= Config::get().Settings().SCALE_FACTOR;    // scale down
+        y -= ssize.height();                               // shift up
     }
 
     // ----------------------------------------------------------------------

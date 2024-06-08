@@ -60,7 +60,8 @@ private:
 #endif
 
     struct GameSprites_t {
-        QPixmap stack_pole, stack_base, arrow;
+        QColor  stack_tint, slice_tint;
+        QPixmap stack_pole, stack_base, arrow, slice;
     } m_sprites;
 
     struct Geometry_t {

@@ -45,6 +45,7 @@ GameView::GameView(QWidget* parent) : QWidget { parent }
     m_sprites.stack_pole = QPixmap(Config::get().AssetFiles().STACK_POLE);
     m_sprites.stack_base = QPixmap(Config::get().AssetFiles().STACK_BASE);
     m_sprites.arrow      = QPixmap(Config::get().AssetFiles().ARROW);
+    m_sprites.slice      = QPixmap(Config::get().AssetFiles().SLICE);
 
     colorizeSprite(&m_sprites.arrow, Config::get().Theme().highlight_tint);
 }
@@ -200,11 +201,19 @@ GameView::clear()
         std::runtime_error("clear(): failed to fill starting stack");
     }
 
+    // tint the slice sprite
+    if (m_sprites.slice_tint != Config::get().Theme().slice_tint) {
+        QPixmap sprite(Config::get().AssetFiles().SLICE);
+        colorizeSprite(&sprite, Config::get().Theme().slice_tint);
+        m_sprites.slice      = sprite;
+        m_sprites.slice_tint = Config::get().Theme().slice_tint;
+    }
+
     HanoiSlice* slice = m_hanoi.stacks[0].getHead();
     while (slice != nullptr) {
-        colorizeSprite(&slice->getPixmap(), Config::get().Theme().slice_tint);
-        m_hanoi.slices[slice->getValue()]
-            = slice;    // save the slices for ease of access
+        // save the slices for ease of access
+        m_hanoi.slices[slice->getValue()] = slice;
+
         slice = slice->next;
     }
 
@@ -255,7 +264,8 @@ GameView::drawStack(float offset, HanoiStack* stack, QPainter* painter)
         slice->Geometry().y = y;
 
         painter->drawPixmap(QPointF(slice->Geometry().x, slice->Geometry().y),
-                            slice->getScaledPixmap());
+                            m_sprites.slice.scaled(slice->Geometry().width,
+                                                   slice->Geometry().height));
 
         slice = slice->prev;
     }
@@ -265,11 +275,9 @@ GameView::drawStack(float offset, HanoiStack* stack, QPainter* painter)
 void
 GameView::drawStackBase(size_t label, float offset, QPainter* painter)
 {
-    if (painter == nullptr) {
-        std::invalid_argument("drawStackBase(): null painter was passed");
+    if (painter == nullptr || !painter->isActive()) {
+        std::invalid_argument("drawStackBase(): invalid painter was passed");
     }
-
-    if (!painter->isActive()) { return; }
 
     //--Draw Stack Base+Pole----------------------------------------------
 
@@ -523,9 +531,11 @@ GameView::paintEvent(QPaintEvent* event)
 
     // render the selected stack
     if (m_selected.hasSelected()) {
-        p.drawPixmap(m_selected.slice->Geometry().x,
-                     m_selected.slice->Geometry().y,
-                     m_selected.slice->getScaledPixmap());
+        p.drawPixmap(
+            m_selected.slice->Geometry().x,
+            m_selected.slice->Geometry().y,
+            m_sprites.slice.scaled(m_selected.slice->Geometry().width,
+                                   m_selected.slice->Geometry().height));
     }
 
     switch (m_game_state) {
