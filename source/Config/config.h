@@ -28,13 +28,15 @@ private:
     static const inline QString m_defaultStylesheet = ":/style/default.qss";
 
     struct Theme_t {
-        static inline QString font_name        = "monospace";
-        static inline QColor  font_color       = "#fffeee";
-        static inline QColor  highlight_tint   = "#e8d81c";
-        static inline QColor  stack_tint       = "#71391c";
-        static inline QColor  slice_tint       = "#7e1313";
-        static inline QColor  win_dialog_tint  = "#28ab2b";
-        static inline QColor  lose_dialog_tint = "#ab282f";
+        static const inline QColor DEFAULT_STACK_TINT = "#71391c";
+        static const inline QColor DEFAULT_SLICE_TINT = "#7e1313";
+        static inline QString      font_name          = "monospace";
+        static inline QColor       font_color         = "#fffeee";
+        static inline QColor       highlight_tint     = "#e8d81c";
+        static inline QColor       stack_tint         = DEFAULT_STACK_TINT;
+        static inline QColor       slice_tint         = DEFAULT_SLICE_TINT;
+        static inline QColor       win_dialog_tint    = "#28ab2b";
+        static inline QColor       lose_dialog_tint   = "#ab282f";
     } m_theme;
 
     struct GameSettings_t {

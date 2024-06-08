@@ -102,7 +102,11 @@ SettingsWindow::on_ThemeSliceColorSettingsInput_editingFinished()
 {
     if (!ui->ThemeSliceColorSettingsInput->text().isEmpty()) {
         QString c = ui->ThemeSliceColorSettingsInput->text();
-        if (QColor::isValidColorName(c)) { Settings.slice_color = c; }
+        if (QColor::isValidColorName(c)) {
+            Settings.slice_color = c;
+        } else {
+            Settings.slice_color = Config::get().Theme().DEFAULT_SLICE_TINT;
+        }
     }
     update_options();
     drawPreview();
@@ -113,7 +117,11 @@ SettingsWindow::on_ThemeStackColorSettingsInput_editingFinished()
 {
     if (!ui->ThemeStackColorSettingsInput->text().isEmpty()) {
         QString c = ui->ThemeStackColorSettingsInput->text();
-        if (QColor::isValidColorName(c)) { Settings.stack_color = c; }
+        if (QColor::isValidColorName(c)) {
+            Settings.stack_color = c;
+        } else {
+            Settings.stack_color = Config::get().Theme().DEFAULT_STACK_TINT;
+        }
     }
     update_options();
     drawPreview();
