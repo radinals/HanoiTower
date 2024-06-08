@@ -120,13 +120,11 @@ GameView::clear()
     m_hanoi.goal_stack = nullptr;
 
     // clear all stack
-    // search for the goal stack node
     for (size_t i = 0; i < Config::get().Settings().stack_amount; i++) {
-        if (m_hanoi.stacks[i].label() == goalStackLabel) {
-            m_hanoi.goal_stack = &m_hanoi.stacks[i];
-        }
         m_hanoi.stacks[i].clearStack();
     }
+
+    m_hanoi.goal_stack = &m_hanoi.stacks[goalStackLabel];
 
     if (m_hanoi.goal_stack == nullptr
         || m_hanoi.goal_stack->label() != goalStackLabel) {
