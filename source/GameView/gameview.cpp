@@ -245,8 +245,6 @@ GameView::drawStack(float offset, HanoiStack* stack, QPainter* painter)
         throw std::invalid_argument("drawStack(): null stack was passed");
     }
 
-    if (stack->isEmpty()) { return; }
-
     float y = height() - m_geometry.slice.height();
 
     HanoiSlice* slice = stack->getTail();
@@ -511,11 +509,13 @@ GameView::paintEvent(QPaintEvent* event)
     float offset = m_geometry.stack_area.width() * 0.5f;
 
     for (size_t i = 0; i < Config::get().Settings().stack_amount; i++) {
+        HanoiStack& current_stack = m_hanoi.stacks[i];
+
         // draw the stack base
-        drawStackBase(m_hanoi.stacks[i].label(), offset, &p);
+        drawStackBase(current_stack.label(), offset, &p);
 
         // render the stack
-        drawStack(offset, &m_hanoi.stacks[i], &p);
+        if (!current_stack.isEmpty()) { drawStack(offset, &current_stack, &p); }
 
         // shift to the right for the next stack
         offset += m_geometry.stack_area.width();
