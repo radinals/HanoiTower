@@ -6,15 +6,16 @@
 #include "../Config/config.h"
 #include "gameview.h"
 #include <random>
+#include <stdexcept>
 
 // get the pointer to a stack
 HanoiStack *
 GameView::getStack(size_t label)
 {
-    for (size_t i = 0; i < Config::get().Settings().stack_amount; i++) {
-        if (m_hanoi.stacks[i].label() == label) { return &m_hanoi.stacks[i]; }
+    if (label < 0 || label >= Config::get().Settings().slice_amount) {
+        throw std::range_error(
+            "GameView:;getStack(): the label out of the stack array's range");
     }
-    throw std::runtime_error("getStack(): failed to find stack");
 
     return &m_hanoi.stacks[label];
 }
