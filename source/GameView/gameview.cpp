@@ -21,15 +21,6 @@
 
 GameView::GameView(QWidget* parent) : QWidget { parent }
 {
-    // allocate spaces for all possible slices and stacks
-    m_hanoi.slices = new HanoiSlice*[Config::get().Settings().SLICE_MAX];
-    m_hanoi.stacks = new HanoiStack[Config::get().Settings().STACK_MAX];
-
-    // initialize all possible stack
-    for (int i = Config::get().Settings().STACK_MAX - 1; i >= 0; i--) {
-        m_hanoi.stacks[i] = (HanoiStack(i));
-    }
-
     // init timer.
     // timer will call checkWinState every tick (should be every 1ms).
     connect(&m_time.timer, &QTimer::timeout, this, &GameView::checkWinState);
@@ -104,8 +95,6 @@ GameView::reset()
 void
 GameView::clear()
 {
-    calculateBaseSizes();
-
     if (has_solver_task()) { stop_solver_task(); }
 
     m_time.elapsed = m_move_count = 0;
@@ -113,23 +102,51 @@ GameView::clear()
     m_game_state = GameState::NotRunning;
     m_time.timer.stop();
 
-    std::memset(m_hanoi.slices, 0, Config::get().Settings().SLICE_MAX);
-
     const size_t goalStackLabel = getRandomGoalStackIndex();
 
-    m_hanoi.goal_stack = nullptr;
-
-    // clear all stack
-    for (size_t i = 0; i < Config::get().Settings().stack_amount; i++) {
-        m_hanoi.stacks[i].clearStack();
+    if (m_hanoi.slices_arr_size != Config::get().Settings().slice_amount) {
+        if (m_hanoi.slices != nullptr) { delete[] m_hanoi.slices; }
+        m_hanoi.slices = new HanoiSlice*[Config::get().Settings().slice_amount];
+        m_hanoi.slices_arr_size = Config::get().Settings().slice_amount;
     }
 
+    std::memset(m_hanoi.slices, 0, Config::get().Settings().slice_amount);
+
+    if (m_hanoi.stacks_arr_size != Config::get().Settings().stack_amount) {
+        // delete the stack first if already exists
+        if (m_hanoi.stacks != nullptr) { delete[] m_hanoi.stacks; }
+
+        // allocate space and save the size for comparison in the next reset
+        m_hanoi.stacks = new HanoiStack[Config::get().Settings().stack_amount];
+        m_hanoi.stacks_arr_size = Config::get().Settings().stack_amount;
+
+        // initialize all possible stack
+        for (int i = Config::get().Settings().stack_amount - 1; i >= 0; i--) {
+            m_hanoi.stacks[i] = (HanoiStack(i));
+        }
+    } else if (m_hanoi.stacks_arr_size
+               == Config::get().Settings().stack_amount) {
+        // clear all stack
+        for (size_t i = 0; i < Config::get().Settings().stack_amount; i++) {
+            m_hanoi.stacks[i].clearStack();
+        }
+    }
+
+    assert(m_hanoi.stacks != nullptr);
+    assert(m_hanoi.slices != nullptr);
+
+    assert(m_hanoi.slices_arr_size == Config::get().Settings().slice_amount);
+    assert(m_hanoi.stacks_arr_size == Config::get().Settings().stack_amount);
+
+    m_hanoi.goal_stack = nullptr;
     m_hanoi.goal_stack = &m_hanoi.stacks[goalStackLabel];
 
     if (m_hanoi.goal_stack == nullptr
         || m_hanoi.goal_stack->label() != goalStackLabel) {
         std::runtime_error("clear(): failed to find goal stack");
     }
+
+    calculateBaseSizes();
 
     m_sidebar_widgets.info_msg_out->setText(
         "Move All Slice to Stack "
