@@ -8,6 +8,8 @@
 #include "../Config/config.h"
 #include "../Utils/utils.h"
 
+#include <QPainter>
+
 // - draw the stack's slices
 // - configure each slice placement in the screen, starting from the bottom
 //   of the stack
