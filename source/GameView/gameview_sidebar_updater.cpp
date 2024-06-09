@@ -32,10 +32,17 @@ GameView::updateInfo()
 
             m_sidebar_widgets.timer_out->setText(h + ":" + m + ":" + s);
         }
+    }
 
-        if (m_sidebar_widgets.move_count_out != nullptr) {
-            m_sidebar_widgets.move_count_out->setText(
-                QString::number(m_move_count));
-        }
+    if (m_sidebar_widgets.move_count_out != nullptr) {
+        m_sidebar_widgets.move_count_out->setText(
+            QString::number(m_move_count));
+    }
+
+    if (m_sidebar_widgets.info_msg_out != nullptr) {
+        m_sidebar_widgets.info_msg_out->setText(
+            "Move All Slice to Stack "
+            + Utils::numToChar(m_hanoi.goal_stack->label()));
+        m_sidebar_widgets.info_msg_out->setAlignment(Qt::AlignCenter);
     }
 }

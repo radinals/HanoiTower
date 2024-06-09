@@ -126,6 +126,5 @@ MainWindow::on_PauseBtn_clicked()
 void
 MainWindow::on_AutoSolveBtn_clicked()
 {
-    if (m_game_view->isAutoSolving() || m_game_view->isTimerRunning()) return;
     m_game_view->solve();
 }

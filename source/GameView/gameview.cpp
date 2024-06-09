@@ -6,8 +6,6 @@
 #include "gameview.h"
 
 #include "../Config/config.h"
-#include "../HanoiStack/hanoistack.h"
-#include "../Utils/utils.h"
 
 #ifndef DISABLE_AUDIO
     #include <QSoundEffect>
@@ -32,7 +30,6 @@ GameView::GameView(QWidget* parent) : QWidget { parent }
 #endif
 
     m_sprites.arrow = QPixmap(Config::get().AssetFiles().ARROW);
-    m_sprites.slice = QPixmap(Config::get().AssetFiles().SLICE);
 
     colorizeSprite(&m_sprites.arrow, Config::get().Theme().highlight_tint);
 }
@@ -40,13 +37,16 @@ GameView::GameView(QWidget* parent) : QWidget { parent }
 void
 GameView::solve()
 {
-    if (m_game_state != GameState::Running || m_time.timer.isActive()) {
-        return;
-    }
+    if (has_solver_task()) { return; }
+
+    // kinda cheating here tbh...
+    clear();
 
     m_game_state = GameState::AutoSolving;
 
-    m_time.timer.start(1);    // start timer
+    m_time.timer.start(1);    // start timer (helps with the winstate checking)
+
+    repaint();    // repaint first
 
     start_solver_task();    // start the solver in a new thread
 }
@@ -78,36 +78,48 @@ GameView::pause()
     }
 }
 
-// (re)initialize an empty state
+// reset all states
 void
 GameView::reset()
 {
+    // stop the solver process if present
+    if (has_solver_task()) { stop_solver_task(); }
+
+    // reset some states
+    m_time.elapsed = m_move_count = 0;
+
+    // stop the timer (if any)
+    m_time.timer.stop();
+
+    // clear the stacks, and resize if needed
     clear();
+
+    // set the goal stack
+    initGoalStack();
+
+    // update the sidebar
     updateInfo();
+
 #ifndef DISABLE_AUDIO
+    // set the fx volume
     m_placement_fx->setVolume(Config::get().Settings().fx_volume);
 #endif
+
     m_game_state = GameState::Running;
+
     repaint();
 }
 
+// initialize a default hanoi game
 void
 GameView::clear()
 {
-    if (has_solver_task()) { stop_solver_task(); }
-
-    m_time.elapsed = m_move_count = 0;
-    m_game_state                  = GameState::NotRunning;
-
-    m_time.timer.stop();
-
+    // get the base sizes for rendering
     calculateBaseSizes();
 
-    init_stacks();
-    init_slices();
+    // reset/re-init the stacks/slices
+    initStacks();
+    initSlices();
 
-    m_sidebar_widgets.info_msg_out->setText(
-        "Move All Slice to Stack "
-        + Utils::numToChar(m_hanoi.goal_stack->label()));
-    m_sidebar_widgets.info_msg_out->setAlignment(Qt::AlignCenter);
+    m_game_state = GameState::NotRunning;
 }
