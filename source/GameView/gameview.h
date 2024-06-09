@@ -172,7 +172,7 @@ private:
     static void colorizeSprite(QPixmap *, const QColor &);
 
     // move/pop the top slice of a stack
-    static void moveTopSlice(HanoiStack *source, HanoiStack *dest);
+    static void makeLegalMove(HanoiStack *source, HanoiStack *dest);
 
     // generate random stack index from 1 to n-1
     static size_t getRandomGoalStackIndex();

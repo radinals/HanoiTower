@@ -9,6 +9,8 @@
 #include <chrono>
 #include <thread>
 
+// TODO: the solver currently only solves the puzzle if it is in the default
+// state
 void
 GameView::hanoiIterativeSolver()
 {
@@ -28,6 +30,10 @@ GameView::hanoiIterativeSolver()
     // the goal of the slices
     size_t dest = m_hanoi.goal_stack->label();
 
+    assert(dest != aux);
+    assert(source != dest);
+    assert(source != aux);
+
     // swap dest with aux if
     // n is an even number
     if (n % 2 == 0) {
@@ -46,11 +52,11 @@ GameView::hanoiIterativeSolver()
 
         // main algorithm
         if (i % 3 == 0) {
-            moveTopSlice(getStack(aux), getStack(dest));
+            makeLegalMove(getStack(aux), getStack(dest));
         } else if (i % 3 == 1) {
-            moveTopSlice(getStack(source), getStack(dest));
+            makeLegalMove(getStack(source), getStack(dest));
         } else {
-            moveTopSlice(getStack(source), getStack(aux));
+            makeLegalMove(getStack(source), getStack(aux));
         }
 
         ++m_move_count;
