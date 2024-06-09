@@ -22,7 +22,7 @@ GameView::drawStack(float offset, HanoiStack* stack, QPainter* painter)
         throw std::invalid_argument("drawStack(): null stack was passed");
     }
 
-    float y = height() - m_geometry.slice.height();
+    float y = height() - m_geometry.stack_base.height();
 
     HanoiSlice* slice = stack->getTail();
     while (slice != nullptr) {

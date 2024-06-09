@@ -22,7 +22,7 @@ GameView::calculateBaseSizes()
     m_geometry.slice.setWidth(m_geometry.stack_area.width() * 0.9f);
 
     m_geometry.stack_base.setWidth(m_geometry.slice.width() * 1.1f);
-    m_geometry.stack_base.setHeight(m_geometry.slice.height());
+    m_geometry.stack_base.setHeight(m_geometry.slice.height() * 0.5f);
 
     m_geometry.dialog.setWidth(width() * 0.4f);
     m_geometry.dialog.setHeight(height() * 0.2f);
@@ -37,8 +37,8 @@ GameView::scaleStack()
 
     // scale the sprites
     m_sprites.stack_pole = m_sprites.stack_pole.scaled(
-        m_geometry.stack_base.width() * 0.1f,
-        m_geometry.stack_base.height() * Config::get().Settings().SLICE_MAX);
+        m_geometry.slice.width() * 0.1f,
+        m_geometry.slice.height() * Config::get().Settings().SLICE_MAX);
 
     m_sprites.stack_base
         = m_sprites.stack_base.scaled(m_geometry.stack_base.width(),
@@ -52,8 +52,7 @@ GameView::scaleStack()
 void
 GameView::scaleSlices()
 {
-    float width  = m_geometry.slice.width(),
-          height = m_geometry.stack_base.height();
+    float width = m_geometry.slice.width(), height = m_geometry.slice.height();
 
     // every slice has a different size
     for (size_t i = 0; i < Config::get().Settings().slice_amount; i++) {

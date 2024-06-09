@@ -44,6 +44,9 @@ SettingsWindow::SettingsWindow(QWidget* parent)
     ui->AudioSettingGroupLine->hide();
 #endif    // !DISABLE_AUDIO
 
+    ui->GameSliceAmountSlider->setMaximum(Config::get().Settings().SLICE_MAX);
+    ui->GameStackAmountSlider->setMaximum(Config::get().Settings().STACK_MAX);
+
     // init the preview scene
     m_preview_scene = new QGraphicsScene;
     ui->PreviewOut->setScene(m_preview_scene);
@@ -230,20 +233,20 @@ SettingsWindow::drawPreview()
 
     // static const int   vpadding           = 0;
 
-    const QSizeF gs(ui->PreviewOut->size());    // QGraphicScene geometry
+    const QSizeF base_size((float(sceneW) / (Settings.stack_amount + hpadding))
+                               * 1.5f,
+                           (float(sceneH) * 0.9f));
 
-    const QSizeF base_size(
-        (float(sceneW) / (Settings.stack_amount + hpadding)) * 1.1f,
-        (float(sceneH) / Config::get().Settings().SLICE_MAX));
+    const QSizeF base_slice(
+        (base_size.width() * 0.9f),
+        (base_size.height() / Config::get().Settings().SLICE_MAX));
 
-    const QSizeF base_slice((base_size.width() * 0.8),
-                            (base_size.height() * 0.8f));
-
-    const QSizeF stack_pole(base_size.width() * 0.1f,
+    const QSizeF stack_pole(base_slice.width() * 0.1f,
                             base_slice.height()
                                 * (Config::get().Settings().SLICE_MAX));
 
-    const QSizeF stack_base(base_size.width(), base_slice.height() * 0.2f);
+    const QSizeF stack_base(base_slice.width() * 1.1f,
+                            base_slice.height() * 0.2f);
 
     const float total_stacks_area
         = ((stack_base.width()) * Settings.stack_amount);
@@ -256,14 +259,14 @@ SettingsWindow::drawPreview()
     float x = start_x;
     for (size_t i = 0; i < Settings.stack_amount; i++) {
         ui->PreviewOut->scene()->addRect(x - (stack_pole.width() * 0.5f),
-                                         (sceneH) -stack_pole.height(),
+                                         sceneH - stack_pole.height(),
                                          stack_pole.width(),
                                          stack_pole.height(),
                                          pen,
                                          Settings.stack_color);
 
         ui->PreviewOut->scene()->addRect(x - (stack_base.width() * 0.5f),
-                                         (sceneH) -stack_base.height(),
+                                         sceneH - stack_base.height(),
                                          stack_base.width(),
                                          stack_base.height(),
                                          pen,
@@ -286,9 +289,9 @@ SettingsWindow::drawPreview()
                                          ssize.height(),
                                          pen,
                                          Settings.slice_color);
-
         ssize *= Config::get().Settings().SCALE_FACTOR;    // scale down
-        y -= ssize.height();                               // shift up
+
+        y -= ssize.height();    // shift up
     }
 
     // ----------------------------------------------------------------------
