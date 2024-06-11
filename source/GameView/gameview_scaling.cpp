@@ -6,6 +6,7 @@
 #include "gameview.h"
 
 #include "../Config/config.h"
+#include <stdexcept>
 
 // generate the base sizes to be used to render the sprites and etc.
 void
@@ -17,7 +18,7 @@ GameView::calculateBaseSizes()
     m_geometry.stack_area.setHeight(height() * 0.9f);
 
     m_geometry.slice.setHeight(m_geometry.stack_area.height()
-                               / Config::get().Settings().SLICE_MAX);
+                               / Config::SLICE_MAX);
 
     m_geometry.slice.setWidth(m_geometry.stack_area.width() * 0.9f);
 
@@ -35,10 +36,15 @@ GameView::scaleStack()
     m_sprites.stack_pole = QPixmap(Config::get().AssetFiles().STACK_POLE);
     m_sprites.stack_base = QPixmap(Config::get().AssetFiles().STACK_BASE);
 
+    if (m_sprites.stack_pole.isNull() || m_sprites.stack_base.isNull()) {
+        throw std::runtime_error(
+            "GameView::scaleStack(): Failed to load Stack Sprites");
+    }
+
     // scale the sprites
     m_sprites.stack_pole = m_sprites.stack_pole.scaled(
         m_geometry.slice.width() * 0.1f,
-        m_geometry.slice.height() * Config::get().Settings().SLICE_MAX);
+        m_geometry.slice.height() * Config::SLICE_MAX);
 
     m_sprites.stack_base
         = m_sprites.stack_base.scaled(m_geometry.stack_base.width(),
@@ -56,10 +62,8 @@ GameView::scaleSlices()
 
     // every slice has a different size
     for (size_t i = 0; i < Config::get().Settings().slice_amount; i++) {
-        m_hanoi.slices[i]->Geometry().height
-            = (height *= Config::get().Settings().SCALE_FACTOR);
-        m_hanoi.slices[i]->Geometry().width
-            = (width *= Config::get().Settings().SCALE_FACTOR);
+        m_hanoi.slices[i]->Geometry().height = (height *= Config::SCALE_FACTOR);
+        m_hanoi.slices[i]->Geometry().width  = (width *= Config::SCALE_FACTOR);
     }
 }
 

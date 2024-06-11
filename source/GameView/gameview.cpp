@@ -22,6 +22,10 @@ GameView::GameView(QWidget* parent) : QWidget { parent }
     // timer will call checkWinState every tick (should be every 1ms).
     connect(&m_time.timer, &QTimer::timeout, this, &GameView::checkWinState);
 
+    for (size_t i = 0; i < Config::get().Settings().stack_amount; i++) {
+        m_hanoi.stacks[i] = HanoiStack(i);
+    }
+
 // load the placement sound effect
 #ifndef DISABLE_AUDIO
     m_placement_fx = new QSoundEffect(this);
@@ -30,6 +34,11 @@ GameView::GameView(QWidget* parent) : QWidget { parent }
 #endif
 
     m_sprites.arrow = QPixmap(Config::get().AssetFiles().ARROW);
+
+    if (m_sprites.arrow.isNull()) {
+        throw std::runtime_error(
+            "GameView::GameView(): Failed to load Arrow Sprite");
+    }
 
     colorizeSprite(&m_sprites.arrow, Config::get().Theme().highlight_tint);
 }
@@ -95,7 +104,7 @@ GameView::reset()
     clear();
 
     // set the goal stack
-    initGoalStack();
+    setGoalStack();
 
     // update the sidebar
     updateInfo();
@@ -117,9 +126,9 @@ GameView::clear()
     // get the base sizes for rendering
     calculateBaseSizes();
 
-    // reset/re-init the stacks/slices
-    initStacks();
-    initSlices();
+    // reset the stacks/slices
+    resetStacks();
+    resetSlices();
 
     m_game_state = GameState::NotRunning;
 }

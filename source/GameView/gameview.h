@@ -5,6 +5,7 @@
 #ifndef GAMEVIEW_H
 #define GAMEVIEW_H
 
+#include "../Config/config.h"
 #include "../HanoiStack/hanoistack.h"
 
 #include <QCoreApplication>
@@ -32,8 +33,6 @@ public:
     ~GameView() override
     {
         if (m_game_state == GameState::AutoSolving) { stop_solver_task(); }
-        delete[] m_hanoi.stacks;
-        delete[] m_hanoi.slices;
 #ifndef DISABLE_AUDIO
         delete m_placement_fx;
 #endif
@@ -97,13 +96,13 @@ private:
     struct HanoiData_t {
         // all slices in game
         // LinkedList<HanoiSlice *> slices;
-        HanoiSlice **slices = nullptr;
+        static inline HanoiSlice *slices[Config::SLICE_MAX];
 
         // all stack in game
-        HanoiStack *stacks = nullptr;
+        static inline HanoiStack stacks[Config::STACK_MAX];
 
         // points to a stack in m_stack
-        HanoiStack *goal_stack = nullptr;
+        static inline HanoiStack *goal_stack = nullptr;
 
         size_t stacks_arr_size = 0;
         size_t slices_arr_size = 0;
@@ -141,9 +140,9 @@ private:
     void pause_solver_task();
     void unpause_solver_task();
 
-    void initStacks();
-    void initSlices();
-    void initGoalStack();
+    void resetStacks();
+    void resetSlices();
+    void setGoalStack();
 
     // calculate click area, returns stack under click
     HanoiStack *calculateStackByPos(const QPointF &);
