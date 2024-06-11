@@ -66,14 +66,11 @@ GameView::mouseReleaseEvent(QMouseEvent* event)
         HanoiStack* destination_stack
             = calculateStackByPos(event->position().toPoint());
         destination_stack->push(m_selected.slice);
+        m_move_count++;
     } catch (...) {
         m_selected.stack->push(m_selected.slice);
-        m_selected.clear();
-        update();
-        return;
     }
 
-    m_move_count++;
     if (m_game_state == GameState::Running && !m_time.timer.isActive()) {
         m_time.timer.start(1);
     }
