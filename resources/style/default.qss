@@ -103,3 +103,10 @@ QTimeEdit::down-arrow {
     width: 100px;
     height: 100px;
 }
+
+QMessageBox {
+   font-size: 20px;
+   background-color: #2a2c30;
+   color: white;
+   border: 1px solid #343442;
+}

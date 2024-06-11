@@ -8,6 +8,7 @@
 #include "../GameView/gameview.h"
 #include "../SettingsWindow/settingswindow.h"
 #include "ui_mainwindow.h"
+#include <qmessagebox.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -124,5 +125,15 @@ MainWindow::on_PauseBtn_clicked()
 void
 MainWindow::on_AutoSolveBtn_clicked()
 {
-    m_game_view->solve();
+    if (m_game_view->isAutoSolving()) {
+        QMessageBox msgbox;
+        msgbox.setText("NOTICE");
+        msgbox.setInformativeText("Auto Solver is Already Running...");
+        msgbox.setStandardButtons(QMessageBox::Ok);
+        msgbox.setIcon(QMessageBox::Information);
+        msgbox.setStyleSheet(Config::get().getDefaultStylesheet());
+        msgbox.exec();
+    } else {
+        m_game_view->solve();
+    }
 }
