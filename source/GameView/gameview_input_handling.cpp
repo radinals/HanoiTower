@@ -5,6 +5,8 @@
 #include "gameview.h"
 
 #include <QMouseEvent>
+#include <qnamespace.h>
+#include <stdexcept>
 
 #include "../Config/config.h"
 
@@ -19,16 +21,18 @@ GameView::mousePressEvent(QMouseEvent* event)
         return;
     }
 
-    HanoiStack* clicked_stack;
-    switch (event->button()) {
-        case Qt::LeftButton:
+    HanoiStack* clicked_stack = nullptr;
+    if (event->button() == Qt::LeftButton) {
+        try {
             clicked_stack = calculateStackByPos(event->position().toPoint());
-            break;
-        default:
+        } catch (...) {
             return;
+        }
+    } else {
+        return;
     }
 
-    if (clicked_stack == nullptr || clicked_stack->isEmpty()) { return; }
+    if (clicked_stack->isEmpty()) { return; }
 
     m_selected.slice = clicked_stack->pop();
     m_selected.stack = clicked_stack;
@@ -59,27 +63,23 @@ GameView::mouseReleaseEvent(QMouseEvent* event)
         return;
     }
 
-    HanoiStack* destination_stack
-        = calculateStackByPos(event->position().toPoint());
-
-    // checks:
-    //  - if the destination stack is full -> cancel
-    //  - if destination stack is the same with the source stack -> cancel
-    //  - if the selected slice is bigger
-    //     than the destination stack top value -> cancel
-
-    if (moveIsValid(destination_stack)) {
-        if (m_game_state == GameState::Running && !m_time.timer.isActive()) {
-            m_time.timer.start(1);
-        }
+    try {
+        HanoiStack* destination_stack
+            = calculateStackByPos(event->position().toPoint());
         destination_stack->push(m_selected.slice);
-        m_move_count++;
-    } else {
+    } catch (...) {
         m_selected.stack->push(m_selected.slice);
+        m_selected.clear();
+        update();
+        return;
     }
 
-    m_selected = { nullptr, nullptr };
+    m_move_count++;
+    if (m_game_state == GameState::Running && !m_time.timer.isActive()) {
+        m_time.timer.start(1);
+    }
 
+    m_selected.clear();
     update();
 
 #ifndef DISABLE_AUDIO
@@ -108,5 +108,7 @@ GameView::calculateStackByPos(const QPointF& point)
 
         area_width += stack_area_width;
     }
-    return nullptr;
+
+    throw std::runtime_error(
+        "GameView::calculateStackByPos(): point is out of bounds");
 }

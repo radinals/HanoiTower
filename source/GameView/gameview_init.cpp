@@ -101,7 +101,7 @@ GameView::initSlices()
     std::memset(m_hanoi.slices, 0, Config::get().Settings().slice_amount);
 
     // save the slices to the array
-    HanoiSlice *slice = m_hanoi.stacks[0].getHead();
+    HanoiSlice *slice = m_hanoi.stacks[0].getTop();
     while (slice != nullptr) {
         m_hanoi.slices[slice->getValue()] = slice;
         slice                             = slice->next;

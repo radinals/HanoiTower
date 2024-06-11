@@ -76,10 +76,18 @@ private:
     struct SelectedData_t {
         HanoiStack *stack = nullptr;    // source stack
         HanoiSlice *slice = nullptr;    // selected slice
+
         inline bool hasSelected()
         {
             return stack != nullptr && slice != nullptr;
         }
+
+        inline void clear()
+        {
+            stack = nullptr;
+            slice = nullptr;
+        }
+
     } m_selected;
 
     struct SidebarWidgets_t {
@@ -183,14 +191,6 @@ private:
 
     // check if the goal stack has all valid slices in it
     bool goalStackIsComplete();
-
-    // overloaded game movement rule check,
-    // this checks the slice in m_selected
-    bool moveIsValid(HanoiStack *&dest);
-
-    // overloaded game movement rule check,
-    // this checks the top slice in two stacks
-    static bool moveIsValid(HanoiStack *source, HanoiStack *dest);
 
 private slots:
     // called by timer in every ms

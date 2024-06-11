@@ -96,23 +96,3 @@ GameView::goalStackIsComplete()
     return (m_hanoi.goal_stack->getSize()
             == Config::get().Settings().slice_amount);
 }
-
-// overloaded game movement rule check,
-// this checks the slice in m_selected
-bool
-GameView::moveIsValid(HanoiStack *&dest)
-{
-    return (dest != nullptr)
-           && (dest->isEmpty()
-               || m_selected.slice->getValue() > dest->peek()->getValue());
-}
-
-// overloaded game movement rule check,
-// this checks the top slice in two stacks
-bool
-GameView::moveIsValid(HanoiStack *source, HanoiStack *dest)
-{
-    return (!source->isEmpty())
-           && (dest->isEmpty()
-               || source->peek()->getValue() > dest->peek()->getValue());
-}
