@@ -16,7 +16,9 @@
 // - set Slices size to be 90% of the base slice size and the size keeps
 //   getting smaller for each slice
 void
-GameView::drawStack(float offset, HanoiStack* stack, QPainter* painter)
+GameView::drawStack(float             offset,
+                    HanoiStack* const stack,
+                    QPainter* const   painter)
 {
     if (stack == nullptr) {
         throw std::invalid_argument("drawStack(): null stack was passed");
@@ -41,7 +43,7 @@ GameView::drawStack(float offset, HanoiStack* stack, QPainter* painter)
 
 // render the stack base
 void
-GameView::drawStackBase(size_t label, float offset, QPainter* painter)
+GameView::drawStackBase(size_t label, float offset, QPainter* const painter)
 {
     if (painter == nullptr || !painter->isActive()) {
         std::invalid_argument("drawStackBase(): invalid painter was passed");

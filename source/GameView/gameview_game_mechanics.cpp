@@ -22,7 +22,7 @@ GameView::getStack(size_t label)
 
 // move the top slice between two stacks
 void
-GameView::makeLegalMove(HanoiStack *source, HanoiStack *dest)
+GameView::makeLegalMove(HanoiStack *const source, HanoiStack *const dest)
 {
     if (source == nullptr || dest == nullptr) {
         std::invalid_argument("moveTopSlice(): null stack was passed");

@@ -158,8 +158,8 @@ private:
     HanoiStack *getStack(size_t label);
 
     // handles drawing/rendering
-    void drawStack(float offset, HanoiStack *, QPainter *p);
-    void drawStackBase(size_t label, float offset, QPainter *painter);
+    void drawStack(float offset, HanoiStack *const, QPainter *const p);
+    void drawStackBase(size_t label, float offset, QPainter *const painter);
     void drawDialog(const QString  &text,
                     const QColor   &color,
                     QPainter *const painter);
@@ -180,7 +180,7 @@ private:
     static void colorizeSprite(QPixmap *, const QColor &);
 
     // move/pop the top slice of a stack
-    static void makeLegalMove(HanoiStack *source, HanoiStack *dest);
+    static void makeLegalMove(HanoiStack *const source, HanoiStack *const dest);
 
     // generate random stack index from 1 to n-1
     static size_t getRandomGoalStackIndex();
