@@ -47,7 +47,6 @@ public:
     // used for checking GameView current status
     bool isPaused() { return m_game_state == GameState::Paused; }
     bool isAutoSolving() { return m_game_state == GameState::AutoSolving; }
-    bool isTimerRunning() { return m_time.timer.isActive(); }
 
     // define pointers to the output widgets
     void setGameInfoOutputs(QLabel *time, QLabel *moves, QTextEdit *info_box)
