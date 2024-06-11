@@ -24,7 +24,7 @@ GameView::mousePressEvent(QMouseEvent* event)
     HanoiStack* clicked_stack = nullptr;
     if (event->button() == Qt::LeftButton) {
         try {
-            clicked_stack = calculateStackByPos(event->position().toPoint());
+            clicked_stack = calculateStackByPos(event->pos().toPointF());
         } catch (...) {
             return;
         }
