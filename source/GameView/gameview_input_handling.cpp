@@ -25,14 +25,13 @@ GameView::mousePressEvent(QMouseEvent* event)
     if (event->button() == Qt::LeftButton) {
         try {
             clicked_stack = calculateStackByPos(event->pos().toPointF());
+            if (clicked_stack->isEmpty()) { return; }
         } catch (...) {
             return;
         }
     } else {
         return;
     }
-
-    if (clicked_stack->isEmpty()) { return; }
 
     m_selected.slice = clicked_stack->pop();
     m_selected.stack = clicked_stack;
