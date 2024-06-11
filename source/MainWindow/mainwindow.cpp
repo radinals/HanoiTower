@@ -97,15 +97,13 @@ MainWindow::on_SettingsBtn_clicked()
 void
 MainWindow::exitAction()
 {
-    if (m_game_view->isAutoSolving()) return;
     close();
 }
 
 void
 MainWindow::backToMainMenuAction()
 {
-    if (m_game_view->isAutoSolving()) return;
-    m_game_view->clear();
+    m_game_view->reset();
     ui->SettingsViewFrame->hide();
     ui->GameSideBarFrame->hide();
     ui->GameViewFrame->hide();

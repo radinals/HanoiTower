@@ -104,9 +104,6 @@ private:
         // points to a stack in m_stack
         static inline HanoiStack *goal_stack = nullptr;
 
-        size_t stacks_arr_size = 0;
-        size_t slices_arr_size = 0;
-
     } m_hanoi;
 
     struct TimeInfo_t {

@@ -119,7 +119,7 @@ GameView::reset()
     repaint();
 }
 
-// initialize a default hanoi game
+// clears hanoi's stack
 void
 GameView::clear()
 {

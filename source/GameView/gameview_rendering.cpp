@@ -73,8 +73,6 @@ GameView::drawStackBase(size_t label, float offset, QPainter* const painter)
 
     // highlight + draw the indicator if current stack is the goal stack
     if (label == (m_hanoi.goal_stack->label())) {
-        const float box_size = (m_geometry.stack_base.width() * 0.1f) + 4;
-
         font_color = Config::get().Theme().highlight_tint;
 
         if (!m_time.timer.isActive() && m_game_state == GameState::Running) {
@@ -86,6 +84,7 @@ GameView::drawStackBase(size_t label, float offset, QPainter* const painter)
                                 pole_y - (arrow_sprite.height()),
                                 arrow_sprite);
         } else {
+            const float box_size = (m_geometry.stack_base.width() * 0.1f) + 4;
             painter->fillRect(offset - (box_size * 0.5f),    // x
                               pole_y - (box_size * 0.5f),    // y
                               box_size,                      // w
