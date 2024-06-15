@@ -14,9 +14,9 @@
 void
 GameView::hanoiIterativeSolver()
 {
-    const size_t n = Config::get().Settings().slice_amount;
-
-    size_t possible_moves = (1 << n) - 1;
+    const size_t slice_amount = Config::get().Settings().slice_amount;
+    const size_t possible_moves
+        = (1 << slice_amount) - 1;    // (2^slice_amount) -1
 
     // starting stack
     size_t source = 0;
@@ -35,8 +35,8 @@ GameView::hanoiIterativeSolver()
     assert(source != aux);
 
     // swap dest with aux if
-    // n is an even number
-    if (n % 2 == 0) {
+    // slice_amount is an even number
+    if (slice_amount % 2 == 0) {
         size_t tmp;
         tmp  = dest;
         dest = aux;
