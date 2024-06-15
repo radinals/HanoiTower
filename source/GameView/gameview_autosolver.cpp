@@ -9,8 +9,6 @@
 #include <chrono>
 #include <thread>
 
-// TODO: the solver currently only solves the puzzle if it is in the default
-// state
 void
 GameView::hanoiIterativeSolver()
 {
