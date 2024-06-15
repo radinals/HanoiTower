@@ -42,10 +42,12 @@ private slots:
     {
         emit(hidden());
         QWidget::hideEvent(event);
+        m_game_view->clear();
     }
 
     void showEvent(QShowEvent *event) override
     {
+        m_game_view->clear();
         QWidget::showEvent(event);
         m_game_view->reset();
     }
