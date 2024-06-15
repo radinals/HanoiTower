@@ -1,3 +1,7 @@
+//-- Description -------------------------------------------------------------/
+// the game's view widget, holds the GameView and also it's sidebar           /
+//----------------------------------------------------------------------------/
+
 #ifndef GAMEWINDOW_H
 #define GAMEWINDOW_H
 
