@@ -3,6 +3,7 @@
 //----------------------------------------------------------------------------/
 
 #include "gamewindow.h"
+#include <QPushButton>
 
 GameWindow::GameWindow(QWidget *parent)
     : QWidget(parent)
@@ -15,6 +16,13 @@ GameWindow::GameWindow(QWidget *parent)
                                     ui->MoveCountOut,
                                     ui->InfoLabel,
                                     ui->InfoOut);
+
+    // clang-format off
+    connect(ui->AutoSolveBtn, &QPushButton::clicked, m_game_view, &GameView::solve);
+    connect(ui->ResetBtn, &QPushButton::clicked, m_game_view, &GameView::reset);
+    connect(ui->PauseBtn, &QPushButton::clicked, m_game_view, &GameView::pause);
+    // clang-format on
+
     ui->GameDisplayFrame->layout()->addWidget(m_game_view);
 }
 
@@ -22,24 +30,6 @@ GameWindow::~GameWindow()
 {
     delete m_game_view;
     delete ui;
-}
-
-void
-GameWindow::on_AutoSolveBtn_clicked()
-{
-    if (!m_game_view->isAutoSolving()) { m_game_view->solve(); }
-}
-
-void
-GameWindow::on_ResetBtn_clicked()
-{
-    m_game_view->reset();
-}
-
-void
-GameWindow::on_PauseBtn_clicked()
-{
-    m_game_view->pause();
 }
 
 void

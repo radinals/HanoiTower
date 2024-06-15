@@ -27,6 +27,11 @@
 class GameView : public QWidget {
     Q_OBJECT
 
+public slots:
+    void reset();    // reset the game states, and re-draw
+    void pause();    // halt the timer, inhibit input
+    void solve();    // solve the game automaticly
+
 public:
     explicit GameView(QWidget *parent = nullptr);
 
@@ -37,11 +42,6 @@ public:
         delete m_placement_fx;
 #endif
     }
-
-    void reset();    // reset the game states, and re-draw
-    void clear();    // reset the game states
-    void pause();    // halt the timer, inhibit input
-    void solve();    // solve the game automaticly
 
     // used for checking GameView current status
     bool isPaused() { return m_game_state == GameState::Paused; }
@@ -58,6 +58,10 @@ public:
         m_sidebar_widgets.info_msg_out   = info_box;
         m_sidebar_widgets.info_msg_label = info_box_label;
     }
+
+private slots:
+    // called by timer in every ms
+    void checkWinState();
 
 private:
     size_t m_move_count = 0;
@@ -134,6 +138,8 @@ private:
         SolverTask_t() {};
     } m_solver_task;
 
+    void clear();    // reset the game states
+
     bool has_solver_task();
     bool has_paused_solver_task();
 
@@ -194,10 +200,6 @@ private:
 
     // check if the goal stack has all valid slices in it
     bool goalStackIsComplete();
-
-private slots:
-    // called by timer in every ms
-    void checkWinState();
 
 signals:
     void hidden();

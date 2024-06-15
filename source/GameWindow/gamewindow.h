@@ -8,7 +8,6 @@
 #include "../GameView/gameview.h"
 #include "ui_gamewindow.h"
 #include <QWidget>
-#include <qevent.h>
 
 namespace Ui {
     class GameWindow;
@@ -28,12 +27,6 @@ private:
     bool m_settings_btn_pressed = false;
 
 private slots:
-    void on_AutoSolveBtn_clicked();
-
-    void on_ResetBtn_clicked();
-
-    void on_PauseBtn_clicked();
-
     void on_BackToMenuBtn_clicked();
 
     void on_QuitGameBtn_clicked();
