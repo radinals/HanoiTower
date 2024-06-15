@@ -3,6 +3,7 @@
 //----------------------------------------------------------------------------/
 
 #include "gamewindow.h"
+#include <QMessageBox>
 #include <QPushButton>
 
 GameWindow::GameWindow(QWidget *parent)
@@ -21,6 +22,8 @@ GameWindow::GameWindow(QWidget *parent)
     connect(ui->AutoSolveBtn, &QPushButton::clicked, m_game_view, &GameView::solve);
     connect(ui->ResetBtn, &QPushButton::clicked, m_game_view, &GameView::reset);
     connect(ui->PauseBtn, &QPushButton::clicked, m_game_view, &GameView::pause);
+    connect(m_game_view, &GameView::solver_is_already_running, this,
+            &GameWindow::showAutoSolverAlreadyRunningError);
     // clang-format on
 
     ui->GameDisplayFrame->layout()->addWidget(m_game_view);
@@ -51,4 +54,15 @@ GameWindow::on_OpenSettingsBtn_clicked()
     m_settings_btn_pressed = true;
     m_game_view->reset();
     emit(open_settings());
+}
+
+void
+GameWindow::showAutoSolverAlreadyRunningError()
+{
+    QMessageBox b(this);
+    b.setText("Notice");
+    b.setInformativeText("The Auto-Solver is already running!");
+    b.setIcon(QMessageBox::Icon::Information);
+    b.setStandardButtons(QMessageBox::Ok);
+    b.exec();
 }

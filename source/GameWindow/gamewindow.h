@@ -33,6 +33,8 @@ private slots:
 
     void on_OpenSettingsBtn_clicked();
 
+    void showAutoSolverAlreadyRunningError();
+
 private:
     Ui::GameWindow *ui;
 

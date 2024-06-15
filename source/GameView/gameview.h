@@ -203,6 +203,7 @@ private:
 
 signals:
     void hidden();
+    void solver_is_already_running();
 };
 
 #endif    // GAMEVIEW_H

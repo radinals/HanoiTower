@@ -46,7 +46,10 @@ GameView::GameView(QWidget* parent) : QWidget { parent }
 void
 GameView::solve()
 {
-    if (has_solver_task()) { return; }
+    if (has_solver_task()) {
+        emit(solver_is_already_running());
+        return;
+    }
 
     // kinda cheating here tbh...
     clear();
