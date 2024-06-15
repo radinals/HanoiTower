@@ -39,8 +39,11 @@ GameView::updateInfo()
             QString::number(m_move_count));
     }
 
-    if (m_sidebar_widgets.info_msg_out != nullptr) {
+    if (m_sidebar_widgets.info_msg_label != nullptr) {
         m_sidebar_widgets.info_msg_label->setText("OBJECTIVES");
+    }
+
+    if (m_sidebar_widgets.info_msg_out != nullptr) {
         m_sidebar_widgets.info_msg_out->setText(
             "Move All Slice to Stack "
             + Utils::numToChar(m_hanoi.goal_stack->label()));
