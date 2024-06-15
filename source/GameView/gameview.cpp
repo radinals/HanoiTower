@@ -22,7 +22,7 @@ GameView::GameView(QWidget* parent) : QWidget { parent }
     // timer will call checkWinState every tick (should be every 1ms).
     connect(&m_time.timer, &QTimer::timeout, this, &GameView::checkWinState);
 
-    for (size_t i = 0; i < Config::get().Settings().stack_amount; i++) {
+    for (size_t i = 0; i < Config::STACK_MAX; i++) {
         m_hanoi.stacks[i] = HanoiStack(i);
     }
 

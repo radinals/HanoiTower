@@ -12,9 +12,9 @@
 HanoiStack *
 GameView::getStack(size_t label)
 {
-    if (label < 0 || label >= Config::get().Settings().slice_amount) {
+    if (label < 0 || label >= Config::get().Settings().stack_amount) {
         throw std::range_error(
-            "GameView:;getStack(): the label out of the stack array's range");
+            "GameView::getStack(): the label out of the stack array's range");
     }
 
     return &m_hanoi.stacks[label];

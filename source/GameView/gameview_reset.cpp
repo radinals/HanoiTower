@@ -82,13 +82,13 @@ GameView::setGoalStack()
     const size_t goalStackLabel = getRandomGoalStackIndex();
 
     if (goalStackLabel <= 0
-        || goalStackLabel > Config::get().Settings().stack_amount) {
+        || goalStackLabel >= Config::get().Settings().stack_amount) {
         std::runtime_error(
             "GameView::setGoalStack(): failed to generate goal stack label");
     }
 
     // save the address of the stack
-    m_hanoi.goal_stack = &m_hanoi.stacks[goalStackLabel];
+    m_hanoi.goal_stack = getStack(goalStackLabel);
 
     if (m_hanoi.goal_stack == nullptr
         || m_hanoi.goal_stack->label() != goalStackLabel) {
