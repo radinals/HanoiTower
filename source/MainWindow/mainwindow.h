@@ -6,7 +6,7 @@
 #define MAINWINDOW_H
 
 #include "../Config/config.h"
-#include "../GameView/gameview.h"
+#include "../GameWindow/gamewindow.h"
 #include "../SettingsWindow/settingswindow.h"
 
 #include <QMainWindow>
@@ -29,7 +29,7 @@ public:
 
 private:
     SettingsWindow *m_settings_window = nullptr;
-    GameView       *m_game_view       = nullptr;
+    GameWindow     *m_game_window     = nullptr;
 
     const QPixmap m_logo = QPixmap(Config::get().AssetFiles().LOGO);
 
@@ -61,22 +61,19 @@ private:
             delete m_media_player;
         }
     } m_background_music;
+
 #endif
 
 private slots:
-    void exitAction();
+    void on_SettingsShowEvent();
 
-    void resetGameAction();
+    void exitAction();
 
     void backToMainMenuAction();
 
     void on_StartBtn_clicked();
 
     void on_SettingsBtn_clicked();
-
-    void on_PauseBtn_clicked();
-
-    void on_AutoSolveBtn_clicked();
 
 private:
     Ui::MainWindow *ui;

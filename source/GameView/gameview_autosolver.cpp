@@ -21,14 +21,12 @@ GameView::hanoiIterativeSolver()
     // starting stack
     size_t source = 0;
 
-    // this should be either the slice after the first one,
-    // or the slice after the goal stack
-    size_t aux = (m_hanoi.goal_stack->label() == 1)
-                     ? m_hanoi.goal_stack->label() + 1
-                     : 1;
-
     // the goal of the slices
     size_t dest = m_hanoi.goal_stack->label();
+
+    // this should be either the slice after the first one,
+    // or the slice after the goal stack
+    size_t aux = (dest == 1) ? dest + 1 : 1;
 
     assert(dest != aux);
     assert(source != dest);

@@ -48,11 +48,15 @@ public:
     bool isAutoSolving() { return m_game_state == GameState::AutoSolving; }
 
     // define pointers to the output widgets
-    void setGameInfoOutputs(QLabel *time, QLabel *moves, QTextEdit *info_box)
+    void setGameInfoOutputs(QLabel    *time,
+                            QLabel    *moves,
+                            QLabel    *info_box_label,
+                            QTextEdit *info_box)
     {
         m_sidebar_widgets.timer_out      = time;
         m_sidebar_widgets.move_count_out = moves;
         m_sidebar_widgets.info_msg_out   = info_box;
+        m_sidebar_widgets.info_msg_label = info_box_label;
     }
 
 private:
@@ -89,7 +93,8 @@ private:
     } m_selected;
 
     struct SidebarWidgets_t {
-        QLabel    *timer_out = nullptr, *move_count_out = nullptr;
+        QLabel *timer_out = nullptr, *move_count_out = nullptr,
+               *info_msg_label  = nullptr;
         QTextEdit *info_msg_out = nullptr;
     } m_sidebar_widgets;
 

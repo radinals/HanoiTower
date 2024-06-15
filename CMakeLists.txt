@@ -54,6 +54,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${SOURCE_DIR}/SettingsWindow/settingswindow.h
         ${SOURCE_DIR}/SettingsWindow/settingswindow.cpp
         ${SOURCE_DIR}/SettingsWindow/settingswindow.ui
+
+        ${SOURCE_DIR}/GameWindow/gamewindow.h
+        ${SOURCE_DIR}/GameWindow/gamewindow.cpp
+        ${SOURCE_DIR}/GameWindow/gamewindow.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET HanoiTower APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

@@ -5,7 +5,7 @@
 
 #include "mainwindow.h"
 
-#include "../GameView/gameview.h"
+#include "../GameWindow/gamewindow.h"
 #include "../SettingsWindow/settingswindow.h"
 #include "ui_mainwindow.h"
 #include <qmessagebox.h>
@@ -18,26 +18,21 @@ MainWindow::MainWindow(QWidget *parent)
 
     this->setStyleSheet(Config::get().getDefaultStylesheet());
 
-    m_game_view = new GameView(ui->GameViewFrame);
-    m_game_view->setGameInfoOutputs(ui->GameTimer,
-                                    ui->GameMoveCountOut,
-                                    ui->GameInfoBox);
-    m_settings_window = new SettingsWindow;
+    m_settings_window = new SettingsWindow(this);
+    m_game_window     = new GameWindow(this);
 
     ui->SettingsViewFrame->layout()->addWidget(m_settings_window);
-    ui->GameViewFrame->layout()->addWidget(m_game_view);
+    ui->GameViewFrame->layout()->addWidget(m_game_window);
 
-    connect(ui->ResetBtn,
-            &QPushButton::clicked,
-            this,
-            &MainWindow::resetGameAction);
-
-    connect(ui->BackToMenuBtn,
-            &QPushButton::clicked,
+    connect(m_game_window,
+            &GameWindow::back_to_menu,
             this,
             &MainWindow::backToMainMenuAction);
 
-    connect(ui->ExitBtn, &QPushButton::clicked, this, &MainWindow::exitAction);
+    connect(m_game_window,
+            &GameWindow::quit_game,
+            this,
+            &MainWindow::exitAction);
 
     connect(ui->StartExitBtn,
             &QPushButton::clicked,
@@ -47,11 +42,14 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_settings_window,
             &SettingsWindow::hidden,
             this,
-            &MainWindow::backToMainMenuAction);
+            &MainWindow::on_SettingsShowEvent);
+
+    connect(m_game_window,
+            &GameWindow::open_settings,
+            this,
+            &MainWindow::on_SettingsBtn_clicked);
 
     ui->GameTitle->setPixmap(m_logo);
-
-    ui->GameSideBarFrame->hide();
     ui->SettingsViewFrame->hide();
     ui->GameViewFrame->hide();
     ui->GameMenuFrame->show();
@@ -64,31 +62,32 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    delete ui;
-    delete m_game_view;
+    delete m_game_window;
     delete m_settings_window;
+    delete ui;
 }
 
 void
-MainWindow::resetGameAction()
+MainWindow::on_SettingsShowEvent()
 {
-    if (m_game_view->isPaused()) { ui->PauseBtn->setText("PAUSE"); }
-    m_game_view->reset();
+    if (m_game_window->isSettingsBtnPressed()) {
+        on_StartBtn_clicked();
+        m_game_window->isSettingsBtnPressed() = false;
+    } else {
+        backToMainMenuAction();
+    }
 }
 
 void
 MainWindow::on_StartBtn_clicked()
 {
     ui->GameMenuFrame->hide();
-    ui->GameSideBarFrame->show();
     ui->GameViewFrame->show();
-    m_game_view->reset();
 }
 
 void
 MainWindow::on_SettingsBtn_clicked()
 {
-    ui->GameSideBarFrame->hide();
     ui->GameViewFrame->hide();
     ui->GameMenuFrame->hide();
     ui->SettingsViewFrame->show();
@@ -104,36 +103,7 @@ MainWindow::exitAction()
 void
 MainWindow::backToMainMenuAction()
 {
-    m_game_view->reset();
     ui->SettingsViewFrame->hide();
-    ui->GameSideBarFrame->hide();
     ui->GameViewFrame->hide();
     ui->GameMenuFrame->show();
-}
-
-void
-MainWindow::on_PauseBtn_clicked()
-{
-    m_game_view->pause();
-    if (m_game_view->isPaused()) {
-        ui->PauseBtn->setText("UN-PAUSE");
-    } else {
-        ui->PauseBtn->setText("PAUSE");
-    }
-}
-
-void
-MainWindow::on_AutoSolveBtn_clicked()
-{
-    if (m_game_view->isAutoSolving()) {
-        QMessageBox msgbox;
-        msgbox.setText("NOTICE");
-        msgbox.setInformativeText("Auto Solver is Already Running...");
-        msgbox.setStandardButtons(QMessageBox::Ok);
-        msgbox.setIcon(QMessageBox::Information);
-        msgbox.setStyleSheet(Config::get().getDefaultStylesheet());
-        msgbox.exec();
-    } else {
-        m_game_view->solve();
-    }
 }

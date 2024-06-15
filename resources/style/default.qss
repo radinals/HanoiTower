@@ -13,18 +13,28 @@ MainWindow,
   border-style: solid;
 }
 
-#GameTimer,
-#GameTimerLabel,
-#GameTimerFrame,
+#GameDisplayFrame,
+#TimerFrame,
+#InfoFrame,
+#MoveCountFrame {
+  background: #343442;
+  border-color : #41527b;
+  border-style: solid;
+  border-width: 4px;
+  border-radius: 20px;
+}
+
+#GameOptionsFrame {
+  border-width: 0px;
+}
+
+#TimerOut,
+#TimerLabel,
 #SettingsTitle,
-#GameInfoBoxFrame,
-#GameInfoBoxLabel,
-#GameInfoBox,
-#GameMoveCountFrame,
-#GameMoveCountLabel,
-#GameMoveCountOut,
-#GameScoreLabel,
-#GameScoreOut {
+#InfoLabel,
+#InfoOut,
+#MoveCountLabel,
+#MoveCountOut {
   color : #f9f9f9;
   background: #343442;
   border-color : #343442;
@@ -33,7 +43,7 @@ MainWindow,
   border-radius: 20px;
 }
 
-#GameSideBarFrame {
+#SideBarFrame {
   background: #2a2c30;
   border-radius: 10px;
   border-width: 1px;
@@ -43,6 +53,12 @@ QLabel {
   color : #f9f9f9;
 }
 
+#AutoSolveBtn,
+#ResetBtn
+#PauseBtn
+#BackToMenuBtn
+#OpenSettingsBtn
+#QuitGameBtn
 #SaveButton,
 #CancelButton,
 QPushButton {
@@ -50,8 +66,17 @@ QPushButton {
   border-color : #41527b;
   color : #f9f9f9;
   border-style: solid;
-  border-width: 4px;
-  border-radius: 20px;
+  border-width: 8px;
+  border-radius: 10px;
+}
+
+QPushButton::pressed {
+  background: #313e5d;
+  border-color : #313e5d;
+  color : #f9f9f9;
+  border-style: solid;
+  border-width: 8px;
+  border-radius: 10px;
 }
 
 
