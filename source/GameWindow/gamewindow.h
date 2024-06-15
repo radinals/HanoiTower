@@ -38,20 +38,6 @@ private slots:
 
     void on_QuitGameBtn_clicked();
 
-    void hideEvent(QHideEvent *event) override
-    {
-        emit(hidden());
-        QWidget::hideEvent(event);
-        m_game_view->clear();
-    }
-
-    void showEvent(QShowEvent *event) override
-    {
-        m_game_view->clear();
-        QWidget::showEvent(event);
-        m_game_view->reset();
-    }
-
     void on_OpenSettingsBtn_clicked();
 
 private:
@@ -61,7 +47,6 @@ signals:
     void open_settings();
     void back_to_menu();
     void quit_game();
-    void hidden();
 };
 
 #endif    // GAMEWINDOW_H

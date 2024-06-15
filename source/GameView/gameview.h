@@ -177,6 +177,9 @@ private:
     void paintEvent(QPaintEvent *) override;
     void resizeEvent(QResizeEvent *) override;
 
+    void hideEvent(QHideEvent *event) override;
+    void showEvent(QShowEvent *event) override;
+
     // tints pixmaps
     static void colorizeSprite(QPixmap *, const QColor &);
 
@@ -197,6 +200,7 @@ private slots:
     void checkWinState();
 
 signals:
+    void hidden();
 };
 
 #endif    // GAMEVIEW_H
