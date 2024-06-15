@@ -8,6 +8,20 @@
 #include <cassert>
 #include <stdexcept>
 
+// clears hanoi's stack
+void
+GameView::clear()
+{
+    // get the base sizes for rendering
+    calculateBaseSizes();
+
+    // reset the stacks/slices
+    resetStacks();
+    resetSlices();
+
+    m_game_state = GameState::NotRunning;
+}
+
 void
 GameView::resetStacks()
 {
