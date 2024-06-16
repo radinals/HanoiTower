@@ -135,7 +135,6 @@ private:
         std::atomic_bool stop_solving  = false;
         std::atomic_bool pause_solving = false;
         std::thread     *work_thread   = nullptr;
-        SolverTask_t() {};
     } m_solver_task;
 
     void clear();    // reset the game states
