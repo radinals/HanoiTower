@@ -196,14 +196,12 @@ SettingsWindow::on_SaveButton_clicked()
     }
 
 #ifndef DISABLE_AUDIO
-    if (QColor(Settings.sfx_volume_level)
-        != Config::get().Settings().fx_volume) {
+    if (Settings.sfx_volume_level != Config::get().Settings().fx_volume) {
         Config::get().Settings().music_volume = Settings.sfx_volume_level;
         Config::get().Settings().fx_volume    = Settings.sfx_volume_level;
     }
 
-    if (QColor(Settings.music_volume_level)
-        != Config::get().Settings().music_volume) {
+    if (Settings.music_volume_level != Config::get().Settings().music_volume) {
         Config::get().Settings().music_volume = Settings.music_volume_level;
     }
 #endif
