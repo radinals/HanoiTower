@@ -177,6 +177,10 @@ SettingsWindow::on_GameTimerInput_editingFinished()
 void
 SettingsWindow::on_CancelButton_clicked()
 {
+#ifndef DISABLE_AUDIO
+    Config::get().getBackgroundMusicInstance()->setVolume(
+        Config::get().Settings().music_volume);
+#endif
     hide();
 }
 

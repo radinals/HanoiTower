@@ -47,6 +47,8 @@ private:
     // make sure to update the preview window everytime is 'un-hide/shown'
     void showEvent(QShowEvent *event) override
     {
+        loadDefaults();
+        updateDisplays();
         drawPreview();
         QWidget::showEvent(event);
     }
