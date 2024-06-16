@@ -181,7 +181,7 @@ private:
     void showEvent(QShowEvent *) override;
 
     // tints pixmaps
-    static void colorizeSprite(QPixmap *, const QColor &);
+    static void colorizeSprite(QPixmap *const, const QColor &);
 
     // move/pop the top slice of a stack
     static void makeLegalMove(HanoiStack *const source, HanoiStack *const dest);

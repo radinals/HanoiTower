@@ -134,7 +134,7 @@ GameView::drawDialog(const QString&  text,
 
 // add tint to a pixmap, by using masks
 void
-GameView::colorizeSprite(QPixmap* sprite, const QColor& color)
+GameView::colorizeSprite(QPixmap* const sprite, const QColor& color)
 {
     if (sprite == nullptr || sprite->isNull()) {
         std::runtime_error("colorizeSprite(): invalid pixmap was passed");
