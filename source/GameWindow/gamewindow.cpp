@@ -23,27 +23,14 @@ GameWindow::GameWindow(QWidget *parent)
     connect(ui->ResetBtn, &QPushButton::clicked, m_game_view, &GameView::reset);
     connect(ui->PauseBtn, &QPushButton::clicked, m_game_view, &GameView::pause);
 
-    connect(m_game_view, &GameView::s_solver_activated, this,
-            [&]() {
-            ui->AutoSolveBtn->hide();
-    });
+    // hide the buttons
+    connect(m_game_view, &GameView::s_solver_activated, this, [&]() { ui->AutoSolveBtn->hide(); });
+    connect(m_game_view, &GameView::s_solver_exited, this, [&]() { ui->AutoSolveBtn->show(); });
 
-    connect(m_game_view, &GameView::s_solver_exited, this,
-            [&]() {
-            ui->AutoSolveBtn->show();
-    });
+    connect(m_game_view, &GameView::s_game_inactive, this, [&]() { ui->PauseBtn->hide(); });
+    connect(m_game_view, &GameView::s_game_started, this, [&]() { ui->PauseBtn->show(); });
 
-    connect(m_game_view, &GameView::s_game_inactive, this,
-            [&]() {
-            ui->PauseBtn->hide();
-    });
-
-    connect(m_game_view, &GameView::s_game_started, this,
-            [&]() {
-            ui->PauseBtn->show();
-    });
-
-
+    // show the game paused status
     connect(m_game_view, &GameView::s_paused, this,
             [&]() {
                 ui->InfoLabel->clear();
