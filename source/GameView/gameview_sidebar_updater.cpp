@@ -8,6 +8,18 @@
 
 #include "gameview.h"
 
+void
+GameView::setGameInfoOutputs(QLabel    *time,
+                             QLabel    *moves,
+                             QLabel    *info_box_label,
+                             QTextEdit *info_box)
+{
+    m_sidebar_widgets.timer_out      = time;
+    m_sidebar_widgets.move_count_out = moves;
+    m_sidebar_widgets.info_msg_out   = info_box;
+    m_sidebar_widgets.info_msg_label = info_box_label;
+}
+
 // update the Game's sidebar information
 // the current time is calculated from subtracting the start time with a
 // time elapsed counter.

@@ -63,6 +63,8 @@ GameView::hanoiIterativeSolver()
         // wait for some time
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
+
+    emit(s_solver_exited());
 }
 
 // NOTE: the solver is ran on a different thread so it's does not interrupt with

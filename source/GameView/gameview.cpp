@@ -46,10 +46,9 @@ GameView::GameView(QWidget* parent) : QWidget { parent }
 void
 GameView::solve()
 {
-    if (has_solver_task()) {
-        emit(s_solver_is_already_running());
-        return;
-    }
+    if (has_solver_task()) { return; }
+
+    emit(s_solver_activated());
 
     // kinda cheating here tbh...
     clear();
@@ -119,6 +118,8 @@ GameView::reset()
 #endif
 
     m_game_state = GameState::Running;
+
+    emit(s_game_inactive());
 
     repaint();
 }

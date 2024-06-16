@@ -44,20 +44,13 @@ public:
     }
 
     // used for checking GameView current status
-    bool isPaused() { return m_game_state == GameState::Paused; }
     bool isAutoSolving() { return m_game_state == GameState::AutoSolving; }
 
     // define pointers to the output widgets
     void setGameInfoOutputs(QLabel    *time,
                             QLabel    *moves,
                             QLabel    *info_box_label,
-                            QTextEdit *info_box)
-    {
-        m_sidebar_widgets.timer_out      = time;
-        m_sidebar_widgets.move_count_out = moves;
-        m_sidebar_widgets.info_msg_out   = info_box;
-        m_sidebar_widgets.info_msg_label = info_box_label;
-    }
+                            QTextEdit *info_box);
 
 private slots:
     // called by timer in every ms
@@ -202,9 +195,12 @@ private:
 
 signals:
     void s_hidden();
-    void s_solver_is_already_running();
     void s_paused();
     void s_unpaused();
+    void s_solver_activated();
+    void s_solver_exited();
+    void s_game_inactive();
+    void s_game_started();
 };
 
 #endif    // GAMEVIEW_H

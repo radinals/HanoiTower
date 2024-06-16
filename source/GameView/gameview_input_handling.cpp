@@ -73,6 +73,7 @@ GameView::mouseReleaseEvent(QMouseEvent* event)
 
     if (m_game_state == GameState::Running && !m_time.timer.isActive()) {
         m_time.timer.start(1);
+        emit(s_game_started());
     }
 
     m_selected.clear();
