@@ -65,15 +65,11 @@ private:
 #endif
 
 private slots:
-    void on_SettingsShowEvent();
-
-    void exitAction();
-
-    void backToMainMenuAction();
-
-    void on_StartBtn_clicked();
-
-    void on_SettingsBtn_clicked();
+    void settingsWindowCloseEvent();
+    void exitGame();
+    void openMainMenu();
+    void openGameView();
+    void openSettingsMenu();
 
 private:
     Ui::MainWindow *ui;

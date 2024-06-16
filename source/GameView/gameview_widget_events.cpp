@@ -10,7 +10,7 @@
 void
 GameView::hideEvent(QHideEvent *event)
 {
-    emit(hidden());
+    emit(s_hidden());
     reset();
     m_game_state = GameState::NotRunning;
     QWidget::hideEvent(event);

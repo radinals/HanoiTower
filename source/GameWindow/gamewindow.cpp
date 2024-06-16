@@ -22,7 +22,8 @@ GameWindow::GameWindow(QWidget *parent)
     connect(ui->AutoSolveBtn, &QPushButton::clicked, m_game_view, &GameView::solve);
     connect(ui->ResetBtn, &QPushButton::clicked, m_game_view, &GameView::reset);
     connect(ui->PauseBtn, &QPushButton::clicked, m_game_view, &GameView::pause);
-    connect(m_game_view, &GameView::solver_is_already_running, this,
+
+    connect(m_game_view, &GameView::s_solver_is_already_running, this,
             &GameWindow::showAutoSolverAlreadyRunningError);
     // clang-format on
 
@@ -39,13 +40,13 @@ void
 GameWindow::on_BackToMenuBtn_clicked()
 {
     m_game_view->reset();
-    emit(back_to_menu());
+    emit(s_back_to_main_menu());
 }
 
 void
 GameWindow::on_QuitGameBtn_clicked()
 {
-    emit(quit_game());
+    emit(s_exit_game());
 }
 
 void
@@ -53,7 +54,7 @@ GameWindow::on_OpenSettingsBtn_clicked()
 {
     m_settings_btn_pressed = true;
     m_game_view->reset();
-    emit(open_settings());
+    emit(s_open_settings());
 }
 
 void

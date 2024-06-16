@@ -47,7 +47,7 @@ void
 GameView::solve()
 {
     if (has_solver_task()) {
-        emit(solver_is_already_running());
+        emit(s_solver_is_already_running());
         return;
     }
 

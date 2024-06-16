@@ -202,8 +202,8 @@ private:
     bool goalStackIsComplete();
 
 signals:
-    void hidden();
-    void solver_is_already_running();
+    void s_hidden();
+    void s_solver_is_already_running();
 };
 
 #endif    // GAMEVIEW_H

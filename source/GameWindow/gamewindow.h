@@ -39,9 +39,9 @@ private:
     Ui::GameWindow *ui;
 
 signals:
-    void open_settings();
-    void back_to_menu();
-    void quit_game();
+    void s_open_settings();
+    void s_back_to_main_menu();
+    void s_exit_game();
 };
 
 #endif    // GAMEWINDOW_H

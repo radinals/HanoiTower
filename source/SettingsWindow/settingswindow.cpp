@@ -52,7 +52,7 @@ SettingsWindow::SettingsWindow(QWidget* parent)
     ui->PreviewOut->setScene(m_preview_scene);
 
     // load the values
-    update_options();
+    updateDisplays();
 
     // update the preview
     drawPreview();
@@ -69,7 +69,7 @@ SettingsWindow::~SettingsWindow()
 
 // updates the setting menu option values
 void
-SettingsWindow::update_options()
+SettingsWindow::updateDisplays()
 {
     //  Updates Game Setting Output
     ui->GameSliceAmountSlider->setValue(Settings.slice_amount);
@@ -115,7 +115,7 @@ SettingsWindow::on_ThemeSliceColorSettingsInput_editingFinished()
             Settings.slice_color = Config::DEFAULT_STACK_TINT;
         }
     }
-    update_options();
+    updateDisplays();
     drawPreview();
 }
 
@@ -130,7 +130,7 @@ SettingsWindow::on_ThemeStackColorSettingsInput_editingFinished()
             Settings.stack_color = Config::DEFAULT_STACK_TINT;
         }
     }
-    update_options();
+    updateDisplays();
     drawPreview();
 }
 
@@ -144,7 +144,7 @@ SettingsWindow::on_GameTimerInput_userTimeChanged(const QTime& time)
                                       time.second());
 
         if (ms <= 0 || ms < Config::TIMER_MIN) {
-            update_options();
+            updateDisplays();
             return;
         }
     }
@@ -163,7 +163,7 @@ SettingsWindow::on_GameTimerInput_editingFinished()
         if (ms > 0 && ms >= Config::TIMER_MIN) { Settings.timer_ms = (ms); }
     }
 
-    update_options();
+    updateDisplays();
 }
 
 void
@@ -302,7 +302,7 @@ SettingsWindow::on_GameSliceAmountSlider_valueChanged(int value)
     if (value > 0 && value <= Config::SLICE_MAX) {
         Settings.slice_amount = value;
     }
-    update_options();
+    updateDisplays();
     drawPreview();
 }
 
@@ -312,7 +312,7 @@ SettingsWindow::on_GameStackAmountSlider_valueChanged(int value)
     if (value > 0 && value <= Config::STACK_MAX) {
         Settings.stack_amount = value;
     }
-    update_options();
+    updateDisplays();
     drawPreview();
 }
 
@@ -321,7 +321,7 @@ SettingsWindow::on_AudioMusicVolSlider_sliderMoved(int position)
 {
 #ifndef DISABLE_AUDIO
     Settings.music_volume_level = (position * 0.01f);
-    update_options();
+    updateDisplays();
     if (Config::get().getBackgroundMusicInstance() != nullptr) {
         Config::get().getBackgroundMusicInstance()->setVolume(
             Settings.music_volume_level);
@@ -334,7 +334,7 @@ SettingsWindow::on_AudioSFXVolSlider_sliderMoved(int position)
 {
 #ifndef DISABLE_AUDIO
     Settings.sfx_volume_level = (position * 0.01f);
-    update_options();
+    updateDisplays();
     if (this->isVisible()) {
         m_sfx_preview->setVolume(Settings.sfx_volume_level);
         if (!m_sfx_preview->isPlaying()) { m_sfx_preview->play(); }

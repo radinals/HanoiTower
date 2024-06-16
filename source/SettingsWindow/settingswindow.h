@@ -35,12 +35,12 @@ private:
     QGraphicsScene *m_preview_scene = nullptr;
 
     void drawPreview();
-    void update_options();
+    void updateDisplays();
 
     // used for handling exiting from setting window
     void hideEvent(QHideEvent *event) override
     {
-        emit hidden();
+        emit(s_hidden());
         QWidget::hideEvent(event);
     }
 
@@ -81,7 +81,8 @@ private slots:
 private:
     Ui::SettingsWindow *ui;
 signals:
-    void hidden();
+    void s_hidden();
+    void s_bg_audio_settings_changed();
 };
 
 #endif    // SETTINGSWINDOW_H

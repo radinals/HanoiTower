@@ -24,31 +24,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->SettingsViewFrame->layout()->addWidget(m_settings_window);
     ui->GameViewFrame->layout()->addWidget(m_game_window);
 
-    connect(m_game_window,
-            &GameWindow::back_to_menu,
-            this,
-            &MainWindow::backToMainMenuAction);
-
-    connect(m_game_window,
-            &GameWindow::quit_game,
-            this,
-            &MainWindow::exitAction);
-
-    connect(ui->StartExitBtn,
-            &QPushButton::clicked,
-            this,
-            &MainWindow::exitAction);
-
-    connect(m_settings_window,
-            &SettingsWindow::hidden,
-            this,
-            &MainWindow::on_SettingsShowEvent);
-
-    connect(m_game_window,
-            &GameWindow::open_settings,
-            this,
-            &MainWindow::on_SettingsBtn_clicked);
-
     ui->GameTitle->setPixmap(m_logo);
     ui->SettingsViewFrame->hide();
     ui->GameViewFrame->hide();
@@ -58,6 +33,44 @@ MainWindow::MainWindow(QWidget *parent)
     Config::get().setBackgroundMusicInstance(m_background_music.m_audio_output);
     m_background_music.m_media_player->play();
 #endif
+
+    // game window slots
+    connect(m_game_window,
+            &GameWindow::s_back_to_main_menu,
+            this,
+            &MainWindow::openMainMenu);
+
+    connect(m_game_window,
+            &GameWindow::s_open_settings,
+            this,
+            &MainWindow::openSettingsMenu);
+
+    connect(m_game_window,
+            &GameWindow::s_exit_game,
+            this,
+            &MainWindow::exitGame);
+
+    // setting window slots
+    connect(m_settings_window,
+            &SettingsWindow::s_hidden,
+            this,
+            &MainWindow::settingsWindowCloseEvent);
+
+    // main window slots
+    connect(ui->StartExitBtn,
+            &QPushButton::clicked,
+            this,
+            &MainWindow::exitGame);
+
+    connect(ui->StartBtn,
+            &QPushButton::clicked,
+            this,
+            &MainWindow::openGameView);
+
+    connect(ui->SettingsBtn,
+            &QPushButton::clicked,
+            this,
+            &MainWindow::openSettingsMenu);
 }
 
 MainWindow::~MainWindow()
@@ -68,42 +81,42 @@ MainWindow::~MainWindow()
 }
 
 void
-MainWindow::on_SettingsShowEvent()
+MainWindow::settingsWindowCloseEvent()
 {
     if (m_game_window->isSettingsBtnPressed()) {
-        on_StartBtn_clicked();
+        openGameView();
         m_game_window->isSettingsBtnPressed() = false;
     } else {
-        backToMainMenuAction();
+        openMainMenu();
     }
 }
 
 void
-MainWindow::on_StartBtn_clicked()
+MainWindow::exitGame()
+{
+    close();
+}
+
+void
+MainWindow::openMainMenu()
+{
+    ui->SettingsViewFrame->hide();
+    ui->GameViewFrame->hide();
+    ui->GameMenuFrame->show();
+}
+
+void
+MainWindow::openGameView()
 {
     ui->GameMenuFrame->hide();
     ui->GameViewFrame->show();
 }
 
 void
-MainWindow::on_SettingsBtn_clicked()
+MainWindow::openSettingsMenu()
 {
     ui->GameViewFrame->hide();
     ui->GameMenuFrame->hide();
     ui->SettingsViewFrame->show();
     m_settings_window->show();
-}
-
-void
-MainWindow::exitAction()
-{
-    close();
-}
-
-void
-MainWindow::backToMainMenuAction()
-{
-    ui->SettingsViewFrame->hide();
-    ui->GameViewFrame->hide();
-    ui->GameMenuFrame->show();
 }
