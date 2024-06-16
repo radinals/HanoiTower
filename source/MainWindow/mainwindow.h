@@ -48,10 +48,15 @@ private:
             m_media_player = new QMediaPlayer;
             m_audio_output = new QAudioOutput;
 
+            // disable video output
             m_media_player->setVideoOutput(nullptr);
+
+            // load the audio source
             m_media_player->setAudioOutput(m_audio_output);
             m_media_player->setSource(
                 "qrc" + Config::get().AudioFiles().BACKGROUND_MUSIC);
+
+            // configure audio
             m_audio_output->setVolume(Config::get().Settings().music_volume);
             m_media_player->setLoops(QMediaPlayer::Infinite);
         };
@@ -61,6 +66,7 @@ private:
             delete m_audio_output;
             delete m_media_player;
         }
+
     } m_background_music;
 
 #endif
