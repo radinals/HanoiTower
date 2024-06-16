@@ -140,7 +140,10 @@ GameView::colorizeSprite(QPixmap* sprite, const QColor& color)
         std::runtime_error("colorizeSprite(): invalid pixmap was passed");
     }
 
-    QPixmap  mask(*sprite);
+    QPixmap mask(*sprite);
+
+    if (mask.isNull()) { return; }
+
     QPainter painter;
 
     // create the mask
