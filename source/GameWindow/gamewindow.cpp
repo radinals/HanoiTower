@@ -69,14 +69,3 @@ GameWindow::on_OpenSettingsBtn_clicked()
     m_game_view->reset();
     emit(s_open_settings());
 }
-
-void
-GameWindow::showAutoSolverAlreadyRunningError()
-{
-    QMessageBox b(this);
-    b.setText("Notice");
-    b.setInformativeText("The Auto-Solver is already running!");
-    b.setIcon(QMessageBox::Icon::Information);
-    b.setStandardButtons(QMessageBox::Ok);
-    b.exec();
-}
