@@ -105,7 +105,7 @@ SettingsWindow::updateDisplays()
     ui->ThemeSliceColorSettingsInput->setText(
         Settings.slice_color.toRgb().name());
 
-    auto hh_mm_ss = Utils::extractTimeFromMs(Settings.timer_ms);
+    const auto hh_mm_ss = Utils::extractTimeFromMs(Settings.timer_ms);
 
     ui->GameTimerInput->setTime(QTime(std::get<0>(hh_mm_ss),
                                       std::get<1>(hh_mm_ss),
@@ -116,12 +116,11 @@ void
 SettingsWindow::on_ThemeSliceColorSettingsInput_editingFinished()
 {
     if (!ui->ThemeSliceColorSettingsInput->text().isEmpty()) {
-        QString c = ui->ThemeSliceColorSettingsInput->text();
-        if (QColor::isValidColorName(c)) {
-            Settings.slice_color = c;
-        } else {
-            Settings.slice_color = Config::DEFAULT_STACK_TINT;
-        }
+        const QString input_str = ui->ThemeSliceColorSettingsInput->text();
+
+        Settings.slice_color = (QColor::isValidColorName(input_str))
+                                   ? input_str
+                                   : Config::DEFAULT_SLICE_TINT;
     }
     updateDisplays();
     drawPreview();
@@ -131,12 +130,11 @@ void
 SettingsWindow::on_ThemeStackColorSettingsInput_editingFinished()
 {
     if (!ui->ThemeStackColorSettingsInput->text().isEmpty()) {
-        QString c = ui->ThemeStackColorSettingsInput->text();
-        if (QColor::isValidColorName(c)) {
-            Settings.stack_color = c;
-        } else {
-            Settings.stack_color = Config::DEFAULT_STACK_TINT;
-        }
+        const QString input_str = ui->ThemeStackColorSettingsInput->text();
+
+        Settings.stack_color = (QColor::isValidColorName(input_str))
+                                   ? input_str
+                                   : Config::DEFAULT_STACK_TINT;
     }
     updateDisplays();
     drawPreview();
@@ -146,10 +144,9 @@ void
 SettingsWindow::on_GameTimerInput_userTimeChanged(const QTime& time)
 {
     if (time.isValid()) {
-        long long int ms;
-        ms = Utils::extractMsFromTime(time.hour(),
-                                      time.minute(),
-                                      time.second());
+        const long long int ms = Utils::extractMsFromTime(time.hour(),
+                                                          time.minute(),
+                                                          time.second());
 
         if (ms <= 0 || ms < Config::TIMER_MIN) {
             updateDisplays();
@@ -161,13 +158,12 @@ SettingsWindow::on_GameTimerInput_userTimeChanged(const QTime& time)
 void
 SettingsWindow::on_GameTimerInput_editingFinished()
 {
-    QTime time = ui->GameTimerInput->time();
+    const QTime time = ui->GameTimerInput->time();
 
     if (time.isValid()) {
-        long long int ms;
-        ms = Utils::extractMsFromTime(time.hour(),
-                                      time.minute(),
-                                      time.second());
+        const long long int ms = Utils::extractMsFromTime(time.hour(),
+                                                          time.minute(),
+                                                          time.second());
         if (ms > 0 && ms >= Config::TIMER_MIN) { Settings.timer_ms = (ms); }
     }
 
