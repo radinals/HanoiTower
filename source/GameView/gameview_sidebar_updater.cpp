@@ -41,6 +41,7 @@ GameView::updateInfo()
 
     if (m_sidebar_widgets.info_msg_label != nullptr) {
         m_sidebar_widgets.info_msg_label->setText("OBJECTIVES");
+        m_sidebar_widgets.info_msg_label->setAlignment(Qt::AlignCenter);
     }
 
     if (m_sidebar_widgets.info_msg_out != nullptr) {

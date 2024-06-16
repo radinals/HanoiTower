@@ -25,6 +25,14 @@ GameWindow::GameWindow(QWidget *parent)
 
     connect(m_game_view, &GameView::s_solver_is_already_running, this,
             &GameWindow::showAutoSolverAlreadyRunningError);
+
+    connect(m_game_view, &GameView::s_paused, this,
+            [&]() {
+                ui->InfoLabel->clear();
+                ui->InfoOut->setText("GAME PAUSED");
+                ui->InfoOut->setAlignment(Qt::AlignCenter);
+            }
+    );
     // clang-format on
 
     ui->GameDisplayFrame->layout()->addWidget(m_game_view);

@@ -204,6 +204,8 @@ private:
 signals:
     void s_hidden();
     void s_solver_is_already_running();
+    void s_paused();
+    void s_unpaused();
 };
 
 #endif    // GAMEVIEW_H

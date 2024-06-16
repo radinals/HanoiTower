@@ -76,14 +76,15 @@ GameView::pause()
             } else {
                 m_game_state = GameState::Running;
             }
+            emit(s_unpaused());
             break;
         case GameState::AutoSolving:
             pause_solver_task();
         case GameState::Running:
             if (!m_time.timer.isActive()) { return; }
-            m_sidebar_widgets.timer_out->setText("PAUSED");
             m_time.timer.stop();
             m_game_state = GameState::Paused;
+            emit(s_paused());
             break;
         default:
             return;
