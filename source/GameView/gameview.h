@@ -43,9 +43,6 @@ public:
 #endif
     }
 
-    // used for checking GameView current status
-    bool isAutoSolving() { return m_game_state == GameState::AutoSolving; }
-
     // define pointers to the output widgets
     void setGameInfoOutputs(QLabel    *time,
                             QLabel    *moves,
