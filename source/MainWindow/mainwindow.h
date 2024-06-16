@@ -48,6 +48,7 @@ private:
             m_media_player = new QMediaPlayer;
             m_audio_output = new QAudioOutput;
 
+            m_media_player->setVideoOutput(nullptr);
             m_media_player->setAudioOutput(m_audio_output);
             m_media_player->setSource(
                 "qrc" + Config::get().AudioFiles().BACKGROUND_MUSIC);
