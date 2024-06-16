@@ -51,6 +51,8 @@ private:
         QWidget::showEvent(event);
     }
 
+    void loadDefaults();
+
     void resizeEvent(QResizeEvent *event) override { drawPreview(); }
 
 #ifndef DISABLE_AUDIO

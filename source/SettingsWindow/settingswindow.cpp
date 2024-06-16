@@ -21,16 +21,10 @@ SettingsWindow::SettingsWindow(QWidget* parent)
     ui->setupUi(this);
 
     // copy the global variables
-    Settings.stack_amount = Config::get().Settings().stack_amount;
-    Settings.slice_amount = Config::get().Settings().slice_amount;
-    Settings.slice_color  = Config::get().Theme().slice_tint;
-    Settings.stack_color  = Config::get().Theme().stack_tint;
-    Settings.timer_ms     = Config::get().Settings().time_length_ms;
+    loadDefaults();
 
 #ifndef DISABLE_AUDIO
-    Settings.sfx_volume_level   = Config::get().Settings().fx_volume;
-    Settings.music_volume_level = Config::get().Settings().music_volume;
-    m_sfx_preview               = new QSoundEffect(this);
+    m_sfx_preview = new QSoundEffect(this);
     m_sfx_preview->setSource("qrc" + Config::get().AudioFiles().PLACEMENT_FX);
 #else
     // hide all audio setting options
@@ -65,6 +59,20 @@ SettingsWindow::~SettingsWindow()
 #endif    // !DISABLE_AUDIO
     delete m_preview_scene;
     delete ui;
+}
+
+void
+SettingsWindow::loadDefaults()
+{
+    Settings.stack_amount = Config::get().Settings().stack_amount;
+    Settings.slice_amount = Config::get().Settings().slice_amount;
+    Settings.slice_color  = Config::get().Theme().slice_tint;
+    Settings.stack_color  = Config::get().Theme().stack_tint;
+    Settings.timer_ms     = Config::get().Settings().time_length_ms;
+#ifndef DISABLE_AUDIO
+    Settings.sfx_volume_level   = Config::get().Settings().fx_volume;
+    Settings.music_volume_level = Config::get().Settings().music_volume;
+#endif    // !DISABLE_AUDIO
 }
 
 // updates the setting menu option values
