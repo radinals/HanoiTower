@@ -166,14 +166,19 @@ private:
     void hanoiIterativeSolver();
 
     // QWidget Event Handlers
+
+    // input event
     void mousePressEvent(QMouseEvent *) override;
     void mouseReleaseEvent(QMouseEvent *) override;
     void mouseMoveEvent(QMouseEvent *) override;
+
+    // render events
     void paintEvent(QPaintEvent *) override;
     void resizeEvent(QResizeEvent *) override;
 
-    void hideEvent(QHideEvent *event) override;
-    void showEvent(QShowEvent *event) override;
+    // widget state event
+    void hideEvent(QHideEvent *) override;
+    void showEvent(QShowEvent *) override;
 
     // tints pixmaps
     static void colorizeSprite(QPixmap *, const QColor &);
