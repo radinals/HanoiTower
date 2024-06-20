@@ -30,8 +30,8 @@ GameView::GameView(QWidget* parent) : QWidget { parent }
 #ifndef DISABLE_AUDIO
     m_placement_fx = new QSoundEffect(this);
     m_placement_fx->setSource("qrc" + Config::get().AudioFiles().PLACEMENT_FX);
-    assert(m_placement_fx->isLoaded());
     m_placement_fx->setVolume(Config::get().Settings().fx_volume);
+    assert(m_placement_fx->status() != QSoundEffect::Error);
 #endif
 
     m_sprites.arrow = QPixmap(Config::get().AssetFiles().ARROW);
