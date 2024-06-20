@@ -20,7 +20,7 @@ GameView::hanoiIterativeSolver()
     size_t source = 0;
 
     // the goal of the slices
-    size_t dest = m_hanoi.goal_stack->label();
+    size_t dest = m_hanoi.goal_stack->getLabel();
 
     // this should be either the slice after the first one,
     // or the slice after the goal stack
@@ -86,11 +86,7 @@ GameView::has_paused_solver_task()
 void
 GameView::stop_solver_task()
 {
-    if (!has_solver_task()) {
-        throw std::runtime_error(
-            "GameView::start_solver_task(): failed to stop solving "
-            "task, no task is currently running");
-    }
+    assert(has_solver_task());
 
     m_solver_task.stop_solving = true;
 
@@ -112,11 +108,7 @@ GameView::stop_solver_task()
 void
 GameView::start_solver_task()
 {
-    if (has_solver_task()) {
-        throw std::runtime_error(
-            "GameView::start_solver_task(): failed to init a new solving "
-            "task, a task is already present");
-    }
+    assert(!has_solver_task());
 
     // start the thread;
     m_solver_task.work_thread
@@ -128,19 +120,13 @@ GameView::start_solver_task()
 void
 GameView::unpause_solver_task()
 {
-    if (!has_paused_solver_task()) {
-        throw std::runtime_error("GameView::unpause_solver_task(): failed to "
-                                 "un-pause task");
-    }
+    assert(has_paused_solver_task());
     m_solver_task.pause_solving = false;
 }
 
 void
 GameView::pause_solver_task()
 {
-    if (has_paused_solver_task()) {
-        throw std::runtime_error("GameView::pause_solver_task(): failed to "
-                                 "pause task");
-    }
+    assert(!has_paused_solver_task());
     m_solver_task.pause_solving = true;
 }

@@ -6,7 +6,6 @@
 
 #include "../Config/config.h"
 #include <cassert>
-#include <stdexcept>
 
 // clears hanoi's stack
 void
@@ -43,10 +42,7 @@ GameView::resetSlices()
     if (m_sprites.slice_tint != Config::get().Theme().slice_tint) {
         QPixmap sprite(Config::get().AssetFiles().SLICE);
 
-        if (sprite.isNull()) {
-            throw std::runtime_error(
-                "GameView::resetSlices(): failed to load slice sprite.");
-        }
+        assert(!sprite.isNull());
 
         // tint the slice sprite
         colorizeSprite(&sprite, Config::get().Theme().slice_tint);
@@ -64,9 +60,8 @@ GameView::resetSlices()
     HanoiStack::fillStack(&m_hanoi.stacks[0],
                           Config::get().Settings().slice_amount);
 
-    if (m_hanoi.stacks[0].getSize() != Config::get().Settings().slice_amount) {
-        std::runtime_error("clear(): failed to fill starting stack");
-    }
+    assert(m_hanoi.stacks[0].getSize()
+           == Config::get().Settings().slice_amount);
 
     //-------------------------------------------------------------------------
 
@@ -95,18 +90,12 @@ GameView::setGoalStack()
     // get randomly chosen stack label
     const size_t goalStackLabel = getRandomGoalStackIndex();
 
-    if (goalStackLabel <= 0
-        || goalStackLabel >= Config::get().Settings().stack_amount) {
-        std::runtime_error(
-            "GameView::setGoalStack(): failed to generate goal stack label");
-    }
+    assert(goalStackLabel > 0);
+    assert(goalStackLabel < Config::get().Settings().stack_amount);
 
     // save the address of the stack
     m_hanoi.goal_stack = getStack(goalStackLabel);
 
-    if (m_hanoi.goal_stack == nullptr
-        || m_hanoi.goal_stack->label() != goalStackLabel) {
-        std::runtime_error(
-            "GameView::setGoalStack(): failed to set goal stack");
-    }
+    assert(m_hanoi.goal_stack != nullptr);
+    assert(m_hanoi.goal_stack->getLabel() == goalStackLabel);
 }

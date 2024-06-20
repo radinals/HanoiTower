@@ -6,16 +6,13 @@
 #include "../Config/config.h"
 #include "gameview.h"
 #include <random>
-#include <stdexcept>
 
 // get the pointer to a stack
 HanoiStack *
 GameView::getStack(size_t label)
 {
-    if (label < 0 || label >= Config::get().Settings().stack_amount) {
-        throw std::range_error(
-            "GameView::getStack(): the label out of the stack array's range");
-    }
+    assert(label >= 0);
+    assert(label < Config::get().Settings().stack_amount);
 
     return &m_hanoi.stacks[label];
 }
@@ -24,14 +21,9 @@ GameView::getStack(size_t label)
 void
 GameView::makeLegalMove(HanoiStack *const source, HanoiStack *const dest)
 {
-    if (source == nullptr || dest == nullptr) {
-        std::invalid_argument("moveTopSlice(): null stack was passed");
-    }
-
-    if (source->isEmpty() && dest->isEmpty()) {
-        throw std::out_of_range("GameView::makeLegalMove(): there is no "
-                                "possible move between two empty stack");
-    };
+    assert(source != nullptr);
+    assert(dest != nullptr);
+    assert((!dest->isEmpty()) || (!source->isEmpty()));
 
     if (source->isEmpty()) {
         source->push(dest->pop());

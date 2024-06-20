@@ -6,8 +6,6 @@
 
 #include "hanoislice.h"
 
-#include <stdexcept>
-
 void
 HanoiStack::clearStack()
 {
@@ -19,9 +17,9 @@ HanoiStack::clearStack()
 void
 HanoiStack::push(HanoiSlice* slice)
 {
-    if (slice == nullptr) {
-        throw std::invalid_argument("Attempted to push a null slice");
-    } else if (isEmpty()) {
+    assert(slice != nullptr);
+
+    if (isEmpty()) {
         m_head = slice;
         m_tail = m_head;
     } else if (slice->getValue() < peek()->getValue()) {
@@ -55,7 +53,7 @@ HanoiStack::peek() const
 HanoiSlice*
 HanoiStack::pop()
 {
-    if (isEmpty()) { throw std::out_of_range("Stack is Empty"); }
+    assert(!isEmpty());
 
     HanoiSlice* popped = m_head;
 

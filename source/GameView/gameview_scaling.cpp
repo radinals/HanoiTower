@@ -6,7 +6,6 @@
 #include "gameview.h"
 
 #include "../Config/config.h"
-#include <stdexcept>
 
 // generate the base sizes to be used to render the sprites and etc.
 void
@@ -36,10 +35,8 @@ GameView::scaleStack()
     m_sprites.stack_pole = QPixmap(Config::get().AssetFiles().STACK_POLE);
     m_sprites.stack_base = QPixmap(Config::get().AssetFiles().STACK_BASE);
 
-    if (m_sprites.stack_pole.isNull() || m_sprites.stack_base.isNull()) {
-        throw std::runtime_error(
-            "GameView::scaleStack(): Failed to load Stack Sprites");
-    }
+    assert(!m_sprites.stack_pole.isNull());
+    assert(!m_sprites.stack_base.isNull());
 
     // scale the sprites
     m_sprites.stack_pole = m_sprites.stack_pole.scaled(

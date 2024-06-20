@@ -20,9 +20,10 @@ GameView::drawStack(float             offset,
                     HanoiStack* const stack,
                     QPainter* const   painter)
 {
-    if (stack == nullptr) {
-        throw std::invalid_argument("drawStack(): null stack was passed");
-    }
+    // draw the stack base
+    drawStackBase(stack->getLabel(), offset, painter);
+
+    if (stack->isEmpty()) { return; }
 
     float y = height() - m_geometry.stack_base.height();
 
@@ -45,9 +46,8 @@ GameView::drawStack(float             offset,
 void
 GameView::drawStackBase(size_t label, float offset, QPainter* const painter)
 {
-    if (painter == nullptr || !painter->isActive()) {
-        std::invalid_argument("drawStackBase(): invalid painter was passed");
-    }
+    assert(painter != nullptr);
+    assert(painter->isActive());
 
     //--Draw Stack Base+Pole----------------------------------------------
 
@@ -72,13 +72,15 @@ GameView::drawStackBase(size_t label, float offset, QPainter* const painter)
     QColor font_color = Config::get().Theme().font_color;
 
     // highlight + draw the indicator if current stack is the goal stack
-    if (label == (m_hanoi.goal_stack->label())) {
+    if (label == (m_hanoi.goal_stack->getLabel())) {
         font_color = Config::get().Theme().highlight_tint;
 
         if (!m_time.timer.isActive() && m_game_state == GameState::Running) {
             const QPixmap arrow_sprite = m_sprites.arrow.scaled(
                 offset - m_geometry.stack_area.width() * 0.5f,
                 m_geometry.stack_base.width() * 0.1f);
+
+            assert(!arrow_sprite.isNull());
 
             painter->drawPixmap(m_geometry.stack_area.width() * 0.5f,
                                 pole_y - (arrow_sprite.height()),
@@ -109,6 +111,9 @@ GameView::drawDialog(const QString&  text,
                      QPainter* const painter)
 {
     QPixmap dialog(Config::get().AssetFiles().DIALOG);
+
+    assert(!dialog.isNull());
+
     dialog = dialog.scaled(m_geometry.dialog.toSize());
 
     colorizeSprite(&dialog, color);
@@ -136,9 +141,8 @@ GameView::drawDialog(const QString&  text,
 void
 GameView::colorizeSprite(QPixmap* const sprite, const QColor& color)
 {
-    if (sprite == nullptr || sprite->isNull()) {
-        std::runtime_error("colorizeSprite(): invalid pixmap was passed");
-    }
+    assert(sprite != nullptr);
+    assert(!sprite->isNull());
 
     QPixmap mask(*sprite);
 
@@ -170,24 +174,18 @@ GameView::paintEvent(QPaintEvent* event)
 
     QPainter p(this);
 
+    assert(p.isActive());
+
     updateInfo();
 
-    float offset = m_geometry.stack_area.width() * 0.5f;
-
+    // render the stacks and slices
+    float x_offset = m_geometry.stack_area.width() * 0.5f;
     for (size_t i = 0; i < Config::get().Settings().stack_amount; i++) {
-        HanoiStack& current_stack = m_hanoi.stacks[i];
-
-        // draw the stack base
-        drawStackBase(current_stack.label(), offset, &p);
-
-        // render the stack
-        if (!current_stack.isEmpty()) { drawStack(offset, &current_stack, &p); }
-
-        // shift to the right for the next stack
-        offset += m_geometry.stack_area.width();
+        drawStack(x_offset, &m_hanoi.stacks[i], &p);
+        x_offset += m_geometry.stack_area.width();    // shift to the right
     }
 
-    // render the selected stack
+    // render the selected slice
     if (m_selected.hasSelected()) {
         p.drawPixmap(
             m_selected.slice->Geometry().x,
@@ -196,6 +194,7 @@ GameView::paintEvent(QPaintEvent* event)
                                    m_selected.slice->Geometry().height));
     }
 
+    // render the game over screens
     switch (m_game_state) {
         case GameState::GameOverLost:
             drawDialog("TIME's UP!",

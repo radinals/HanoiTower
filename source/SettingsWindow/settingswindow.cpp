@@ -26,6 +26,7 @@ SettingsWindow::SettingsWindow(QWidget* parent)
 #ifndef DISABLE_AUDIO
     m_sfx_preview = new QSoundEffect(this);
     m_sfx_preview->setSource("qrc" + Config::get().AudioFiles().PLACEMENT_FX);
+    assert(m_sfx_preview->isLoaded());
 #else
     // hide all audio setting options
     ui->AudioSFXVolOut->hide();

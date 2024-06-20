@@ -5,7 +5,6 @@
 #include "gameview.h"
 
 #include <QMouseEvent>
-#include <qnamespace.h>
 #include <stdexcept>
 
 #include "../Config/config.h"

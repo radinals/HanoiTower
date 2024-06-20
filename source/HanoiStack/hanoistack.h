@@ -34,7 +34,8 @@ public:
     // initialize a stack with 'slice_amount' of slices
     static void fillStack(HanoiStack* stack, size_t slice_amount);
 
-    inline size_t& label() { return m_label; };
+    inline size_t  getLabel() const { return m_label; };
+    inline size_t& getLabel() { return m_label; };
 
 private:
     size_t m_size  = 0;
