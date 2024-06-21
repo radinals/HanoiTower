@@ -89,7 +89,7 @@ GameView::mouseReleaseEvent(QMouseEvent* event)
 HanoiStack*
 GameView::calculateStackByPos(const QPointF& point)
 {
-    const float stack_area_height = m_geometry.stack_area.height();
+    const float stack_area_height = height();
     const float stack_area_width  = m_geometry.stack_area.width();
 
     float area_width = stack_area_width;

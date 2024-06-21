@@ -292,7 +292,10 @@ SettingsWindow::drawPreview()
                                          ssize.height(),
                                          pen,
                                          Settings.slice_color);
-        ssize *= Config::SCALE_FACTOR;    // scale down
+        // scale down
+        ssize.setHeight(ssize.height()
+                        * Config::H_SCALE_FACTOR);                 // scale down
+        ssize.setWidth(ssize.width() * Config::W_SCALE_FACTOR);    // scale down
 
         y -= ssize.height();    // shift up
     }

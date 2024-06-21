@@ -16,8 +16,8 @@ GameView::calculateBaseSizes()
 
     m_geometry.stack_area.setHeight(height() * 0.8f);
 
-    m_geometry.slice.setHeight(m_geometry.stack_area.height()
-                               / Config::SLICE_MAX);
+    m_geometry.slice.setHeight(
+        (m_geometry.stack_area.height() / Config::SLICE_MAX) * 1.1f);
 
     m_geometry.slice.setWidth(m_geometry.stack_area.width() * 0.9f);
 
@@ -39,9 +39,9 @@ GameView::scaleStack()
     assert(!m_sprites.stack_base.isNull());
 
     // scale the sprites
-    m_sprites.stack_pole = m_sprites.stack_pole.scaled(
-        m_geometry.slice.width() * 0.1f,
-        m_geometry.slice.height() * Config::SLICE_MAX);
+    m_sprites.stack_pole
+        = m_sprites.stack_pole.scaled(m_geometry.slice.width() * 0.1f,
+                                      m_geometry.stack_area.height());
 
     m_sprites.stack_base
         = m_sprites.stack_base.scaled(m_geometry.stack_base.width(),
@@ -59,8 +59,9 @@ GameView::scaleSlices()
 
     // every slice has a different size
     for (size_t i = 0; i < Config::get().Settings().slice_amount; i++) {
-        m_hanoi.slices[i]->Geometry().height = (height *= Config::SCALE_FACTOR);
-        m_hanoi.slices[i]->Geometry().width  = (width *= Config::SCALE_FACTOR);
+        m_hanoi.slices[i]->Geometry().height
+            = (height *= Config::H_SCALE_FACTOR);
+        m_hanoi.slices[i]->Geometry().width = (width *= Config::W_SCALE_FACTOR);
     }
 }
 
