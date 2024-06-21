@@ -133,7 +133,7 @@ GameView::drawDialog(const QString&  text,
                         dialog);
 
     painter->drawText((width() * 0.5f) - ((text.length() * font_size) * 0.4f),
-                      (height() * 0.5f) + m_geometry.dialog.height() * 0.1f,
+                      (height() * 0.5f) + m_geometry.dialog.height() * 0.15f,
                       text);
 }
 
