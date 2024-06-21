@@ -58,7 +58,7 @@ GameWindow::GameWindow(QWidget *parent)
 
     connect(m_game_view, &GameView::s_paused, this,
             [&]() {
-                ui->TimerOut->setText("PAUSED");
+                ui->TimerOut->setText(" PAUSED ");
                 ui->TimerOut->setIcon(QIcon(QPixmap(Config::get().AssetFiles().PLAY_BTN_ICON)));
             }
     );
