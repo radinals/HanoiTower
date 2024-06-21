@@ -28,8 +28,10 @@ void
 GameView::updateInfo()
 {
     if (m_sidebar_widgets.timer_out != nullptr) {
-        if (has_solver_task()) {
-            m_sidebar_widgets.timer_out->setText(".....");
+        if (m_game_state == GameState::Paused) {
+            m_sidebar_widgets.timer_out->setText(" PAUSED ");
+        } else if (has_solver_task()) {
+            m_sidebar_widgets.timer_out->setText("--:--:--");
         } else {
             auto hh_mm_ss = Utils::extractTimeFromMs(
                 Config::get().Settings().time_length_ms - m_time.elapsed);
