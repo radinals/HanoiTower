@@ -47,7 +47,7 @@ GameWindow::GameWindow(QWidget *parent)
     // hide the buttons
     connect(m_game_view, &GameView::s_game_inactive, this, [&]() { ui->AutoSolveBtn->setDisabled(false); });
     connect(m_game_view, &GameView::s_solver_activated, this, [&]() { ui->AutoSolveBtn->setDisabled(true); });
-    connect(m_game_view, &GameView::s_game_over, this, [&]() { ui->AutoSolveBtn->setDisabled(false); });
+    connect(m_game_view, &GameView::s_game_over, this, [&]() { ui->AutoSolveBtn->setDisabled(true); });
 
     // show the game paused status
     connect(m_game_view, &GameView::s_unpaused, this,
