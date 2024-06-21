@@ -18,6 +18,8 @@ GameWindow::GameWindow(QWidget *parent)
                                     ui->InfoLabel,
                                     ui->InfoOut);
 
+    ui->GameDisplayFrame->layout()->addWidget(m_game_view);
+
     // clang-format off
 
     ui->QuitGameBtn->setIcon(QIcon(QPixmap(Config::get().AssetFiles().QUIT_BTN_ICON)));
@@ -35,16 +37,17 @@ GameWindow::GameWindow(QWidget *parent)
     ui->TimerOut->setIcon(QIcon(QPixmap(Config::get().AssetFiles().PAUSE_BTN_ICON)));
     ui->TimerOut->setIconSize(QSize(ui->TimerOut->size().height(), ui->TimerOut->size().height()));
 
+    ui->AutoSolveBtn->setIcon(QIcon(QPixmap(Config::get().AssetFiles().AUTO_SOLVE_BTN_ICON)));
+    ui->AutoSolveBtn->setIconSize(QSize(ui->AutoSolveBtn->size().height(), ui->AutoSolveBtn->size().height()));
 
     connect(ui->AutoSolveBtn, &QPushButton::clicked, m_game_view, &GameView::solve);
     connect(ui->ResetBtn, &QPushButton::clicked, m_game_view, &GameView::reset);
     connect(ui->TimerOut, &QPushButton::clicked, m_game_view, &GameView::pause);
 
     // hide the buttons
-    connect(m_game_view, &GameView::s_game_inactive, this, [&]() { ui->AutoSolveBtn->show(); });
-    connect(m_game_view, &GameView::s_solver_activated, this, [&]() { ui->AutoSolveBtn->hide(); });
-    connect(m_game_view, &GameView::s_game_inactive, this, [&]() { ui->PauseBtn->hide(); });
-    connect(m_game_view, &GameView::s_game_started, this, [&]() { ui->PauseBtn->show(); });
+    connect(m_game_view, &GameView::s_game_inactive, this, [&]() { ui->AutoSolveBtn->setDisabled(false); });
+    connect(m_game_view, &GameView::s_solver_activated, this, [&]() { ui->AutoSolveBtn->setDisabled(true); });
+    connect(m_game_view, &GameView::s_game_over, this, [&]() { ui->AutoSolveBtn->setDisabled(false); });
 
     // show the game paused status
     connect(m_game_view, &GameView::s_unpaused, this,
@@ -59,10 +62,7 @@ GameWindow::GameWindow(QWidget *parent)
                 ui->TimerOut->setIcon(QIcon(QPixmap(Config::get().AssetFiles().PLAY_BTN_ICON)));
             }
     );
-
     // clang-format on
-
-    ui->GameDisplayFrame->layout()->addWidget(m_game_view);
 }
 
 GameWindow::~GameWindow()

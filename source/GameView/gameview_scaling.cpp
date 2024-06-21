@@ -14,7 +14,7 @@ GameView::calculateBaseSizes()
     m_geometry.stack_area.setWidth(float(width())
                                    / Config::get().Settings().stack_amount);
 
-    m_geometry.stack_area.setHeight(height() * 0.9f);
+    m_geometry.stack_area.setHeight(height() * 0.8f);
 
     m_geometry.slice.setHeight(m_geometry.stack_area.height()
                                / Config::SLICE_MAX);

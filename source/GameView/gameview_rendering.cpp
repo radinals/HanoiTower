@@ -142,11 +142,10 @@ void
 GameView::colorizeSprite(QPixmap* const sprite, const QColor& color)
 {
     assert(sprite != nullptr);
-    assert(!sprite->isNull());
+
+    if (sprite->isNull()) { return; }
 
     QPixmap mask(*sprite);
-
-    if (mask.isNull()) { return; }
 
     QPainter painter;
 

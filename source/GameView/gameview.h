@@ -202,6 +202,7 @@ signals:
     void s_solver_exited();
     void s_game_inactive();
     void s_game_started();
+    void s_game_over();
 };
 
 #endif    // GAMEVIEW_H

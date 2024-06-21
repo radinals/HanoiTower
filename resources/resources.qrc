@@ -17,5 +17,6 @@
         <file>ui/quit_game_btn_icon.png</file>
         <file>ui/pause_btn_icon.png</file>
         <file>ui/play_btn_icon.png</file>
+        <file>ui/auto_solve_btn_icon.png</file>
     </qresource>
 </RCC>

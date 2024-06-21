@@ -40,6 +40,7 @@ private:
         static const inline QString MENU_BTN_ICON = ":/ui/open_menu_btn_icon.png";
         static const inline QString PAUSE_BTN_ICON = ":/ui/pause_btn_icon.png";
         static const inline QString PLAY_BTN_ICON = ":/ui/play_btn_icon.png";
+        static const inline QString AUTO_SOLVE_BTN_ICON = ":/ui/auto_solve_btn_icon.png";
     } m_Assetsfiles;
 
     // clang-format on
