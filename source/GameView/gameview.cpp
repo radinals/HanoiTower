@@ -82,6 +82,7 @@ GameView::pause()
             m_time.timer.stop();
             m_game_state = GameState::Paused;
             emit(s_paused());
+            updateInfo();
             break;
         default:
             return;
