@@ -19,25 +19,47 @@ GameWindow::GameWindow(QWidget *parent)
                                     ui->InfoOut);
 
     // clang-format off
+
+    ui->QuitGameBtn->setIcon(QIcon(QPixmap(Config::get().AssetFiles().QUIT_BTN_ICON)));
+    ui->QuitGameBtn->setIconSize(QSize(ui->QuitGameBtn->size().height(),ui->QuitGameBtn->size().height()));
+
+    ui->ResetBtn->setIcon(QIcon(QPixmap(Config::get().AssetFiles().RESET_BTN_ICON)));
+    ui->ResetBtn->setIconSize(QSize(ui->ResetBtn->size().height(),ui->ResetBtn->size().height()));
+
+    ui->BackToMenuBtn->setIcon(QIcon(QPixmap(Config::get().AssetFiles().MENU_BTN_ICON)));
+    ui->BackToMenuBtn->setIconSize(QSize(ui->BackToMenuBtn->size().height(),ui->BackToMenuBtn->size().height()));
+
+    ui->OpenSettingsBtn->setIcon(QIcon(QPixmap(Config::get().AssetFiles().SETTINGS_BTN_ICON)));
+    ui->OpenSettingsBtn->setIconSize(QSize(ui->OpenSettingsBtn->size().height(),ui->OpenSettingsBtn->size().height()));
+
+    ui->TimerOut->setIcon(QIcon(QPixmap(Config::get().AssetFiles().PAUSE_BTN_ICON)));
+    ui->TimerOut->setIconSize(QSize(ui->TimerOut->size().height(), ui->TimerOut->size().height()));
+
+
     connect(ui->AutoSolveBtn, &QPushButton::clicked, m_game_view, &GameView::solve);
     connect(ui->ResetBtn, &QPushButton::clicked, m_game_view, &GameView::reset);
-    connect(ui->PauseBtn, &QPushButton::clicked, m_game_view, &GameView::pause);
+    connect(ui->TimerOut, &QPushButton::clicked, m_game_view, &GameView::pause);
 
     // hide the buttons
+    connect(m_game_view, &GameView::s_game_inactive, this, [&]() { ui->AutoSolveBtn->show(); });
     connect(m_game_view, &GameView::s_solver_activated, this, [&]() { ui->AutoSolveBtn->hide(); });
-    connect(m_game_view, &GameView::s_solver_exited, this, [&]() { ui->AutoSolveBtn->show(); });
-
     connect(m_game_view, &GameView::s_game_inactive, this, [&]() { ui->PauseBtn->hide(); });
     connect(m_game_view, &GameView::s_game_started, this, [&]() { ui->PauseBtn->show(); });
 
     // show the game paused status
-    connect(m_game_view, &GameView::s_paused, this,
+    connect(m_game_view, &GameView::s_unpaused, this,
             [&]() {
-                ui->InfoLabel->clear();
-                ui->InfoOut->setText("GAME PAUSED");
-                ui->InfoOut->setAlignment(Qt::AlignCenter);
+                ui->TimerOut->setIcon(QIcon(QPixmap(Config::get().AssetFiles().PAUSE_BTN_ICON)));
             }
     );
+
+    connect(m_game_view, &GameView::s_paused, this,
+            [&]() {
+                ui->TimerOut->setText("PAUSED");
+                ui->TimerOut->setIcon(QIcon(QPixmap(Config::get().AssetFiles().PLAY_BTN_ICON)));
+            }
+    );
+
     // clang-format on
 
     ui->GameDisplayFrame->layout()->addWidget(m_game_view);

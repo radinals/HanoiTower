@@ -11,5 +11,11 @@
         <file>ui/up_arrow.png</file>
         <file>ui/logo.png</file>
         <file>ui/down_arrow.png</file>
+        <file>ui/open_menu_btn_icon.png</file>
+        <file>ui/open_settings_btn_icon.png</file>
+        <file>ui/reset_btn_icon.png</file>
+        <file>ui/quit_game_btn_icon.png</file>
+        <file>ui/pause_btn_icon.png</file>
+        <file>ui/play_btn_icon.png</file>
     </qresource>
 </RCC>

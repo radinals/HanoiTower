@@ -10,13 +10,12 @@
 
 #include <QCoreApplication>
 #include <QLabel>
-#include <QMessageBox>
 #include <QPushButton>
 #include <QTextEdit>
 #include <QTime>
-#include <QTimer>
 #include <QWidget>
 #include <atomic>
+#include <qpushbutton.h>
 #include <thread>
 
 #ifndef DISABLE_AUDIO
@@ -44,10 +43,10 @@ public:
     }
 
     // define pointers to the output widgets
-    void setGameInfoOutputs(QLabel    *time,
-                            QLabel    *moves,
-                            QLabel    *info_box_label,
-                            QTextEdit *info_box);
+    void setGameInfoOutputs(QPushButton *time,
+                            QLabel      *moves,
+                            QLabel      *info_box_label,
+                            QTextEdit   *info_box);
 
 private slots:
     // called by timer in every ms
@@ -87,9 +86,9 @@ private:
     } m_selected;
 
     struct SidebarWidgets_t {
-        QLabel *timer_out = nullptr, *move_count_out = nullptr,
-               *info_msg_label  = nullptr;
-        QTextEdit *info_msg_out = nullptr;
+        QPushButton *timer_out      = nullptr;
+        QLabel      *move_count_out = nullptr, *info_msg_label = nullptr;
+        QTextEdit   *info_msg_out = nullptr;
     } m_sidebar_widgets;
 
     struct HanoiData_t {

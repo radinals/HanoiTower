@@ -7,12 +7,13 @@
 #include "../Config/config.h"
 
 #include "gameview.h"
+#include <QPushButton>
 
 void
-GameView::setGameInfoOutputs(QLabel    *time,
-                             QLabel    *moves,
-                             QLabel    *info_box_label,
-                             QTextEdit *info_box)
+GameView::setGameInfoOutputs(QPushButton *time,
+                             QLabel      *moves,
+                             QLabel      *info_box_label,
+                             QTextEdit   *info_box)
 {
     m_sidebar_widgets.timer_out      = time;
     m_sidebar_widgets.move_count_out = moves;

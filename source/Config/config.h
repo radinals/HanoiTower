@@ -33,6 +33,13 @@ private:
         static const inline QString ARROW       = ":/sprites/arrow.png";
         static const inline QString LOGO        = ":/ui/logo.png";
         static const inline QString DIALOG      = ":/sprites/dialog_base.png";
+
+        static const inline QString QUIT_BTN_ICON = ":/ui/quit_game_btn_icon.png";
+        static const inline QString RESET_BTN_ICON = ":/ui/reset_btn_icon.png";
+        static const inline QString SETTINGS_BTN_ICON = ":/ui/open_settings_btn_icon.png";
+        static const inline QString MENU_BTN_ICON = ":/ui/open_menu_btn_icon.png";
+        static const inline QString PAUSE_BTN_ICON = ":/ui/pause_btn_icon.png";
+        static const inline QString PLAY_BTN_ICON = ":/ui/play_btn_icon.png";
     } m_Assetsfiles;
 
     // clang-format on
