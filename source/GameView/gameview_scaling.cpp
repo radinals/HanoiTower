@@ -12,7 +12,7 @@ void
 GameView::calculateBaseSizes()
 {
     Geometry::stack_area.setWidth(float(width())
-                                  / Config::Settings().stack_amount);
+                                  / Config::Settings::stack_amount);
 
     Geometry::stack_area.setHeight(height() * 0.8F);
 
@@ -32,8 +32,8 @@ void
 GameView::scaleStack()
 {
     // fetch the originals
-    m_sprites.stack_pole = QPixmap(Config::AssetFiles().STACK_POLE);
-    m_sprites.stack_base = QPixmap(Config::AssetFiles().STACK_BASE);
+    m_sprites.stack_pole = QPixmap(Config::AssetsFiles::STACK_POLE);
+    m_sprites.stack_base = QPixmap(Config::AssetsFiles::STACK_BASE);
 
     assert(!m_sprites.stack_pole.isNull());
     assert(!m_sprites.stack_base.isNull());
@@ -48,8 +48,8 @@ GameView::scaleStack()
                                       Geometry::stack_base.height());
 
     // tint the sprites
-    colorizeSprite(&m_sprites.stack_base, Config::Theme().stack_tint);
-    colorizeSprite(&m_sprites.stack_pole, Config::Theme().stack_tint);
+    colorizeSprite(&m_sprites.stack_base, Config::Theme::stack_tint);
+    colorizeSprite(&m_sprites.stack_pole, Config::Theme::stack_tint);
 }
 
 void
@@ -58,7 +58,7 @@ GameView::scaleSlices()
     float width = Geometry::slice.width(), height = Geometry::slice.height();
 
     // every slice has a different size
-    for (size_t i = 0; i < Config::Settings().slice_amount; i++) {
+    for (size_t i = 0; i < Config::Settings::slice_amount; i++) {
         HanoiStacks::slices[i]->Geometry().height
             = (height *= Config::H_SCALE_FACTOR);
         HanoiStacks::slices[i]->Geometry().width

@@ -25,7 +25,7 @@ SettingsWindow::SettingsWindow(QWidget* parent)
 
 #ifndef DISABLE_AUDIO
     m_sfx_preview = new QSoundEffect(this);
-    m_sfx_preview->setSource("qrc" + Config::AudioFiles().PLACEMENT_FX);
+    m_sfx_preview->setSource("qrc" + Config::AudioFiles::PLACEMENT_FX);
     assert(m_sfx_preview->status() != QSoundEffect::Error);
 #else
     // hide all audio setting options
@@ -65,14 +65,14 @@ SettingsWindow::~SettingsWindow()
 void
 SettingsWindow::loadDefaults()
 {
-    Settings.stack_amount = Config::Settings().stack_amount;
-    Settings.slice_amount = Config::Settings().slice_amount;
-    Settings.slice_color  = Config::Theme().slice_tint;
-    Settings.stack_color  = Config::Theme().stack_tint;
-    Settings.timer_ms     = Config::Settings().time_length_ms;
+    Settings.stack_amount = Config::Settings::stack_amount;
+    Settings.slice_amount = Config::Settings::slice_amount;
+    Settings.slice_color  = Config::Theme::slice_tint;
+    Settings.stack_color  = Config::Theme::stack_tint;
+    Settings.timer_ms     = Config::Settings::time_length_ms;
 #ifndef DISABLE_AUDIO
-    Settings.sfx_volume_level   = Config::Settings().fx_volume;
-    Settings.music_volume_level = Config::Settings().music_volume;
+    Settings.sfx_volume_level   = Config::Settings::fx_volume;
+    Settings.music_volume_level = Config::Settings::music_volume;
 #endif    // !DISABLE_AUDIO
 }
 
@@ -175,8 +175,7 @@ void
 SettingsWindow::on_CancelButton_clicked()
 {
 #ifndef DISABLE_AUDIO
-    Config::getBackgroundMusicInstance()->setVolume(
-        Config::Settings().music_volume);
+    Config::m_bg_music_output->setVolume(Config::Settings::music_volume);
 #endif
     hide();
 }
@@ -184,34 +183,34 @@ SettingsWindow::on_CancelButton_clicked()
 void
 SettingsWindow::on_SaveButton_clicked()
 {
-    if (Settings.stack_amount != Config::Settings().stack_amount) {
-        Config::Settings().stack_amount = Settings.stack_amount;
+    if (Settings.stack_amount != Config::Settings::stack_amount) {
+        Config::Settings::stack_amount = Settings.stack_amount;
     }
 
-    if (Settings.slice_amount != Config::Settings().slice_amount) {
-        Config::Settings().slice_amount = Settings.slice_amount;
+    if (Settings.slice_amount != Config::Settings::slice_amount) {
+        Config::Settings::slice_amount = Settings.slice_amount;
     }
 
-    if (QColor(Settings.slice_color) != Config::Theme().slice_tint) {
-        Config::Theme().slice_tint = Settings.slice_color;
+    if (QColor(Settings.slice_color) != Config::Theme::slice_tint) {
+        Config::Theme::slice_tint = Settings.slice_color;
     }
 
-    if (QColor(Settings.stack_color) != Config::Theme().stack_tint) {
-        Config::Theme().stack_tint = Settings.stack_color;
+    if (QColor(Settings.stack_color) != Config::Theme::stack_tint) {
+        Config::Theme::stack_tint = Settings.stack_color;
     }
 
-    if (QColor(Settings.timer_ms) != Config::Settings().time_length_ms) {
-        Config::Settings().time_length_ms = Settings.timer_ms;
+    if (QColor(Settings.timer_ms) != Config::Settings::time_length_ms) {
+        Config::Settings::time_length_ms = Settings.timer_ms;
     }
 
 #ifndef DISABLE_AUDIO
-    if (Settings.sfx_volume_level != Config::Settings().fx_volume) {
-        Config::Settings().music_volume = Settings.sfx_volume_level;
-        Config::Settings().fx_volume    = Settings.sfx_volume_level;
+    if (Settings.sfx_volume_level != Config::Settings::fx_volume) {
+        Config::Settings::music_volume = Settings.sfx_volume_level;
+        Config::Settings::fx_volume    = Settings.sfx_volume_level;
     }
 
-    if (Settings.music_volume_level != Config::Settings().music_volume) {
-        Config::Settings().music_volume = Settings.music_volume_level;
+    if (Settings.music_volume_level != Config::Settings::music_volume) {
+        Config::Settings::music_volume = Settings.music_volume_level;
     }
 #endif
     hide();
@@ -332,9 +331,8 @@ SettingsWindow::on_AudioMusicVolSlider_sliderMoved(int position)
 #ifndef DISABLE_AUDIO
     Settings.music_volume_level = (position * 0.01f);
     updateDisplays();
-    if (Config::getBackgroundMusicInstance() != nullptr) {
-        Config::getBackgroundMusicInstance()->setVolume(
-            Settings.music_volume_level);
+    if (Config::m_bg_music_output != nullptr) {
+        Config::m_bg_music_output->setVolume(Settings.music_volume_level);
     }
 #endif
 }

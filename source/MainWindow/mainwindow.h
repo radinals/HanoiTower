@@ -31,7 +31,7 @@ private:
     SettingsWindow *m_settings_window = nullptr;
     GameWindow     *m_game_window     = nullptr;
 
-    const QPixmap m_logo = QPixmap(Config::AssetFiles().LOGO);
+    const QPixmap m_logo = QPixmap(Config::AssetsFiles::LOGO);
 
 #ifndef DISABLE_AUDIO
     struct BackgroundAudio_t {
@@ -54,10 +54,10 @@ private:
             // load the audio source
             m_media_player->setAudioOutput(m_audio_output);
             m_media_player->setSource("qrc"
-                                      + Config::AudioFiles().BACKGROUND_MUSIC);
+                                      + Config::AudioFiles::BACKGROUND_MUSIC);
 
             // configure audio
-            m_audio_output->setVolume(Config::Settings().music_volume);
+            m_audio_output->setVolume(Config::Settings::music_volume);
             m_media_player->setLoops(QMediaPlayer::Infinite);
         };
 

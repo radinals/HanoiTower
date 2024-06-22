@@ -7,6 +7,7 @@
 
 #include "../GameWindow/gamewindow.h"
 #include "../SettingsWindow/settingswindow.h"
+#include "../Utils/utils.h"
 #include "ui_mainwindow.h"
 #include <qmessagebox.h>
 
@@ -16,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    this->setStyleSheet(Config::getDefaultStylesheet());
+    this->setStyleSheet(Utils::getDefaultStylesheet());
 
     m_settings_window = new SettingsWindow(this);
     m_game_window     = new GameWindow(this);
@@ -30,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->GameMenuFrame->show();
 
 #ifndef DISABLE_AUDIO
-    Config::setBackgroundMusicInstance(m_background_music.m_audio_output);
+    Config::m_bg_music_output = m_background_music.m_audio_output;
     m_background_music.m_media_player->play();
 #endif
 

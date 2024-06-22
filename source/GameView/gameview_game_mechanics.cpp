@@ -12,7 +12,7 @@ HanoiStack *
 GameView::getStack(size_t label)
 {
     assert(label >= 0);
-    assert(label < Config::Settings().stack_amount);
+    assert(label < Config::Settings::stack_amount);
 
     return &HanoiStacks::stacks[label];
 }
@@ -46,7 +46,7 @@ size_t
 GameView::getRandomGoalStackIndex()
 {
     const size_t min = 1;
-    const size_t max = Config::Settings().stack_amount - 1;
+    const size_t max = Config::Settings::stack_amount - 1;
 
     std::random_device rdev;
     std::mt19937       gen(rdev());
@@ -70,7 +70,7 @@ GameView::checkWinState()
         TimeInfo::timer.stop();
         emit(s_game_over());
         repaint();
-    } else if (TimeInfo::elapsed >= Config::Settings().time_length_ms) {
+    } else if (TimeInfo::elapsed >= Config::Settings::time_length_ms) {
         m_game_state = GameState::GameOverLost;
         TimeInfo::timer.stop();
         emit(s_game_over());
@@ -93,5 +93,5 @@ bool
 GameView::goalStackIsComplete()
 {
     return (HanoiStacks::goal_stack->getSize()
-            == Config::Settings().slice_amount);
+            == Config::Settings::slice_amount);
 }

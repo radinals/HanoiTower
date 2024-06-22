@@ -4,9 +4,12 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <QFile>
 #include <QString>
 #include <string>
 #include <tuple>
+
+#include "../Config/config.h"
 
 namespace Utils {
 
@@ -36,6 +39,18 @@ namespace Utils {
         str += char('A' + n);
         return QString::fromStdString(str);
     };
+
+    // load and get stylesheet
+    static inline const QString& getDefaultStylesheet()
+    {
+        static QString style_sheet;
+        if (style_sheet.isEmpty()) {
+            QFile file(Config::Theme::default_stylesheet);
+            file.open(QFile::ReadOnly);
+            style_sheet = QLatin1String(file.readAll());
+        }
+        return style_sheet;
+    }
 
 };    // namespace Utils
 

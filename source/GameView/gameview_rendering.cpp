@@ -110,7 +110,7 @@ GameView::drawDialog(const QString&  text,
                      const QColor&   color,
                      QPainter* const painter)
 {
-    QPixmap dialog(Config::AssetFiles().DIALOG);
+    QPixmap dialog(Config::AssetsFiles::DIALOG);
 
     assert(!dialog.isNull());
 

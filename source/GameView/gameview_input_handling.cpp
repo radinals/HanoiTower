@@ -98,7 +98,7 @@ GameView::calculateStackByPos(const QPointF& point)
 
     float area_width = stack_area_width;
 
-    for (size_t i = 0; i < Config::Settings().stack_amount; i++) {
+    for (size_t i = 0; i < Config::Settings::stack_amount; i++) {
         const float x = (point.x() != 0) ? (point.x() / area_width) : 0;
         const float y = (point.y() != 0) ? (point.y() / stack_area_height) : 0;
 
