@@ -257,18 +257,18 @@ SettingsWindow::drawPreview()
     // Draw the base and the pole -------------------------------------------
 
     const float start_x
-        = ((sceneW * 0.5f) - (total_stacks_area * 0.5f)) + hpadding;
+        = ((sceneW * 0.5F) - (total_stacks_area * 0.5F)) + hpadding;
 
     float x = start_x;
     for (size_t i = 0; i < Settings.stack_amount; i++) {
-        ui->PreviewOut->scene()->addRect(x - (stack_pole.width() * 0.5f),
+        ui->PreviewOut->scene()->addRect(x - (stack_pole.width() * 0.5F),
                                          sceneH - stack_pole.height(),
                                          stack_pole.width(),
                                          stack_pole.height(),
                                          pen,
                                          Settings.stack_color);
 
-        ui->PreviewOut->scene()->addRect(x - (stack_base.width() * 0.5f),
+        ui->PreviewOut->scene()->addRect(x - (stack_base.width() * 0.5F),
                                          sceneH - stack_base.height(),
                                          stack_base.width(),
                                          stack_base.height(),
@@ -286,7 +286,7 @@ SettingsWindow::drawPreview()
         = sceneH - (stack_base.height() + base_slice.height());    // bottom y
 
     for (size_t i = 0; i < Settings.slice_amount; i++) {
-        ui->PreviewOut->scene()->addRect(start_x - (ssize.width() * 0.5f),
+        ui->PreviewOut->scene()->addRect(start_x - (ssize.width() * 0.5F),
                                          y,
                                          ssize.width(),
                                          ssize.height(),

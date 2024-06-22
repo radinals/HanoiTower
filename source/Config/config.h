@@ -21,11 +21,12 @@ class Config {
     struct GameSettings_t;
 
 public:
+    static constexpr int           SOLVER_DELAY       = 10;    // ms
     static constexpr size_t        SLICE_MAX          = 10;
     static constexpr size_t        STACK_MAX          = 5;
     static constexpr long long int TIMER_MIN          = 60000 * 3;
-    static constexpr float         H_SCALE_FACTOR     = 0.95f;
-    static constexpr float         W_SCALE_FACTOR     = 0.9f;
+    static constexpr float         H_SCALE_FACTOR     = 0.95F;
+    static constexpr float         W_SCALE_FACTOR     = 0.9F;
     static const inline QColor     DEFAULT_STACK_TINT = "#71391c";
     static const inline QColor     DEFAULT_SLICE_TINT = "#7e1313";
 

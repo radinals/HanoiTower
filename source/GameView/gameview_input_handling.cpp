@@ -12,9 +12,9 @@
 // on mouse press, pop the slice of the stack below the mouse click,
 // and store it.
 void
-GameView::mousePressEvent(QMouseEvent* event)
+GameView::mousePressEvent(QMouseEvent* const event)
 {
-    if (m_selected.hasSelected() || m_game_state != GameState::Running
+    if (SelectedSlice::hasSelected() || m_game_state != GameState::Running
         || (event->pos().x() <= 0 || event->pos().y() <= 0)
         || (event->pos().x() >= width() || event->pos().y() >= height())) {
         return;
@@ -32,51 +32,53 @@ GameView::mousePressEvent(QMouseEvent* event)
         return;
     }
 
-    m_selected.slice = clicked_stack->pop();
-    m_selected.stack = clicked_stack;
+    SelectedSlice::slice = clicked_stack->pop();
+    SelectedSlice::stack = clicked_stack;
 
     moveSelectedSlice(event->pos());
+    update();
 }
 
 // on mouse move, if a slice is stored from a clicked event, update
 // the slice coordinate to be the cursor coordinates and redraw screen.
 void
-GameView::mouseMoveEvent(QMouseEvent* event)
+GameView::mouseMoveEvent(QMouseEvent* const event)
 {
-    if (!m_selected.hasSelected() || m_game_state != GameState::Running
+    if (!SelectedSlice::hasSelected() || m_game_state != GameState::Running
         || (event->pos().x() <= 0 || event->pos().y() <= 0)
         || (event->pos().x() >= width() || event->pos().y() >= height())) {
         return;
     }
 
     moveSelectedSlice(event->pos());
+    update();
 }
 
 // on mouse release, if holding any slice, place the slice in
 // the stack where the mouse was released, or just put it back.
 void
-GameView::mouseReleaseEvent(QMouseEvent* event)
+GameView::mouseReleaseEvent(QMouseEvent* const event)
 {
-    if (!m_selected.hasSelected() || m_game_state != GameState::Running) {
+    if (!SelectedSlice::hasSelected() || m_game_state != GameState::Running) {
         return;
     }
 
     try {
         HanoiStack* destination_stack
             = calculateStackByPos(event->position().toPoint());
-        destination_stack->push(m_selected.slice);
+        destination_stack->push(SelectedSlice::slice);
         m_move_count++;
     } catch (...) {
-        m_selected.stack->push(m_selected.slice);
+        SelectedSlice::stack->push(SelectedSlice::slice);
     }
 
-    if (m_game_state == GameState::Running && !m_time.timer.isActive()) {
-        m_time.timer.start(1);
+    if (m_game_state == GameState::Running && !TimeInfo::timer.isActive()) {
+        TimeInfo::timer.start(1);
         emit(s_game_started());
     }
 
-    m_selected.stack = nullptr;
-    m_selected.slice = nullptr;
+    SelectedSlice::stack = nullptr;
+    SelectedSlice::slice = nullptr;
 
     update();
 
@@ -92,7 +94,7 @@ HanoiStack*
 GameView::calculateStackByPos(const QPointF& point)
 {
     const float stack_area_height = height();
-    const float stack_area_width  = m_geometry.stack_area.width();
+    const float stack_area_width  = Geometry::stack_area.width();
 
     float area_width = stack_area_width;
 
@@ -101,7 +103,7 @@ GameView::calculateStackByPos(const QPointF& point)
         const float y = (point.y() != 0) ? (point.y() / stack_area_height) : 0;
 
         if ((x >= 0 && x <= 1) && (y >= 0 && y <= 1)) {
-            return &m_hanoi.stacks[i];
+            return &HanoiStacks::stacks[i];
         }
 
         area_width += stack_area_width;

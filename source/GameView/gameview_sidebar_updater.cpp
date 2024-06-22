@@ -15,10 +15,10 @@ GameView::setGameInfoOutputs(QPushButton *time,
                              QLabel      *info_box_label,
                              QTextEdit   *info_box)
 {
-    m_sidebar_widgets.timer_out      = time;
-    m_sidebar_widgets.move_count_out = moves;
-    m_sidebar_widgets.info_msg_out   = info_box;
-    m_sidebar_widgets.info_msg_label = info_box_label;
+    SidebarWidgets::timer_out      = time;
+    SidebarWidgets::move_count_out = moves;
+    SidebarWidgets::info_msg_out   = info_box;
+    SidebarWidgets::info_msg_label = info_box_label;
 }
 
 // update the Game's sidebar information
@@ -27,14 +27,14 @@ GameView::setGameInfoOutputs(QPushButton *time,
 void
 GameView::updateInfo()
 {
-    if (m_sidebar_widgets.timer_out != nullptr) {
+    if (SidebarWidgets::timer_out != nullptr) {
         if (m_game_state == GameState::Paused) {
-            m_sidebar_widgets.timer_out->setText(" PAUSED ");
+            SidebarWidgets::timer_out->setText(" PAUSED ");
         } else if (has_solver_task()) {
-            m_sidebar_widgets.timer_out->setText("--:--:--");
+            SidebarWidgets::timer_out->setText("--:--:--");
         } else {
             auto hh_mm_ss = Utils::extractTimeFromMs(
-                Config::Settings().time_length_ms - m_time.elapsed);
+                Config::Settings().time_length_ms - TimeInfo::elapsed);
 
             QString h, m, s;
             h = QString::number(std::get<0>(hh_mm_ss));
@@ -45,24 +45,23 @@ GameView::updateInfo()
             if (std::get<1>(hh_mm_ss) < 10) { m = '0' + m; }
             if (std::get<2>(hh_mm_ss) < 10) { s = '0' + s; }
 
-            m_sidebar_widgets.timer_out->setText(h + ":" + m + ":" + s);
+            SidebarWidgets::timer_out->setText(h + ":" + m + ":" + s);
         }
     }
 
-    if (m_sidebar_widgets.move_count_out != nullptr) {
-        m_sidebar_widgets.move_count_out->setText(
-            QString::number(m_move_count));
+    if (SidebarWidgets::move_count_out != nullptr) {
+        SidebarWidgets::move_count_out->setText(QString::number(m_move_count));
     }
 
-    if (m_sidebar_widgets.info_msg_label != nullptr) {
-        m_sidebar_widgets.info_msg_label->setText("OBJECTIVES");
-        m_sidebar_widgets.info_msg_label->setAlignment(Qt::AlignCenter);
+    if (SidebarWidgets::info_msg_label != nullptr) {
+        SidebarWidgets::info_msg_label->setText("OBJECTIVES");
+        SidebarWidgets::info_msg_label->setAlignment(Qt::AlignCenter);
     }
 
-    if (m_sidebar_widgets.info_msg_out != nullptr) {
-        m_sidebar_widgets.info_msg_out->setText(
+    if (SidebarWidgets::info_msg_out != nullptr) {
+        SidebarWidgets::info_msg_out->setText(
             "Move All Slice to Stack "
-            + Utils::numToChar(m_hanoi.goal_stack->getLabel()));
-        m_sidebar_widgets.info_msg_out->setAlignment(Qt::AlignCenter);
+            + Utils::numToChar(HanoiStacks::goal_stack->getLabel()));
+        SidebarWidgets::info_msg_out->setAlignment(Qt::AlignCenter);
     }
 }

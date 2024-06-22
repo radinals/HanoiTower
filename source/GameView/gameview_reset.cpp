@@ -27,7 +27,7 @@ GameView::resetStacks()
     //-------------------------------------------------------------------------
 
     for (size_t i = 0; i < Config::Settings().stack_amount; i++) {
-        m_hanoi.stacks[i].clearStack();
+        HanoiStacks::stacks[i].clearStack();
     }
 
     // scale the stacks
@@ -57,9 +57,10 @@ GameView::resetSlices()
     //-------------------------------------------------------------------------
 
     // populate the first stack
-    HanoiStack::fillStack(&m_hanoi.stacks[0], Config::Settings().slice_amount);
+    HanoiStack::fillStack(&HanoiStacks::stacks[0],
+                          Config::Settings().slice_amount);
 
-    assert(m_hanoi.stacks[0].getSize() == Config::Settings().slice_amount);
+    assert(HanoiStacks::stacks[0].getSize() == Config::Settings().slice_amount);
 
     //-------------------------------------------------------------------------
 
@@ -67,13 +68,13 @@ GameView::resetSlices()
     // check if the array should be reallocated or just be reused instead
 
     // fill the array with default values
-    std::memset(&m_hanoi.slices, 0, Config::Settings().slice_amount);
+    std::memset(&HanoiStacks::slices, 0, Config::Settings().slice_amount);
 
     // save the slices to the array
-    HanoiSlice *slice = m_hanoi.stacks[0].getTop();
+    HanoiSlice *slice = HanoiStacks::stacks[0].getTop();
     while (slice != nullptr) {
-        m_hanoi.slices[slice->getValue()] = slice;
-        slice                             = slice->next;
+        HanoiStacks::slices[slice->getValue()] = slice;
+        slice                                  = slice->next;
     }
 
     //-------------------------------------------------------------------------
@@ -92,8 +93,8 @@ GameView::setGoalStack()
     assert(goalStackLabel < Config::Settings().stack_amount);
 
     // save the address of the stack
-    m_hanoi.goal_stack = getStack(goalStackLabel);
+    HanoiStacks::goal_stack = getStack(goalStackLabel);
 
-    assert(m_hanoi.goal_stack != nullptr);
-    assert(m_hanoi.goal_stack->getLabel() == goalStackLabel);
+    assert(HanoiStacks::goal_stack != nullptr);
+    assert(HanoiStacks::goal_stack->getLabel() == goalStackLabel);
 }

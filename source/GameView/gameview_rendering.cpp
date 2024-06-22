@@ -25,13 +25,13 @@ GameView::drawStack(float             offset,
 
     if (stack->isEmpty()) { return; }
 
-    float y = height() - m_geometry.stack_base.height();
+    float y = height() - Geometry::stack_base.height();
 
     HanoiSlice* slice = stack->getTail();
     while (slice != nullptr) {
         y -= std::floor(slice->Geometry().height);
 
-        slice->Geometry().x = offset - (slice->Geometry().width * 0.5f);
+        slice->Geometry().x = offset - (slice->Geometry().width * 0.5F);
         slice->Geometry().y = y;
 
         painter->drawPixmap(QPointF(slice->Geometry().x, slice->Geometry().y),
@@ -54,43 +54,43 @@ GameView::drawStackBase(size_t label, float offset, QPainter* const painter)
     const float pole_y = height() - m_sprites.stack_pole.height();
 
     // draw the pole
-    painter->drawPixmap(offset - (m_sprites.stack_pole.width() * 0.5f),
+    painter->drawPixmap(offset - (m_sprites.stack_pole.width() * 0.5F),
                         pole_y,
                         m_sprites.stack_pole);
 
     // draw the base
-    painter->drawPixmap(offset - (m_geometry.stack_base.width() * 0.5f),
-                        height() - m_geometry.stack_base.height(),
+    painter->drawPixmap(offset - (Geometry::stack_base.width() * 0.5F),
+                        height() - Geometry::stack_base.height(),
                         m_sprites.stack_base);
 
     //--Draw Stack Label--------------------------------------------------
 
-    const QFont font(Config::Theme().font_name,              // fontname
-                     m_geometry.stack_base.width() * 0.1f    // size
+    const QFont font(Config::Theme().font_name,             // fontname
+                     Geometry::stack_base.width() * 0.1F    // size
     );
 
     QColor font_color = Config::Theme().font_color;
 
     // highlight + draw the indicator if current stack is the goal stack
-    if (label == (m_hanoi.goal_stack->getLabel())) {
+    if (label == (HanoiStacks::goal_stack->getLabel())) {
         font_color = Config::Theme().highlight_tint;
 
-        if (!m_time.timer.isActive() && m_game_state == GameState::Running) {
+        if (!TimeInfo::timer.isActive() && m_game_state == GameState::Running) {
             const QPixmap arrow_sprite = m_sprites.arrow.scaled(
-                offset - m_geometry.stack_area.width() * 0.5f,
-                m_geometry.stack_base.width() * 0.1f);
+                offset - Geometry::stack_area.width() * 0.5F,
+                Geometry::stack_base.width() * 0.1F);
 
             assert(!arrow_sprite.isNull());
 
-            painter->drawPixmap(m_geometry.stack_area.width() * 0.5f,
+            painter->drawPixmap(Geometry::stack_area.width() * 0.5F,
                                 pole_y - (arrow_sprite.height()),
                                 arrow_sprite);
         } else {
-            const float box_size = (m_geometry.stack_base.width() * 0.1f) + 4;
-            painter->fillRect(offset - (box_size * 0.5f),    // x
-                              pole_y - (box_size * 0.5f),    // y
+            const float box_size = (Geometry::stack_base.width() * 0.1F) + 4;
+            painter->fillRect(offset - (box_size * 0.5F),    // x
+                              pole_y - (box_size * 0.5F),    // y
                               box_size,                      // w
-                              box_size * 0.2f,               // h
+                              box_size * 0.2F,               // h
                               Config::Theme().highlight_tint);
         }
     }
@@ -100,7 +100,7 @@ GameView::drawStackBase(size_t label, float offset, QPainter* const painter)
     painter->setFont(font);
 
     // draw the stack label
-    painter->drawText(offset - (painter->font().pointSizeF() * 0.5f),
+    painter->drawText(offset - (painter->font().pointSizeF() * 0.5F),
                       pole_y - painter->font().pointSizeF(),
                       Utils::numToChar(label));
 }
@@ -114,13 +114,13 @@ GameView::drawDialog(const QString&  text,
 
     assert(!dialog.isNull());
 
-    dialog = dialog.scaled(m_geometry.dialog.toSize());
+    dialog = dialog.scaled(Geometry::dialog.toSize());
 
     colorizeSprite(&dialog, color);
 
     // setup font
-    const QFont font(Config::Theme().font_name,                   // fontname
-                     m_geometry.dialog.width() / text.length()    // size
+    const QFont font(Config::Theme().font_name,                  // fontname
+                     Geometry::dialog.width() / text.length()    // size
     );
     painter->setFont(font);
     const int font_size = painter->font().pointSizeF();
@@ -128,12 +128,12 @@ GameView::drawDialog(const QString&  text,
     // set text color
     painter->setPen(Config::Theme().font_color);
 
-    painter->drawPixmap((width() * 0.5f) - (dialog.width() * 0.5f),
-                        (height() * 0.5f) - (m_geometry.dialog.height() * 0.5f),
+    painter->drawPixmap((width() * 0.5F) - (dialog.width() * 0.5F),
+                        (height() * 0.5F) - (Geometry::dialog.height() * 0.5F),
                         dialog);
 
-    painter->drawText((width() * 0.5f) - ((text.length() * font_size) * 0.4f),
-                      (height() * 0.5f) + m_geometry.dialog.height() * 0.15f,
+    painter->drawText((width() * 0.5F) - ((text.length() * font_size) * 0.4f),
+                      (height() * 0.5F) + Geometry::dialog.height() * 0.15F,
                       text);
 }
 
@@ -178,19 +178,19 @@ GameView::paintEvent(QPaintEvent* event)
     updateInfo();
 
     // render the stacks and slices
-    float x_offset = m_geometry.stack_area.width() * 0.5f;
+    float x_offset = Geometry::stack_area.width() * 0.5F;
     for (size_t i = 0; i < Config::Settings().stack_amount; i++) {
-        drawStack(x_offset, &m_hanoi.stacks[i], &p);
-        x_offset += m_geometry.stack_area.width();    // shift to the right
+        drawStack(x_offset, &HanoiStacks::stacks[i], &p);
+        x_offset += Geometry::stack_area.width();    // shift to the right
     }
 
     // render the selected slice
-    if (m_selected.hasSelected()) {
+    if (SelectedSlice::hasSelected()) {
         p.drawPixmap(
-            m_selected.slice->Geometry().x,
-            m_selected.slice->Geometry().y,
-            m_sprites.slice.scaled(m_selected.slice->Geometry().width,
-                                   m_selected.slice->Geometry().height));
+            SelectedSlice::slice->Geometry().x,
+            SelectedSlice::slice->Geometry().y,
+            m_sprites.slice.scaled(SelectedSlice::slice->Geometry().width,
+                                   SelectedSlice::slice->Geometry().height));
     }
 
     // render the game over screens

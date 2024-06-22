@@ -11,21 +11,21 @@
 void
 GameView::calculateBaseSizes()
 {
-    m_geometry.stack_area.setWidth(float(width())
-                                   / Config::Settings().stack_amount);
+    Geometry::stack_area.setWidth(float(width())
+                                  / Config::Settings().stack_amount);
 
-    m_geometry.stack_area.setHeight(height() * 0.8f);
+    Geometry::stack_area.setHeight(height() * 0.8F);
 
-    m_geometry.slice.setHeight(
-        (m_geometry.stack_area.height() / Config::SLICE_MAX) * 1.1f);
+    Geometry::slice.setHeight(
+        (Geometry::stack_area.height() / Config::SLICE_MAX) * 1.1F);
 
-    m_geometry.slice.setWidth(m_geometry.stack_area.width() * 0.9f);
+    Geometry::slice.setWidth(Geometry::stack_area.width() * 0.9F);
 
-    m_geometry.stack_base.setWidth(m_geometry.slice.width() * 1.1f);
-    m_geometry.stack_base.setHeight(m_geometry.slice.height() * 0.5f);
+    Geometry::stack_base.setWidth(Geometry::slice.width() * 1.1F);
+    Geometry::stack_base.setHeight(Geometry::slice.height() * 0.5F);
 
-    m_geometry.dialog.setWidth(width() * 0.4f);
-    m_geometry.dialog.setHeight(height() * 0.2f);
+    Geometry::dialog.setWidth(width() * 0.4F);
+    Geometry::dialog.setHeight(height() * 0.2F);
 }
 
 void
@@ -40,12 +40,12 @@ GameView::scaleStack()
 
     // scale the sprites
     m_sprites.stack_pole
-        = m_sprites.stack_pole.scaled(m_geometry.slice.width() * 0.1f,
-                                      m_geometry.stack_area.height());
+        = m_sprites.stack_pole.scaled(Geometry::slice.width() * 0.1F,
+                                      Geometry::stack_area.height());
 
     m_sprites.stack_base
-        = m_sprites.stack_base.scaled(m_geometry.stack_base.width(),
-                                      m_geometry.stack_base.height());
+        = m_sprites.stack_base.scaled(Geometry::stack_base.width(),
+                                      Geometry::stack_base.height());
 
     // tint the sprites
     colorizeSprite(&m_sprites.stack_base, Config::Theme().stack_tint);
@@ -55,13 +55,14 @@ GameView::scaleStack()
 void
 GameView::scaleSlices()
 {
-    float width = m_geometry.slice.width(), height = m_geometry.slice.height();
+    float width = Geometry::slice.width(), height = Geometry::slice.height();
 
     // every slice has a different size
     for (size_t i = 0; i < Config::Settings().slice_amount; i++) {
-        m_hanoi.slices[i]->Geometry().height
+        HanoiStacks::slices[i]->Geometry().height
             = (height *= Config::H_SCALE_FACTOR);
-        m_hanoi.slices[i]->Geometry().width = (width *= Config::W_SCALE_FACTOR);
+        HanoiStacks::slices[i]->Geometry().width
+            = (width *= Config::W_SCALE_FACTOR);
     }
 }
 

@@ -20,7 +20,7 @@ GameView::hanoiIterativeSolver()
     size_t source = 0;
 
     // the goal of the slices
-    size_t dest = m_hanoi.goal_stack->getLabel();
+    size_t dest = HanoiStacks::goal_stack->getLabel();
 
     // this should be either the slice after the first one,
     // or the slice after the goal stack
@@ -39,11 +39,11 @@ GameView::hanoiIterativeSolver()
         aux  = tmp;
     }
 
-    for (int i = 1; i <= possible_moves && !m_solver_task.stop_solving; i++) {
+    for (int i = 1; i <= possible_moves && !SolverTask::stop_solving; i++) {
         // pauses the loop in place
-        while (m_solver_task.pause_solving) {
+        while (SolverTask::pause_solving) {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
-            if (m_solver_task.stop_solving) { return; }
+            if (SolverTask::stop_solving) { return; }
         }
 
         // main algorithm
@@ -61,7 +61,8 @@ GameView::hanoiIterativeSolver()
         QMetaObject::invokeMethod(this, "repaint", Qt::QueuedConnection);
 
         // wait for some time
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        std::this_thread::sleep_for(
+            std::chrono::milliseconds(Config::SOLVER_DELAY));
     }
 
     emit(s_solver_exited());
@@ -73,13 +74,13 @@ GameView::hanoiIterativeSolver()
 bool
 GameView::has_solver_task()
 {
-    return m_solver_task.work_thread != nullptr;
+    return SolverTask::work_thread != nullptr;
 }
 
 bool
 GameView::has_paused_solver_task()
 {
-    return has_solver_task() && m_solver_task.pause_solving;
+    return has_solver_task() && SolverTask::pause_solving;
 }
 
 // starts or stops the solver task
@@ -88,21 +89,21 @@ GameView::stop_solver_task()
 {
     assert(has_solver_task());
 
-    m_solver_task.stop_solving = true;
+    SolverTask::stop_solving = true;
 
     // wait for the thread to exit
-    if (m_solver_task.work_thread->joinable()) {
-        m_solver_task.work_thread->join();
+    if (SolverTask::work_thread->joinable()) {
+        SolverTask::work_thread->join();
     }
 
     // de-allocate the thread
-    delete m_solver_task.work_thread;
+    delete SolverTask::work_thread;
 
     // reset the states
-    m_solver_task.pause_solving = false;
-    m_solver_task.stop_solving  = false;
+    SolverTask::pause_solving = false;
+    SolverTask::stop_solving  = false;
 
-    m_solver_task.work_thread = nullptr;
+    SolverTask::work_thread = nullptr;
 }
 
 void
@@ -111,7 +112,7 @@ GameView::start_solver_task()
     assert(!has_solver_task());
 
     // start the thread;
-    m_solver_task.work_thread
+    SolverTask::work_thread
         = new std::thread(&GameView::hanoiIterativeSolver, this);
 }
 
@@ -121,12 +122,12 @@ void
 GameView::unpause_solver_task()
 {
     assert(has_paused_solver_task());
-    m_solver_task.pause_solving = false;
+    SolverTask::pause_solving = false;
 }
 
 void
 GameView::pause_solver_task()
 {
     assert(!has_paused_solver_task());
-    m_solver_task.pause_solving = true;
+    SolverTask::pause_solving = true;
 }

@@ -20,10 +20,10 @@ GameView::GameView(QWidget* parent) : QWidget { parent }
 {
     // init timer.
     // timer will call checkWinState every tick (should be every 1ms).
-    connect(&m_time.timer, &QTimer::timeout, this, &GameView::checkWinState);
+    connect(&TimeInfo::timer, &QTimer::timeout, this, &GameView::checkWinState);
 
     for (size_t i = 0; i < Config::STACK_MAX; i++) {
-        m_hanoi.stacks[i] = HanoiStack(i);
+        HanoiStacks::stacks[i] = HanoiStack(i);
     }
 
 // load the placement sound effect
@@ -53,7 +53,8 @@ GameView::solve()
 
     m_game_state = GameState::AutoSolving;
 
-    m_time.timer.start(1);    // start timer (helps with the winstate checking)
+    TimeInfo::timer.start(
+        1);    // start timer (helps with the winstate checking)
 
     repaint();    // repaint first
 
@@ -65,7 +66,7 @@ GameView::pause()
 {
     switch (m_game_state) {
         case GameState::Paused:
-            m_time.timer.start(1);
+            TimeInfo::timer.start(1);
             updateInfo();
             if (has_paused_solver_task()) {
                 unpause_solver_task();
@@ -78,8 +79,8 @@ GameView::pause()
         case GameState::AutoSolving:
             pause_solver_task();
         case GameState::Running:
-            if (!m_time.timer.isActive()) { return; }
-            m_time.timer.stop();
+            if (!TimeInfo::timer.isActive()) { return; }
+            TimeInfo::timer.stop();
             m_game_state = GameState::Paused;
             emit(s_paused());
             updateInfo();
@@ -97,10 +98,10 @@ GameView::reset()
     if (has_solver_task()) { stop_solver_task(); }
 
     // reset some states
-    m_time.elapsed = m_move_count = 0;
+    TimeInfo::elapsed = m_move_count = 0;
 
     // stop the timer (if any)
-    m_time.timer.stop();
+    TimeInfo::timer.stop();
 
     // clear the stacks, and resize if needed
     clear();

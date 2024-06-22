@@ -53,54 +53,53 @@ private slots:
     void checkWinState();
 
 private:
-    size_t m_move_count = 0;
+    static inline size_t m_move_count = 0;
 
 #ifndef DISABLE_AUDIO
     QSoundEffect *m_placement_fx = nullptr;
 #endif
 
-    struct GameSprites_t {
+    struct GameSprites {
         QColor  stack_tint, slice_tint;
         QPixmap stack_pole, stack_base, arrow, slice;
     } m_sprites;
 
-    struct Geometry_t {
-        QSizeF stack_area, stack_base, slice, dialog;
-    } m_geometry;
+    struct Geometry {
+        static inline QSizeF stack_area, stack_base, slice, dialog;
+    };
 
     struct SelectedSlice {
-        HanoiStack *stack = nullptr;    // source stack
-        HanoiSlice *slice = nullptr;    // selected slice
+        static inline HanoiStack *stack = nullptr;    // source stack
+        static inline HanoiSlice *slice = nullptr;    // selected slice
 
-        inline bool hasSelected()
+        static inline bool hasSelected()
         {
             return stack != nullptr && slice != nullptr;
         }
-    } m_selected;
+    };
 
-    struct SidebarWidgets_t {
-        QLabel      *move_count_out = nullptr, *info_msg_label = nullptr;
-        QPushButton *timer_out    = nullptr;
-        QTextEdit   *info_msg_out = nullptr;
-    } m_sidebar_widgets;
+    struct SidebarWidgets {
+        static inline QLabel *move_count_out    = nullptr,
+                             *info_msg_label    = nullptr;
+        static inline QPushButton *timer_out    = nullptr;
+        static inline QTextEdit   *info_msg_out = nullptr;
+    };
 
-    struct HanoiData_t {
+    struct HanoiStacks {
         // all slices in game
-        // LinkedList<HanoiSlice *> slices;
         static inline HanoiSlice *slices[Config::SLICE_MAX];
 
         // all stack in game
         static inline HanoiStack stacks[Config::STACK_MAX];
 
-        // points to a stack in m_stack
+        // points to the target stack in the game
         static inline HanoiStack *goal_stack = nullptr;
+    };
 
-    } m_hanoi;
-
-    struct TimeInfo_t {
-        QTimer        timer;
-        long long int elapsed = 0;    // ms
-    } m_time;
+    struct TimeInfo {
+        static inline QTimer        timer;
+        static inline long long int elapsed = 0;    // ms
+    };
 
     enum class GameState {
         NotRunning,
@@ -113,21 +112,21 @@ private:
 
     GameState m_game_state = GameState::NotRunning;
 
-    struct SolverTask_t {
-        std::atomic_bool stop_solving  = false;
-        std::atomic_bool pause_solving = false;
-        std::thread     *work_thread   = nullptr;
-    } m_solver_task;
+    struct SolverTask {
+        static inline std::atomic_bool stop_solving  = false;
+        static inline std::atomic_bool pause_solving = false;
+        static inline std::thread     *work_thread   = nullptr;
+    };
 
     void clear();    // reset the game states
 
-    bool has_solver_task();
-    bool has_paused_solver_task();
+    static bool has_solver_task();
+    static bool has_paused_solver_task();
 
-    void stop_solver_task();
-    void start_solver_task();
-    void pause_solver_task();
-    void unpause_solver_task();
+    void        start_solver_task();
+    static void stop_solver_task();
+    static void pause_solver_task();
+    static void unpause_solver_task();
 
     void resetStacks();
     void resetSlices();
@@ -143,7 +142,7 @@ private:
     void updateInfo();
 
     // get pointer to stack of 'label'
-    HanoiStack *getStack(size_t label);
+    static HanoiStack *getStack(size_t label);
 
     // handles drawing/rendering
     void drawStack(float offset, HanoiStack *const, QPainter *const p);
@@ -160,17 +159,17 @@ private:
     // QWidget Event Handlers
 
     // input event
-    void mousePressEvent(QMouseEvent *) override;
-    void mouseReleaseEvent(QMouseEvent *) override;
-    void mouseMoveEvent(QMouseEvent *) override;
+    void mousePressEvent(QMouseEvent *const) override;
+    void mouseReleaseEvent(QMouseEvent *const) override;
+    void mouseMoveEvent(QMouseEvent *const) override;
 
     // render events
-    void paintEvent(QPaintEvent *) override;
-    void resizeEvent(QResizeEvent *) override;
+    void paintEvent(QPaintEvent *const) override;
+    void resizeEvent(QResizeEvent *const) override;
 
     // widget state event
-    void hideEvent(QHideEvent *) override;
-    void showEvent(QShowEvent *) override;
+    void hideEvent(QHideEvent *const) override;
+    void showEvent(QShowEvent *const) override;
 
     // tints pixmaps
     static void colorizeSprite(QPixmap *const, const QColor &);
@@ -182,10 +181,13 @@ private:
     static size_t getRandomGoalStackIndex();
 
     // move slice stored by m_selected, to the QPoints x and y values
-    void moveSelectedSlice(const QPoint &p);
+    static void moveSelectedSlice(const QPoint &p);
 
     // check if the goal stack has all valid slices in it
-    bool goalStackIsComplete();
+    static bool goalStackIsComplete();
+
+    inline static bool moveisLegal(const HanoiStack &source,
+                                   const HanoiStack &dest);
 
 signals:
     void s_hidden();
