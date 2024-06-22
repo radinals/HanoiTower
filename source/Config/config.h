@@ -15,6 +15,11 @@
 #endif    // !DISABLE_AUDIO
 
 class Config {
+    struct AssetsFiles_t;
+    struct AudioFiles_t;
+    struct Theme_t;
+    struct GameSettings_t;
+
 public:
     static constexpr size_t        SLICE_MAX          = 10;
     static constexpr size_t        STACK_MAX          = 5;
@@ -23,6 +28,43 @@ public:
     static constexpr float         W_SCALE_FACTOR     = 0.9f;
     static const inline QColor     DEFAULT_STACK_TINT = "#71391c";
     static const inline QColor     DEFAULT_SLICE_TINT = "#7e1313";
+
+public:
+    //------------------------------------------------------------------------
+
+    static const AssetsFiles_t& AssetFiles() { return get().m_Assetsfiles; }
+    static Theme_t&             Theme() { return get().m_theme; }
+    static GameSettings_t&      Settings() { return get().m_settings; }
+
+    //------------------------------------------------------------------------
+
+    // load and get stylesheet
+    static const QString& getDefaultStylesheet()
+    {
+        static QString style_sheet;
+        if (style_sheet.isEmpty()) {
+            QFile file(m_defaultStylesheet);
+            file.open(QFile::ReadOnly);
+            style_sheet = QLatin1String(file.readAll());
+        }
+        return style_sheet;
+    }
+
+    //------------------------------------------------------------------------
+
+#ifndef DISABLE_AUDIO
+    static const AudioFiles_t& AudioFiles() { return get().m_Audiofiles; }
+
+    static void setBackgroundMusicInstance(QAudioOutput* i)
+    {
+        get().m_backgroundMusicInstance = i;
+    }
+
+    static QAudioOutput* const getBackgroundMusicInstance()
+    {
+        return get().m_backgroundMusicInstance;
+    }
+#endif    // !DISABLE_AUDIO
 
 private:
     // clang-format off
@@ -81,43 +123,6 @@ private:
         static Config instance;
         return instance;
     }
-
-public:
-    //------------------------------------------------------------------------
-
-    static const AssetsFiles_t& AssetFiles() { return get().m_Assetsfiles; }
-    static Theme_t&             Theme() { return get().m_theme; }
-    static GameSettings_t&      Settings() { return get().m_settings; }
-
-    //------------------------------------------------------------------------
-
-    // load and get stylesheet
-    static const QString& getDefaultStylesheet()
-    {
-        static QString style_sheet;
-        if (style_sheet.isEmpty()) {
-            QFile file(m_defaultStylesheet);
-            file.open(QFile::ReadOnly);
-            style_sheet = QLatin1String(file.readAll());
-        }
-        return style_sheet;
-    }
-
-    //------------------------------------------------------------------------
-
-#ifndef DISABLE_AUDIO
-    static const AudioFiles_t& AudioFiles() { return get().m_Audiofiles; }
-
-    static void setBackgroundMusicInstance(QAudioOutput* i)
-    {
-        get().m_backgroundMusicInstance = i;
-    }
-
-    static QAudioOutput* const getBackgroundMusicInstance()
-    {
-        return get().m_backgroundMusicInstance;
-    }
-#endif    // !DISABLE_AUDIO
 };
 
 #endif    // CONFIG_H
