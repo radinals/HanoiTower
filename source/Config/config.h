@@ -67,7 +67,7 @@ private:
     } m_settings;
 
 #ifndef DISABLE_AUDIO
-    QAudioOutput* m_backgroundMusicInstance = nullptr;
+    static inline QAudioOutput* m_backgroundMusicInstance = nullptr;
 
     struct AudioFiles_t {
         static const inline QString PLACEMENT_FX = ":/audio/placement_fx.wav";
@@ -75,17 +75,24 @@ private:
     } m_Audiofiles;
 #endif    // !DISABLE_AUDIO
 
+    // get static instance
+    static Config& get()
+    {
+        static Config instance;
+        return instance;
+    }
+
 public:
     //------------------------------------------------------------------------
 
-    const AssetsFiles_t& AssetFiles() { return m_Assetsfiles; }
-    Theme_t&             Theme() { return m_theme; }
-    GameSettings_t&      Settings() { return m_settings; }
+    static const AssetsFiles_t& AssetFiles() { return get().m_Assetsfiles; }
+    static Theme_t&             Theme() { return get().m_theme; }
+    static GameSettings_t&      Settings() { return get().m_settings; }
 
     //------------------------------------------------------------------------
 
     // load and get stylesheet
-    const QString& getDefaultStylesheet()
+    static const QString& getDefaultStylesheet()
     {
         static QString style_sheet;
         if (style_sheet.isEmpty()) {
@@ -96,26 +103,19 @@ public:
         return style_sheet;
     }
 
-    // get static instance
-    static Config& get()
-    {
-        static Config instance;
-        return instance;
-    }
-
     //------------------------------------------------------------------------
 
 #ifndef DISABLE_AUDIO
-    const AudioFiles_t& AudioFiles() { return m_Audiofiles; }
+    static const AudioFiles_t& AudioFiles() { return get().m_Audiofiles; }
 
-    void setBackgroundMusicInstance(QAudioOutput* i)
+    static void setBackgroundMusicInstance(QAudioOutput* i)
     {
-        m_backgroundMusicInstance = i;
+        get().m_backgroundMusicInstance = i;
     }
 
-    QAudioOutput* const getBackgroundMusicInstance()
+    static QAudioOutput* const getBackgroundMusicInstance()
     {
-        return m_backgroundMusicInstance;
+        return get().m_backgroundMusicInstance;
     }
 #endif    // !DISABLE_AUDIO
 };

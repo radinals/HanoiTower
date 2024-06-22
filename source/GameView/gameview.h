@@ -68,7 +68,7 @@ private:
         QSizeF stack_area, stack_base, slice, dialog;
     } m_geometry;
 
-    struct SelectedData_t {
+    struct SelectedSlice {
         HanoiStack *stack = nullptr;    // source stack
         HanoiSlice *slice = nullptr;    // selected slice
 
@@ -76,18 +76,11 @@ private:
         {
             return stack != nullptr && slice != nullptr;
         }
-
-        inline void clear()
-        {
-            stack = nullptr;
-            slice = nullptr;
-        }
-
     } m_selected;
 
     struct SidebarWidgets_t {
-        QPushButton *timer_out      = nullptr;
         QLabel      *move_count_out = nullptr, *info_msg_label = nullptr;
+        QPushButton *timer_out    = nullptr;
         QTextEdit   *info_msg_out = nullptr;
     } m_sidebar_widgets;
 

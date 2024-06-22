@@ -26,7 +26,7 @@ GameView::resetStacks()
 {
     //-------------------------------------------------------------------------
 
-    for (size_t i = 0; i < Config::get().Settings().stack_amount; i++) {
+    for (size_t i = 0; i < Config::Settings().stack_amount; i++) {
         m_hanoi.stacks[i].clearStack();
     }
 
@@ -39,29 +39,27 @@ GameView::resetSlices()
 {
     //-------------------------------------------------------------------------
 
-    if (m_sprites.slice_tint != Config::get().Theme().slice_tint) {
-        QPixmap sprite(Config::get().AssetFiles().SLICE);
+    if (m_sprites.slice_tint != Config::Theme().slice_tint) {
+        QPixmap sprite(Config::AssetFiles().SLICE);
 
         assert(!sprite.isNull());
 
         // tint the slice sprite
-        colorizeSprite(&sprite, Config::get().Theme().slice_tint);
+        colorizeSprite(&sprite, Config::Theme().slice_tint);
 
         // save tinted sprite
         m_sprites.slice = sprite;
 
         // save the color
-        m_sprites.slice_tint = Config::get().Theme().slice_tint;
+        m_sprites.slice_tint = Config::Theme().slice_tint;
     }
 
     //-------------------------------------------------------------------------
 
     // populate the first stack
-    HanoiStack::fillStack(&m_hanoi.stacks[0],
-                          Config::get().Settings().slice_amount);
+    HanoiStack::fillStack(&m_hanoi.stacks[0], Config::Settings().slice_amount);
 
-    assert(m_hanoi.stacks[0].getSize()
-           == Config::get().Settings().slice_amount);
+    assert(m_hanoi.stacks[0].getSize() == Config::Settings().slice_amount);
 
     //-------------------------------------------------------------------------
 
@@ -69,7 +67,7 @@ GameView::resetSlices()
     // check if the array should be reallocated or just be reused instead
 
     // fill the array with default values
-    std::memset(&m_hanoi.slices, 0, Config::get().Settings().slice_amount);
+    std::memset(&m_hanoi.slices, 0, Config::Settings().slice_amount);
 
     // save the slices to the array
     HanoiSlice *slice = m_hanoi.stacks[0].getTop();
@@ -91,7 +89,7 @@ GameView::setGoalStack()
     const size_t goalStackLabel = getRandomGoalStackIndex();
 
     assert(goalStackLabel > 0);
-    assert(goalStackLabel < Config::get().Settings().stack_amount);
+    assert(goalStackLabel < Config::Settings().stack_amount);
 
     // save the address of the stack
     m_hanoi.goal_stack = getStack(goalStackLabel);

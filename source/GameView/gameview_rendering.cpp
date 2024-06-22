@@ -65,15 +65,15 @@ GameView::drawStackBase(size_t label, float offset, QPainter* const painter)
 
     //--Draw Stack Label--------------------------------------------------
 
-    const QFont font(Config::get().Theme().font_name,        // fontname
+    const QFont font(Config::Theme().font_name,              // fontname
                      m_geometry.stack_base.width() * 0.1f    // size
     );
 
-    QColor font_color = Config::get().Theme().font_color;
+    QColor font_color = Config::Theme().font_color;
 
     // highlight + draw the indicator if current stack is the goal stack
     if (label == (m_hanoi.goal_stack->getLabel())) {
-        font_color = Config::get().Theme().highlight_tint;
+        font_color = Config::Theme().highlight_tint;
 
         if (!m_time.timer.isActive() && m_game_state == GameState::Running) {
             const QPixmap arrow_sprite = m_sprites.arrow.scaled(
@@ -91,7 +91,7 @@ GameView::drawStackBase(size_t label, float offset, QPainter* const painter)
                               pole_y - (box_size * 0.5f),    // y
                               box_size,                      // w
                               box_size * 0.2f,               // h
-                              Config::get().Theme().highlight_tint);
+                              Config::Theme().highlight_tint);
         }
     }
 
@@ -110,7 +110,7 @@ GameView::drawDialog(const QString&  text,
                      const QColor&   color,
                      QPainter* const painter)
 {
-    QPixmap dialog(Config::get().AssetFiles().DIALOG);
+    QPixmap dialog(Config::AssetFiles().DIALOG);
 
     assert(!dialog.isNull());
 
@@ -119,14 +119,14 @@ GameView::drawDialog(const QString&  text,
     colorizeSprite(&dialog, color);
 
     // setup font
-    const QFont font(Config::get().Theme().font_name,             // fontname
+    const QFont font(Config::Theme().font_name,                   // fontname
                      m_geometry.dialog.width() / text.length()    // size
     );
     painter->setFont(font);
     const int font_size = painter->font().pointSizeF();
 
     // set text color
-    painter->setPen(Config::get().Theme().font_color);
+    painter->setPen(Config::Theme().font_color);
 
     painter->drawPixmap((width() * 0.5f) - (dialog.width() * 0.5f),
                         (height() * 0.5f) - (m_geometry.dialog.height() * 0.5f),
@@ -179,7 +179,7 @@ GameView::paintEvent(QPaintEvent* event)
 
     // render the stacks and slices
     float x_offset = m_geometry.stack_area.width() * 0.5f;
-    for (size_t i = 0; i < Config::get().Settings().stack_amount; i++) {
+    for (size_t i = 0; i < Config::Settings().stack_amount; i++) {
         drawStack(x_offset, &m_hanoi.stacks[i], &p);
         x_offset += m_geometry.stack_area.width();    // shift to the right
     }
@@ -196,13 +196,11 @@ GameView::paintEvent(QPaintEvent* event)
     // render the game over screens
     switch (m_game_state) {
         case GameState::GameOverLost:
-            drawDialog("TIME's UP!",
-                       Config::get().Theme().lose_dialog_tint,
-                       &p);
+            drawDialog("TIME's UP!", Config::Theme().lose_dialog_tint, &p);
             break;
 
         case GameState::GameOverWon:
-            drawDialog("YOU WIN", Config::get().Theme().win_dialog_tint, &p);
+            drawDialog("YOU WIN", Config::Theme().win_dialog_tint, &p);
             break;
 
         default:

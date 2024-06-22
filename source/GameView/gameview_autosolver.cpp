@@ -12,7 +12,7 @@
 void
 GameView::hanoiIterativeSolver()
 {
-    const size_t slice_amount = Config::get().Settings().slice_amount;
+    const size_t slice_amount = Config::Settings().slice_amount;
     const size_t possible_moves
         = (1 << slice_amount) - 1;    // (2^slice_amount) -1
 

@@ -29,16 +29,16 @@ GameView::GameView(QWidget* parent) : QWidget { parent }
 // load the placement sound effect
 #ifndef DISABLE_AUDIO
     m_placement_fx = new QSoundEffect(this);
-    m_placement_fx->setSource("qrc" + Config::get().AudioFiles().PLACEMENT_FX);
-    m_placement_fx->setVolume(Config::get().Settings().fx_volume);
+    m_placement_fx->setSource("qrc" + Config::AudioFiles().PLACEMENT_FX);
+    m_placement_fx->setVolume(Config::Settings().fx_volume);
     assert(m_placement_fx->status() != QSoundEffect::Error);
 #endif
 
-    m_sprites.arrow = QPixmap(Config::get().AssetFiles().ARROW);
+    m_sprites.arrow = QPixmap(Config::AssetFiles().ARROW);
 
     assert(!m_sprites.arrow.isNull());
 
-    colorizeSprite(&m_sprites.arrow, Config::get().Theme().highlight_tint);
+    colorizeSprite(&m_sprites.arrow, Config::Theme().highlight_tint);
 }
 
 void
@@ -113,7 +113,7 @@ GameView::reset()
 
 #ifndef DISABLE_AUDIO
     // set the fx volume
-    m_placement_fx->setVolume(Config::get().Settings().fx_volume);
+    m_placement_fx->setVolume(Config::Settings().fx_volume);
 #endif
 
     m_game_state = GameState::Running;
