@@ -31,6 +31,7 @@ GameView::GameView(QWidget* parent) : QWidget { parent }
     m_placement_fx = new QSoundEffect(this);
     m_placement_fx->setSource("qrc" + Config::AudioFiles::PLACEMENT_FX);
     m_placement_fx->setVolume(Config::Settings::fx_volume);
+    connect(this, &GameView::s_slice_moved, [&]() { m_placement_fx->play(); });
     assert(m_placement_fx->status() != QSoundEffect::Error);
 #endif
 

@@ -198,6 +198,7 @@ signals:
     void s_game_inactive();
     void s_game_started();
     void s_game_over();
+    void s_slice_moved();
 };
 
 #endif    // GAMEVIEW_H

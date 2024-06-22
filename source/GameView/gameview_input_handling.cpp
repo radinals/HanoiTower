@@ -82,9 +82,7 @@ GameView::mouseReleaseEvent(QMouseEvent* const event)
 
     update();
 
-#ifndef DISABLE_AUDIO
-    if (!m_placement_fx->isPlaying()) { m_placement_fx->play(); }
-#endif
+    emit(s_slice_moved());
 }
 
 // compare the QPointF x and y values to a stack's area, if
