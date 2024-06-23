@@ -65,7 +65,7 @@ private:
     } m_sprites;
 
     struct Geometry {
-        static inline QSizeF stack_area, stack_base, slice, dialog;
+        static inline QSizeF stack_area, stack_base, slice, dialog, window;
     };
 
     struct SelectedSlice {

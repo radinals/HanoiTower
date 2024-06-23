@@ -25,7 +25,7 @@ GameView::drawStack(float             offset,
 
     if (stack->isEmpty()) { return; }
 
-    float y = height() - Geometry::stack_base.height();
+    float y = Geometry::window.height() - Geometry::stack_base.height();
 
     HanoiSlice* slice = stack->getTail();
     while (slice != nullptr) {
@@ -51,7 +51,8 @@ GameView::drawStackBase(size_t label, float offset, QPainter* const painter)
 
     //--Draw Stack Base+Pole----------------------------------------------
 
-    const float pole_y = height() - m_sprites.stack_pole.height();
+    const float pole_y
+        = Geometry::window.height() - m_sprites.stack_pole.height();
 
     // draw the pole
     painter->drawPixmap(offset - (m_sprites.stack_pole.width() * 0.5F),
@@ -60,21 +61,22 @@ GameView::drawStackBase(size_t label, float offset, QPainter* const painter)
 
     // draw the base
     painter->drawPixmap(offset - (Geometry::stack_base.width() * 0.5F),
-                        height() - Geometry::stack_base.height(),
+                        Geometry::window.height()
+                            - Geometry::stack_base.height(),
                         m_sprites.stack_base);
 
     //--Draw Stack Label--------------------------------------------------
 
-    const QFont font(Config::Theme().font_name,             // fontname
-                     Geometry::stack_base.width() * 0.1F    // size
-    );
+    // set font color for drawing the label
+    painter->setPen(Config::Theme().font_color);
 
-    QColor font_color = Config::Theme().font_color;
-
-    // highlight + draw the indicator if current stack is the goal stack
+    // highlight and draw the indicator if current stack is the goal stack
     if (label == (HanoiStacks::goal_stack->getLabel())) {
-        font_color = Config::Theme().highlight_tint;
+        // use the highlight color for the font
+        painter->setPen(Config::Theme().highlight_tint);
 
+        // draw the arrow if the timer is not running or
+        // draw indicator instead
         if (!TimeInfo::timer.isActive() && m_game_state == GameState::Running) {
             const QPixmap arrow_sprite = m_sprites.arrow.scaled(
                 offset - Geometry::stack_area.width() * 0.5F,
@@ -95,9 +97,10 @@ GameView::drawStackBase(size_t label, float offset, QPainter* const painter)
         }
     }
 
-    // set font & color for drawing the label
-    painter->setPen(font_color);
-    painter->setFont(font);
+    // set the font style and size
+    painter->setFont(QFont(Config::Theme().font_name,             // fontname
+                           Geometry::stack_base.width() * 0.1F    // size
+                           ));
 
     // draw the stack label
     painter->drawText(offset - (painter->font().pointSizeF() * 0.5F),
@@ -119,22 +122,23 @@ GameView::drawDialog(const QString&  text,
     colorizeSprite(&dialog, color);
 
     // setup font
-    const QFont font(Config::Theme().font_name,                  // fontname
-                     Geometry::dialog.width() / text.length()    // size
-    );
-    painter->setFont(font);
-    const int font_size = painter->font().pointSizeF();
+    painter->setFont(QFont(Config::Theme().font_name,    // fontname
+                           Geometry::dialog.width() / text.length()    // size
+                           ));
 
     // set text color
     painter->setPen(Config::Theme().font_color);
 
-    painter->drawPixmap((width() * 0.5F) - (dialog.width() * 0.5F),
-                        (height() * 0.5F) - (Geometry::dialog.height() * 0.5F),
-                        dialog);
+    painter->drawPixmap(
+        (Geometry::window.width() * 0.5F) - (dialog.width() * 0.5F),
+        (Geometry::window.height() * 0.5F) - (Geometry::dialog.height() * 0.5F),
+        dialog);
 
-    painter->drawText((width() * 0.5F) - ((text.length() * font_size) * 0.4f),
-                      (height() * 0.5F) + Geometry::dialog.height() * 0.15F,
-                      text);
+    painter->drawText(
+        (Geometry::window.width() * 0.5F)
+            - ((text.length() * painter->font().pointSizeF()) * 0.4f),
+        (Geometry::window.height() * 0.5F) + Geometry::dialog.height() * 0.15F,
+        text);
 }
 
 // add tint to a pixmap, by using masks

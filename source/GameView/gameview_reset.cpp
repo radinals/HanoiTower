@@ -30,6 +30,12 @@ GameView::resetStacks()
         HanoiStacks::stacks[i].clearStack();
     }
 
+    // populate the first stack
+    HanoiStack::fillStack(&HanoiStacks::stacks[0],
+                          Config::Settings::slice_amount);
+
+    assert(HanoiStacks::stacks[0].getSize() == Config::Settings::slice_amount);
+
     // scale the stacks
     scaleStack();
 }
@@ -38,6 +44,8 @@ void
 GameView::resetSlices()
 {
     //-------------------------------------------------------------------------
+
+    // initialize  the slice sprite
 
     if (m_sprites.slice_tint != Config::Theme::slice_tint) {
         QPixmap sprite(Config::AssetsFiles::SLICE);
@@ -48,7 +56,7 @@ GameView::resetSlices()
         colorizeSprite(&sprite, Config::Theme::slice_tint);
 
         // save tinted sprite
-        m_sprites.slice = sprite;
+        m_sprites.slice = std::move(sprite);
 
         // save the color
         m_sprites.slice_tint = Config::Theme::slice_tint;
@@ -56,18 +64,7 @@ GameView::resetSlices()
 
     //-------------------------------------------------------------------------
 
-    // populate the first stack
-    HanoiStack::fillStack(&HanoiStacks::stacks[0],
-                          Config::Settings::slice_amount);
-
-    assert(HanoiStacks::stacks[0].getSize() == Config::Settings::slice_amount);
-
-    //-------------------------------------------------------------------------
-
-    // allocate space for the slice storing array
-    // check if the array should be reallocated or just be reused instead
-
-    // fill the array with default values
+    // reset the slice array
     std::memset(&HanoiStacks::slices, 0, Config::Settings::slice_amount);
 
     // save the slices to the array

@@ -99,7 +99,8 @@ GameView::reset()
     if (has_solver_task()) { stop_solver_task(); }
 
     // reset some states
-    TimeInfo::elapsed = m_move_count = 0;
+    TimeInfo::elapsed = 0;
+    m_move_count      = 0;
 
     // stop the timer (if any)
     TimeInfo::timer.stop();

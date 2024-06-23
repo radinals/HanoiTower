@@ -11,6 +11,8 @@
 void
 GameView::calculateBaseSizes()
 {
+    Geometry::window = this->size();
+
     Geometry::stack_area.setWidth(float(width())
                                   / Config::Settings::stack_amount);
 
