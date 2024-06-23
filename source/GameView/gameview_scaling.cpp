@@ -57,6 +57,22 @@ GameView::scaleStack()
 void
 GameView::scaleSlices()
 {
+    // load and tint a new slice sprite if needed
+    if (m_sprites.slice_tint != Config::Theme::slice_tint) {
+        QPixmap sprite(Config::AssetsFiles::SLICE);
+
+        assert(!sprite.isNull());
+
+        // tint the slice sprite
+        colorizeSprite(&sprite, Config::Theme::slice_tint);
+
+        // save tinted sprite
+        m_sprites.slice = std::move(sprite);
+
+        // save the color
+        m_sprites.slice_tint = Config::Theme::slice_tint;
+    }
+
     float width = Geometry::slice.width(), height = Geometry::slice.height();
 
     // every slice has a different size

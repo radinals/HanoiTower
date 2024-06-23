@@ -13,9 +13,9 @@
 #include <QPushButton>
 #include <QTextEdit>
 #include <QTime>
+#include <QTimer>
 #include <QWidget>
 #include <atomic>
-#include <qpushbutton.h>
 #include <thread>
 
 #ifndef DISABLE_AUDIO
@@ -31,22 +31,21 @@ public slots:
     void pause();    // halt the timer, inhibit input
     void solve();    // solve the game automaticly
 
-public:
+private:
     explicit GameView(QWidget *parent = nullptr);
 
-    ~GameView() override
-    {
-        if (m_game_state == GameState::AutoSolving) { stop_solver_task(); }
-#ifndef DISABLE_AUDIO
-        delete m_placement_fx;
-#endif
-    }
+public:
+    GameView(GameView &&) = delete;
+
+    static GameView *const &getInstance();
+
+    static void destroyInstance();
+
+    ~GameView() override;
 
     // define pointers to the output widgets
-    void setGameInfoOutputs(QPushButton *time,
-                            QLabel      *moves,
-                            QLabel      *info_box_label,
-                            QTextEdit   *info_box);
+    static void
+    setGameInfoOutputs(QPushButton *, QLabel *, QLabel *, QTextEdit *);
 
 private slots:
     // called by timer in every ms
@@ -110,15 +109,13 @@ private:
         AutoSolving,
     };
 
-    GameState m_game_state = GameState::NotRunning;
+    static inline GameState m_game_state = GameState::NotRunning;
 
     struct SolverTask {
         static inline std::atomic_bool stop_solving  = false;
         static inline std::atomic_bool pause_solving = false;
         static inline std::thread     *work_thread   = nullptr;
     };
-
-    void clear();    // reset the game states
 
     static bool has_solver_task();
     static bool has_paused_solver_task();
@@ -128,18 +125,19 @@ private:
     static void pause_solver_task();
     static void unpause_solver_task();
 
-    void resetStacks();
-    void resetSlices();
-    void setGoalStack();
+    void        clear();    // reset the game states
+    void        resetStacks();
+    void        resetSlices();
+    static void setGoalStack();
 
     // calculate click area, returns stack under click
-    HanoiStack *calculateStackByPos(const QPointF &);
+    static HanoiStack *calculateStackByPos(const QPointF &);
 
     // calculate the base sizes
     void calculateBaseSizes();
 
     // updates sidebar values
-    void updateInfo();
+    static void updateInfo();
 
     // get pointer to stack of 'label'
     static HanoiStack *getStack(size_t label);

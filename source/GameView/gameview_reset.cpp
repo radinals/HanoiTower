@@ -24,8 +24,7 @@ GameView::clear()
 void
 GameView::resetStacks()
 {
-    //-------------------------------------------------------------------------
-
+    // clear the stacks
     for (size_t i = 0; i < Config::Settings::stack_amount; i++) {
         getStack(i)->clearStack();
     }
@@ -35,34 +34,13 @@ GameView::resetStacks()
 
     assert(getStack(0)->getSize() == Config::Settings::slice_amount);
 
-    // scale the stacks
+    // setup the sprite scaling
     scaleStack();
 }
 
 void
 GameView::resetSlices()
 {
-    //-------------------------------------------------------------------------
-
-    // initialize  the slice sprite
-
-    if (m_sprites.slice_tint != Config::Theme::slice_tint) {
-        QPixmap sprite(Config::AssetsFiles::SLICE);
-
-        assert(!sprite.isNull());
-
-        // tint the slice sprite
-        colorizeSprite(&sprite, Config::Theme::slice_tint);
-
-        // save tinted sprite
-        m_sprites.slice = std::move(sprite);
-
-        // save the color
-        m_sprites.slice_tint = Config::Theme::slice_tint;
-    }
-
-    //-------------------------------------------------------------------------
-
     // reset the slice array
     std::memset(&HanoiStacks::slices, 0, Config::Settings::slice_amount);
 
@@ -73,9 +51,7 @@ GameView::resetSlices()
         slice                                  = slice->next;
     }
 
-    //-------------------------------------------------------------------------
-
-    // scale the slices
+    // setup the sprite scaling
     scaleSlices();
 }
 

@@ -16,7 +16,8 @@ GameView::mousePressEvent(QMouseEvent* const event)
 {
     if (SelectedSlice::hasSelected() || m_game_state != GameState::Running
         || (event->pos().x() <= 0 || event->pos().y() <= 0)
-        || (event->pos().x() >= width() || event->pos().y() >= height())) {
+        || (event->pos().x() >= Geometry::window.width()
+            || event->pos().y() >= Geometry::window.height())) {
         return;
     }
 
@@ -46,7 +47,8 @@ GameView::mouseMoveEvent(QMouseEvent* const event)
 {
     if (!SelectedSlice::hasSelected() || m_game_state != GameState::Running
         || (event->pos().x() <= 0 || event->pos().y() <= 0)
-        || (event->pos().x() >= width() || event->pos().y() >= height())) {
+        || (event->pos().x() >= Geometry::window.width()
+            || event->pos().y() >= Geometry::window.height())) {
         return;
     }
 
@@ -98,7 +100,7 @@ GameView::mouseReleaseEvent(QMouseEvent* const event)
 HanoiStack*
 GameView::calculateStackByPos(const QPointF& point)
 {
-    const float stack_area_height = height();
+    const float stack_area_height = Geometry::window.height();
     const float stack_area_width  = Geometry::stack_area.width();
 
     float area_width = stack_area_width;

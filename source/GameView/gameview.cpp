@@ -16,7 +16,7 @@
 #include <QPoint>
 #include <QTimer>
 
-GameView::GameView(QWidget* parent) : QWidget { parent }
+GameView::GameView(QWidget *parent) : QWidget { parent }
 {
     // init timer.
     // timer will call checkWinState every tick (should be every 1ms).
@@ -41,6 +41,27 @@ GameView::GameView(QWidget* parent) : QWidget { parent }
 
     colorizeSprite(&m_sprites.arrow, Config::Theme().highlight_tint);
 }
+
+GameView::~GameView()
+{
+    if (m_game_state == GameState::AutoSolving) { stop_solver_task(); }
+#ifndef DISABLE_AUDIO
+    delete m_placement_fx;
+#endif
+}
+
+GameView *const &
+GameView::getInstance()
+{
+    static GameView *G = new GameView();
+    return G;
+};
+
+void
+GameView::destroyInstance()
+{
+    delete getInstance();
+};
 
 void
 GameView::solve()

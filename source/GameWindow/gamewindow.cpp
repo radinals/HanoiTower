@@ -11,12 +11,12 @@ GameWindow::GameWindow(QWidget *parent)
     , ui(new Ui::GameWindow)
 {
     ui->setupUi(this);
-    m_game_view = new GameView(ui->GameDisplayFrame);
+    m_game_view = GameView::getInstance();
     ui->InfoOut->setReadOnly(true);
-    m_game_view->setGameInfoOutputs(ui->TimerOut,
-                                    ui->MoveCountOut,
-                                    ui->InfoLabel,
-                                    ui->InfoOut);
+    GameView::setGameInfoOutputs(ui->TimerOut,
+                                 ui->MoveCountOut,
+                                 ui->InfoLabel,
+                                 ui->InfoOut);
 
     ui->GameDisplayFrame->layout()->addWidget(m_game_view);
 
@@ -66,7 +66,7 @@ GameWindow::GameWindow(QWidget *parent)
 
 GameWindow::~GameWindow()
 {
-    delete m_game_view;
+    GameView::destroyInstance();
     delete ui;
 }
 
