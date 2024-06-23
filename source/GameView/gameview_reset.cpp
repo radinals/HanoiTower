@@ -27,14 +27,13 @@ GameView::resetStacks()
     //-------------------------------------------------------------------------
 
     for (size_t i = 0; i < Config::Settings::stack_amount; i++) {
-        HanoiStacks::stacks[i].clearStack();
+        getStack(i)->clearStack();
     }
 
     // populate the first stack
-    HanoiStack::fillStack(&HanoiStacks::stacks[0],
-                          Config::Settings::slice_amount);
+    HanoiStack::fillStack(getStack(0), Config::Settings::slice_amount);
 
-    assert(HanoiStacks::stacks[0].getSize() == Config::Settings::slice_amount);
+    assert(getStack(0)->getSize() == Config::Settings::slice_amount);
 
     // scale the stacks
     scaleStack();
@@ -68,7 +67,7 @@ GameView::resetSlices()
     std::memset(&HanoiStacks::slices, 0, Config::Settings::slice_amount);
 
     // save the slices to the array
-    HanoiSlice *slice = HanoiStacks::stacks[0].getTop();
+    HanoiSlice *slice = getStack(0)->getTop();
     while (slice != nullptr) {
         HanoiStacks::slices[slice->getValue()] = slice;
         slice                                  = slice->next;

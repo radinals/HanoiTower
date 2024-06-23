@@ -100,9 +100,7 @@ GameView::calculateStackByPos(const QPointF& point)
         const float x = (point.x() != 0) ? (point.x() / area_width) : 0;
         const float y = (point.y() != 0) ? (point.y() / stack_area_height) : 0;
 
-        if ((x >= 0 && x <= 1) && (y >= 0 && y <= 1)) {
-            return &HanoiStacks::stacks[i];
-        }
+        if ((x >= 0 && x <= 1) && (y >= 0 && y <= 1)) { return getStack(i); }
 
         area_width += stack_area_width;
     }

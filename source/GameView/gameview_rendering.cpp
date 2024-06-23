@@ -184,7 +184,7 @@ GameView::paintEvent(QPaintEvent* event)
     // render the stacks and slices
     float x_offset = Geometry::stack_area.width() * 0.5F;
     for (size_t i = 0; i < Config::Settings().stack_amount; i++) {
-        drawStack(x_offset, &HanoiStacks::stacks[i], &p);
+        drawStack(x_offset, getStack(i), &p);
         x_offset += Geometry::stack_area.width();    // shift to the right
     }
 
