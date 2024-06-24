@@ -81,13 +81,13 @@ GameView::solve()
 
     emit(s_solver_activated());
 
-    // kinda cheating here tbh...
+    // reset the stacks first
     clear();
 
     m_game_state = GameState::AutoSolving;
 
-    TimeInfo::timer.start(
-        1);    // start timer (helps with the winstate checking)
+    // start timer
+    TimeInfo::timer.start(1);
 
     repaint();    // repaint first
 
