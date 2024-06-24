@@ -44,6 +44,14 @@ GameView::GameView(QWidget *parent) : QWidget { parent }
 
     GameSprites::arrow->load(Config::AssetsFiles::ARROW);
 
+    GameSprites::stack_pole->load(Config::AssetsFiles::STACK_POLE);
+    GameSprites::stack_base->load(Config::AssetsFiles::STACK_BASE);
+
+    colorizeSprite(GameSprites::stack_base, Config::Theme::stack_tint);
+    colorizeSprite(GameSprites::stack_pole, Config::Theme::stack_tint);
+
+    GameSprites::stack_tint = Config::Theme::stack_tint;
+
     assert(!GameSprites::arrow->isNull());
 
     colorizeSprite(GameSprites::arrow, Config::Theme().highlight_tint);

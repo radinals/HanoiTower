@@ -36,16 +36,22 @@ GameView::calculateBaseSizes()
 void
 GameView::scaleStack()
 {
-    // reload the sprites
-    GameSprites::stack_pole->load(Config::AssetsFiles::STACK_POLE);
-    GameSprites::stack_base->load(Config::AssetsFiles::STACK_BASE);
+    // check for sprite tint change
+    if (GameSprites::stack_tint != Config::Theme::stack_tint) {
+        // reload the sprites
+        GameSprites::stack_pole->load(Config::AssetsFiles::STACK_POLE);
+        GameSprites::stack_base->load(Config::AssetsFiles::STACK_BASE);
 
-    assert(!GameSprites::stack_pole->isNull());
-    assert(!GameSprites::stack_base->isNull());
+        assert(!GameSprites::stack_pole->isNull());
+        assert(!GameSprites::stack_base->isNull());
 
-    // tint the sprites
-    colorizeSprite(GameSprites::stack_base, Config::Theme::stack_tint);
-    colorizeSprite(GameSprites::stack_pole, Config::Theme::stack_tint);
+        // tint the sprites
+        colorizeSprite(GameSprites::stack_base, Config::Theme::stack_tint);
+        colorizeSprite(GameSprites::stack_pole, Config::Theme::stack_tint);
+
+        // save the color
+        GameSprites::stack_tint = Config::Theme::stack_tint;
+    }
 }
 
 void
