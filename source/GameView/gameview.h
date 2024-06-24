@@ -82,11 +82,8 @@ private:
         // move slice stored by SelectedSlice:: to the QPoints x and y values
         static inline void move(const QPoint &point)
         {
-            SelectedSlice::x
-                = (point.x() - (SelectedSlice::slice->Geometry().width * 0.5F));
-            SelectedSlice::y
-                = (point.y()
-                   - (SelectedSlice::slice->Geometry().height * 0.5F));
+            x = (point.x() - (SelectedSlice::slice->Geometry().width * 0.5F));
+            y = (point.y() - (SelectedSlice::slice->Geometry().height * 0.5F));
         }
     };
 
