@@ -34,9 +34,10 @@ GameView::drawStack(float             offset,
         slice->Geometry().x = offset - (slice->Geometry().width * 0.5F);
         slice->Geometry().y = y;
 
-        painter->drawPixmap(QPointF(slice->Geometry().x, slice->Geometry().y),
-                            m_sprites.slice.scaled(slice->Geometry().width,
-                                                   slice->Geometry().height));
+        painter->drawPixmap(
+            QPointF(slice->Geometry().x, slice->Geometry().y),
+            GameSprites::slice->scaled(slice->Geometry().width,
+                                       slice->Geometry().height));
 
         slice = slice->prev;
     }
@@ -52,18 +53,19 @@ GameView::drawStackBase(size_t label, float offset, QPainter* const painter)
     //--Draw Stack Base+Pole----------------------------------------------
 
     const float pole_y
-        = Geometry::window.height() - m_sprites.stack_pole.height();
+        = Geometry::window.height() - Geometry::stack_pole.height();
 
     // draw the pole
-    painter->drawPixmap(offset - (m_sprites.stack_pole.width() * 0.5F),
-                        pole_y,
-                        m_sprites.stack_pole);
+    painter->drawPixmap(
+        offset - (Geometry::stack_pole.width() * 0.5F),
+        pole_y,
+        GameSprites::stack_pole->scaled(Geometry::stack_pole.toSize()));
 
     // draw the base
-    painter->drawPixmap(offset - (Geometry::stack_base.width() * 0.5F),
-                        Geometry::window.height()
-                            - Geometry::stack_base.height(),
-                        m_sprites.stack_base);
+    painter->drawPixmap(
+        offset - (Geometry::stack_base.width() * 0.5F),
+        Geometry::window.height() - Geometry::stack_base.height(),
+        GameSprites::stack_base->scaled(Geometry::stack_base.toSize()));
 
     //--Draw Stack Label--------------------------------------------------
 
@@ -78,7 +80,7 @@ GameView::drawStackBase(size_t label, float offset, QPainter* const painter)
         // draw the arrow if the timer is not running or
         // draw indicator instead
         if (!TimeInfo::timer.isActive() && m_game_state == GameState::Running) {
-            const QPixmap arrow_sprite = m_sprites.arrow.scaled(
+            const QPixmap arrow_sprite = GameSprites::arrow->scaled(
                 offset - Geometry::stack_area.width() * 0.5F,
                 Geometry::stack_base.width() * 0.1F);
 
@@ -190,11 +192,11 @@ GameView::paintEvent(QPaintEvent* event)
 
     // render the selected slice
     if (SelectedSlice::hasSelected()) {
-        p.drawPixmap(
-            SelectedSlice::slice->Geometry().x,
-            SelectedSlice::slice->Geometry().y,
-            m_sprites.slice.scaled(SelectedSlice::slice->Geometry().width,
-                                   SelectedSlice::slice->Geometry().height));
+        p.drawPixmap(SelectedSlice::slice->Geometry().x,
+                     SelectedSlice::slice->Geometry().y,
+                     GameSprites::slice->scaled(
+                         SelectedSlice::slice->Geometry().width,
+                         SelectedSlice::slice->Geometry().height));
     }
 
     // render the game over screens

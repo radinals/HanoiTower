@@ -28,49 +28,40 @@ GameView::calculateBaseSizes()
 
     Geometry::dialog.setWidth(width() * 0.4F);
     Geometry::dialog.setHeight(height() * 0.2F);
+
+    Geometry::stack_pole.setHeight(Geometry::stack_area.height());
+    Geometry::stack_pole.setWidth(Geometry::stack_base.width() * 0.1F);
 }
 
 void
 GameView::scaleStack()
 {
-    // fetch the originals
-    m_sprites.stack_pole = QPixmap(Config::AssetsFiles::STACK_POLE);
-    m_sprites.stack_base = QPixmap(Config::AssetsFiles::STACK_BASE);
+    // reload the sprites
+    GameSprites::stack_pole->load(Config::AssetsFiles::STACK_POLE);
+    GameSprites::stack_base->load(Config::AssetsFiles::STACK_BASE);
 
-    assert(!m_sprites.stack_pole.isNull());
-    assert(!m_sprites.stack_base.isNull());
-
-    // scale the sprites
-    m_sprites.stack_pole
-        = m_sprites.stack_pole.scaled(Geometry::slice.width() * 0.1F,
-                                      Geometry::stack_area.height());
-
-    m_sprites.stack_base
-        = m_sprites.stack_base.scaled(Geometry::stack_base.width(),
-                                      Geometry::stack_base.height());
+    assert(!GameSprites::stack_pole->isNull());
+    assert(!GameSprites::stack_base->isNull());
 
     // tint the sprites
-    colorizeSprite(&m_sprites.stack_base, Config::Theme::stack_tint);
-    colorizeSprite(&m_sprites.stack_pole, Config::Theme::stack_tint);
+    colorizeSprite(GameSprites::stack_base, Config::Theme::stack_tint);
+    colorizeSprite(GameSprites::stack_pole, Config::Theme::stack_tint);
 }
 
 void
 GameView::scaleSlices()
 {
     // load and tint a new slice sprite if needed
-    if (m_sprites.slice_tint != Config::Theme::slice_tint) {
-        QPixmap sprite(Config::AssetsFiles::SLICE);
+    if (GameSprites::slice_tint != Config::Theme::slice_tint) {
+        GameSprites::slice->load(Config::AssetsFiles::SLICE);
 
-        assert(!sprite.isNull());
+        assert(!GameSprites::slice->isNull());
 
         // tint the slice sprite
-        colorizeSprite(&sprite, Config::Theme::slice_tint);
-
-        // save tinted sprite
-        m_sprites.slice = std::move(sprite);
+        colorizeSprite(GameSprites::slice, Config::Theme::slice_tint);
 
         // save the color
-        m_sprites.slice_tint = Config::Theme::slice_tint;
+        GameSprites::slice_tint = Config::Theme::slice_tint;
     }
 
     float width = Geometry::slice.width(), height = Geometry::slice.height();

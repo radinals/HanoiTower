@@ -59,12 +59,14 @@ private:
 #endif
 
     struct GameSprites {
-        QColor  stack_tint, slice_tint;
-        QPixmap stack_pole, stack_base, arrow, slice;
-    } m_sprites;
+        static inline QColor   stack_tint, slice_tint;
+        static inline QPixmap *stack_pole = nullptr, *stack_base = nullptr,
+                              *arrow = nullptr, *slice = nullptr;
+    };
 
     struct Geometry {
-        static inline QSizeF stack_area, stack_base, slice, dialog, window;
+        static inline QSizeF stack_area, stack_base, slice, dialog, window,
+            stack_pole;
     };
 
     struct SelectedSlice {
@@ -96,7 +98,7 @@ private:
     };
 
     struct TimeInfo {
-        static inline QTimer        timer;
+        static QTimer               timer;
         static inline long long int elapsed = 0;    // ms
     };
 
@@ -126,8 +128,8 @@ private:
     static void unpause_solver_task();
 
     void        clear();    // reset the game states
-    void        resetStacks();
-    void        resetSlices();
+    static void resetStacks();
+    static void resetSlices();
     static void setGoalStack();
 
     // calculate click area, returns stack under click
@@ -143,14 +145,12 @@ private:
     static HanoiStack *getStack(size_t label);
 
     // handles drawing/rendering
-    void drawStack(float offset, HanoiStack *const, QPainter *const p);
-    void drawStackBase(size_t label, float offset, QPainter *const painter);
-    void drawDialog(const QString  &text,
-                    const QColor   &color,
-                    QPainter *const painter);
+    static void drawStack(float, HanoiStack *const, QPainter *const);
+    static void drawStackBase(size_t, float, QPainter *const);
+    static void drawDialog(const QString &, const QColor &, QPainter *const);
 
-    void scaleSlices();    // handles slice scaling
-    void scaleStack();     // handles stack scaling
+    static void scaleSlices();    // handles slice scaling
+    static void scaleStack();     // handles stack scaling
 
     void hanoiIterativeSolver();
 

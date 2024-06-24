@@ -16,6 +16,8 @@
 #include <QPoint>
 #include <QTimer>
 
+QTimer GameView::TimeInfo::timer = QTimer();
+
 GameView::GameView(QWidget *parent) : QWidget { parent }
 {
     // init timer.
@@ -35,11 +37,16 @@ GameView::GameView(QWidget *parent) : QWidget { parent }
     assert(m_placement_fx->status() != QSoundEffect::Error);
 #endif
 
-    m_sprites.arrow = QPixmap(Config::AssetsFiles::ARROW);
+    GameSprites::stack_pole = new QPixmap();
+    GameSprites::stack_base = new QPixmap();
+    GameSprites::arrow      = new QPixmap();
+    GameSprites::slice      = new QPixmap();
 
-    assert(!m_sprites.arrow.isNull());
+    GameSprites::arrow->load(Config::AssetsFiles::ARROW);
 
-    colorizeSprite(&m_sprites.arrow, Config::Theme().highlight_tint);
+    assert(!GameSprites::arrow->isNull());
+
+    colorizeSprite(GameSprites::arrow, Config::Theme().highlight_tint);
 }
 
 GameView::~GameView()
@@ -48,6 +55,10 @@ GameView::~GameView()
 #ifndef DISABLE_AUDIO
     delete m_placement_fx;
 #endif
+    delete GameSprites::stack_pole;
+    delete GameSprites::stack_base;
+    delete GameSprites::arrow;
+    delete GameSprites::slice;
 }
 
 GameView *const &
