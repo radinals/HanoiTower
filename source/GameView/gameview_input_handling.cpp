@@ -36,7 +36,7 @@ GameView::mousePressEvent(QMouseEvent* const event)
     SelectedSlice::slice = clicked_stack->pop();
     SelectedSlice::stack = clicked_stack;
 
-    moveSelectedSlice(event->pos());
+    SelectedSlice::move(event->pos());
     update();
 }
 
@@ -52,7 +52,7 @@ GameView::mouseMoveEvent(QMouseEvent* const event)
         return;
     }
 
-    moveSelectedSlice(event->pos());
+    SelectedSlice::move(event->pos());
     update();
 }
 

@@ -27,7 +27,7 @@ private:
     unsigned int m_value = 0;
 
     struct Geometry_t {
-        float x = 0, y = 0, width = 0, height = 0;
+        float width = 0, height = 0;
     } m_geometry;
 };
 

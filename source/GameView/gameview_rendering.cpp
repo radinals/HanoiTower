@@ -10,11 +10,7 @@
 
 #include <QPainter>
 
-// - draw the stack's slices
-// - configure each slice placement in the screen, starting from the bottom
-//   of the stack
-// - set Slices size to be 90% of the base slice size and the size keeps
-//   getting smaller for each slice
+// draws a single stack with all of it's slices.
 void
 GameView::drawStack(float             offset,
                     HanoiStack* const stack,
@@ -25,17 +21,15 @@ GameView::drawStack(float             offset,
 
     if (stack->isEmpty()) { return; }
 
-    float y = Geometry::window.height() - Geometry::stack_base.height();
+    float y_offset = Geometry::window.height() - Geometry::stack_base.height();
 
     HanoiSlice* slice = stack->getTail();
     while (slice != nullptr) {
-        y -= std::floor(slice->Geometry().height);
-
-        slice->Geometry().x = offset - (slice->Geometry().width * 0.5F);
-        slice->Geometry().y = y;
+        y_offset -= std::floor(slice->Geometry().height);
 
         painter->drawPixmap(
-            QPointF(slice->Geometry().x, slice->Geometry().y),
+            offset - (slice->Geometry().width * 0.5F),
+            y_offset,
             GameSprites::slice->scaled(slice->Geometry().width,
                                        slice->Geometry().height));
 
@@ -192,8 +186,8 @@ GameView::paintEvent(QPaintEvent* event)
 
     // render the selected slice
     if (SelectedSlice::hasSelected()) {
-        p.drawPixmap(SelectedSlice::slice->Geometry().x,
-                     SelectedSlice::slice->Geometry().y,
+        p.drawPixmap(SelectedSlice::x,
+                     SelectedSlice::y,
                      GameSprites::slice->scaled(
                          SelectedSlice::slice->Geometry().width,
                          SelectedSlice::slice->Geometry().height));

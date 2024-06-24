@@ -78,16 +78,6 @@ GameView::checkWinState()
     }
 }
 
-// move slice stored by SelectedSlice:: to the QPoints x and y values
-void
-GameView::moveSelectedSlice(const QPoint &point)
-{
-    SelectedSlice::slice->Geometry().x
-        = (point.x() - (SelectedSlice::slice->Geometry().width * 0.5F));
-    SelectedSlice::slice->Geometry().y
-        = (point.y() - (SelectedSlice::slice->Geometry().height * 0.5F));
-}
-
 // check if the goal stack has all valid slices in it
 bool
 GameView::goalStackIsComplete()

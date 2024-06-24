@@ -72,10 +72,21 @@ private:
     struct SelectedSlice {
         static inline HanoiStack *stack = nullptr;    // source stack
         static inline HanoiSlice *slice = nullptr;    // selected slice
+        static inline float       x = 0, y = 0;
 
         static inline bool hasSelected()
         {
             return stack != nullptr && slice != nullptr;
+        }
+
+        // move slice stored by SelectedSlice:: to the QPoints x and y values
+        static inline void move(const QPoint &point)
+        {
+            SelectedSlice::x
+                = (point.x() - (SelectedSlice::slice->Geometry().width * 0.5F));
+            SelectedSlice::y
+                = (point.y()
+                   - (SelectedSlice::slice->Geometry().height * 0.5F));
         }
     };
 
@@ -177,9 +188,6 @@ private:
 
     // generate random stack index from 1 to n-1
     static size_t getRandomGoalStackIndex();
-
-    // move slice stored by m_selected, to the QPoints x and y values
-    static void moveSelectedSlice(const QPoint &p);
 
     // check if the goal stack has all valid slices in it
     static bool goalStackIsComplete();
