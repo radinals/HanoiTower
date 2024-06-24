@@ -235,68 +235,63 @@ SettingsWindow::drawPreview()
     const float sceneW = ui->PreviewOut->width();
     const float sceneH = ui->PreviewOut->height();
 
-    // static const int   vpadding           = 0;
+    const QSizeF stack_area(float(sceneW) / Settings.stack_amount,
+                            float(sceneH) * 0.9F);
 
-    const QSizeF base_size((float(sceneW) / (Settings.stack_amount + hpadding))
-                               * 1.5f,
-                           (float(sceneH) * 0.9f));
+    const QSizeF base_slice(stack_area.width() * 0.9F,
+                            stack_area.height() / Config::SLICE_MAX);
 
-    const QSizeF base_slice((base_size.width() * 0.9f),
-                            (base_size.height() / Config::SLICE_MAX));
+    const QSizeF stack_pole(base_slice.width() * 0.1F, stack_area.height());
 
-    const QSizeF stack_pole(base_slice.width() * 0.1f,
-                            base_slice.height() * (Config::SLICE_MAX));
-
-    const QSizeF stack_base(base_slice.width() * 1.1f,
-                            base_slice.height() * 0.2f);
-
-    const float total_stacks_area
-        = ((stack_base.width()) * Settings.stack_amount);
+    const QSizeF stack_base(stack_area.width() - hpadding, base_slice.height());
 
     // Draw the base and the pole -------------------------------------------
 
-    const float start_x
-        = ((sceneW * 0.5F) - (total_stacks_area * 0.5F)) + hpadding;
+    {
+        float x = 0;
+        for (size_t i = 0; i < Settings.stack_amount; i++) {
+            ui->PreviewOut->scene()->addRect(x + (stack_area.width() * 0.5F)
+                                                 - (stack_pole.width() * 0.5f),
+                                             sceneH - stack_pole.height(),
+                                             stack_pole.width(),
+                                             stack_pole.height(),
+                                             pen,
+                                             Settings.stack_color);
 
-    float x = start_x;
-    for (size_t i = 0; i < Settings.stack_amount; i++) {
-        ui->PreviewOut->scene()->addRect(x - (stack_pole.width() * 0.5F),
-                                         sceneH - stack_pole.height(),
-                                         stack_pole.width(),
-                                         stack_pole.height(),
-                                         pen,
-                                         Settings.stack_color);
+            ui->PreviewOut->scene()->addRect(x,
+                                             sceneH - stack_base.height(),
+                                             stack_base.width(),
+                                             stack_base.height(),
+                                             pen,
+                                             Settings.stack_color);
 
-        ui->PreviewOut->scene()->addRect(x - (stack_base.width() * 0.5F),
-                                         sceneH - stack_base.height(),
-                                         stack_base.width(),
-                                         stack_base.height(),
-                                         pen,
-                                         Settings.stack_color);
-
-        x += base_size.width() + hpadding;    // shifting to right
+            x += stack_area.width() + hpadding;    // shifting to right
+        }
     }
 
     // Draw Slices on the first stack ---------------------------------------
+    {
+        QSizeF slice = base_slice;    // scale size
 
-    QSizeF ssize = base_slice;    // scale size
+        const float x = stack_area.width() * 0.5F;
 
-    float y
-        = sceneH - (stack_base.height() + base_slice.height());    // bottom y
+        float y = (sceneH - stack_base.height());    // bottom y
 
-    for (size_t i = 0; i < Settings.slice_amount; i++) {
-        ui->PreviewOut->scene()->addRect(start_x - (ssize.width() * 0.5F),
-                                         y,
-                                         ssize.width(),
-                                         ssize.height(),
-                                         pen,
-                                         Settings.slice_color);
-        // scale down
-        ssize.setHeight(ssize.height()
-                        * Config::H_SCALE_FACTOR);                 // scale down
-        ssize.setWidth(ssize.width() * Config::W_SCALE_FACTOR);    // scale down
+        for (size_t i = 0; i < Settings.slice_amount; i++) {
+            y -= slice.height();    // shift up
 
-        y -= ssize.height();    // shift up
+            ui->PreviewOut->scene()->addRect(x - slice.width() * 0.5F,
+                                             y,
+                                             slice.width(),
+                                             slice.height(),
+                                             pen,
+                                             Settings.slice_color);
+            // scale down
+            slice.setHeight(slice.height()
+                            * Config::H_SCALE_FACTOR);    // scale down
+            slice.setWidth(slice.width()
+                           * Config::W_SCALE_FACTOR);    // scale down
+        }
     }
 
     // ----------------------------------------------------------------------
