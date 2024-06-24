@@ -6,7 +6,6 @@
 #ifndef HANOISLICE_H
 #define HANOISLICE_H
 
-#include <QPixmap>
 #include <QString>
 
 class HanoiSlice {
