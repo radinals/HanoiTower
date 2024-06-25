@@ -26,13 +26,6 @@ private:
 
     bool m_settings_btn_pressed = false;
 
-private slots:
-    void on_BackToMenuBtn_clicked();
-
-    void on_QuitGameBtn_clicked();
-
-    void on_OpenSettingsBtn_clicked();
-
 private:
     Ui::GameWindow *ui;
 

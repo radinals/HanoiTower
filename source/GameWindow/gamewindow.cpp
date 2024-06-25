@@ -44,6 +44,21 @@ GameWindow::GameWindow(QWidget *parent)
     connect(ui->ResetBtn, &QPushButton::clicked, m_game_view, &GameView::reset);
     connect(ui->TimerOut, &QPushButton::clicked, m_game_view, &GameView::pause);
 
+    connect(ui->QuitGameBtn, &QPushButton::clicked, m_game_view, [&](){
+        emit(s_exit_game());
+    });
+
+    connect(ui->BackToMenuBtn, &QPushButton::clicked, m_game_view, [&](){
+        m_game_view->reset();
+        emit(s_back_to_main_menu());
+    });
+
+    connect(ui->OpenSettingsBtn, &QPushButton::clicked, m_game_view, [&](){
+        m_settings_btn_pressed = true;
+        m_game_view->reset();
+        emit(s_open_settings());
+    });
+
     // hide the buttons
     connect(m_game_view, &GameView::s_game_inactive, this, [&]() { ui->AutoSolveBtn->setDisabled(false); });
     connect(m_game_view, &GameView::s_solver_activated, this, [&]() { ui->AutoSolveBtn->setDisabled(true); });
@@ -68,25 +83,4 @@ GameWindow::~GameWindow()
 {
     GameView::destroyInstance();
     delete ui;
-}
-
-void
-GameWindow::on_BackToMenuBtn_clicked()
-{
-    m_game_view->reset();
-    emit(s_back_to_main_menu());
-}
-
-void
-GameWindow::on_QuitGameBtn_clicked()
-{
-    emit(s_exit_game());
-}
-
-void
-GameWindow::on_OpenSettingsBtn_clicked()
-{
-    m_settings_btn_pressed = true;
-    m_game_view->reset();
-    emit(s_open_settings());
 }
