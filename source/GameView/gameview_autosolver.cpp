@@ -17,7 +17,7 @@ GameView::hanoiIterativeSolver()
         = (1 << slice_amount) - 1;    // (2^slice_amount) -1
 
     // starting stack
-    size_t source = 0;
+    const size_t source = 0;
 
     // the goal of the slices
     size_t dest = HanoiStacks::goal_stack->getLabel();
