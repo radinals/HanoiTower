@@ -63,8 +63,8 @@ GameView::drawStackBase(size_t label, float offset, QPainter* const painter)
 
     //--Draw Stack Label--------------------------------------------------
 
-    // set font color for drawing the label
-    painter->setPen(Config::Theme().font_color);
+    const QSize box_size(Geometry::stack_pole.width(),
+                         Geometry::stack_pole.width());
 
     // highlight and draw the indicator if current stack is the goal stack
     if (label == (HanoiStacks::goal_stack->getLabel())) {
@@ -84,24 +84,27 @@ GameView::drawStackBase(size_t label, float offset, QPainter* const painter)
                                 pole_y - (arrow_sprite.height()),
                                 arrow_sprite);
         } else {
-            const float box_size = (Geometry::stack_base.width() * 0.1F) + 4;
-            painter->fillRect(offset - (box_size * 0.5F),    // x
-                              pole_y - (box_size * 0.5F),    // y
-                              box_size,                      // w
-                              box_size * 0.2F,               // h
+            painter->fillRect(offset - (box_size.width() * 0.5F),     // x
+                              pole_y - (box_size.height() * 0.5F),    // y
+                              box_size.width(),                       // w
+                              box_size.height() * 0.2F,               // h
                               Config::Theme().highlight_tint);
         }
     }
 
-    // set the font style and size
-    painter->setFont(QFont(Config::Theme().font_name,             // fontname
-                           Geometry::stack_base.width() * 0.1F    // size
-                           ));
+    // setup font for drawing the label
+    painter->setFont(QFont(Config::Theme().font_name,    // fontname
+                           box_size.width() * 0.9F));
+    painter->setPen(Config::Theme().font_color);
 
+    const QPoint box_point(offset - (Geometry::stack_pole.width() * 0.5F),
+                           pole_y - (box_size.height() * 2));
+
+    const QRect label_bounds = painter->boundingRect(QRect(box_point, box_size),
+                                                     Qt::AlignHCenter,
+                                                     Utils::numToChar(label));
     // draw the stack label
-    painter->drawText(offset - (painter->font().pointSizeF() * 0.5F),
-                      pole_y - painter->font().pointSizeF(),
-                      Utils::numToChar(label));
+    painter->drawText(label_bounds, Utils::numToChar(label));
 }
 
 void
@@ -118,23 +121,27 @@ GameView::drawDialog(const QString&  text,
     colorizeSprite(&dialog, color);
 
     // setup font
-    painter->setFont(QFont(Config::Theme().font_name,    // fontname
-                           Geometry::dialog.width() / text.length()    // size
+    painter->setFont(QFont(Config::Theme().font_name,        // fontname
+                           dialog.width() / text.length()    // size
                            ));
-
-    // set text color
     painter->setPen(Config::Theme().font_color);
 
-    painter->drawPixmap(
-        (Geometry::window.width() * 0.5F) - (dialog.width() * 0.5F),
-        (Geometry::window.height() * 0.5F) - (Geometry::dialog.height() * 0.5F),
-        dialog);
+    // setup bounds to make sure the text is centered
+    const QRect dialog_rect(
+        QPoint(((Geometry::window.width() * 0.5F) - (dialog.width() * 0.5F)),
+               ((Geometry::window.height() * 0.5F) - (dialog.height() * 0.5F))),
+        dialog.size());
 
-    painter->drawText(
-        (Geometry::window.width() * 0.5F)
-            - ((text.length() * painter->font().pointSizeF()) * 0.4f),
-        (Geometry::window.height() * 0.5F) + Geometry::dialog.height() * 0.15F,
-        text);
+    const QRect text_rect = painter->boundingRect(dialog_rect.x(),
+                                                  dialog_rect.y(),
+                                                  dialog_rect.width(),
+                                                  dialog.rect().height() * 0.9F,
+                                                  Qt::AlignCenter,
+                                                  text);
+
+    // render the dialog
+    painter->drawPixmap(dialog_rect, dialog);
+    painter->drawText(text_rect, text);
 }
 
 // add tint to a pixmap, by using masks
