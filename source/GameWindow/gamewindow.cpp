@@ -14,10 +14,10 @@ GameWindow::GameWindow(QWidget *parent)
 
     m_game_view = GameView::getInstance();
 
-    GameView::setGameInfoOutputs(ui->TimerOut,
-                                 ui->MoveCountOut,
-                                 ui->InfoLabel,
-                                 ui->InfoOut);
+    GameView::setSidebarWidget(ui->TimerOut,
+                               ui->MoveCountOut,
+                               ui->InfoLabel,
+                               ui->InfoOut);
 
     ui->GameDisplayFrame->layout()->addWidget(m_game_view);
 

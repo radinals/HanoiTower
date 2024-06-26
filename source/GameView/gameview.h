@@ -52,7 +52,7 @@ public:
 
     // define pointers to the output widgets
     static void
-    setGameInfoOutputs(QPushButton *, QLabel *, QLabel *, QTextEdit *);
+    setSidebarWidget(QPushButton *, QLabel *, QLabel *, QTextEdit *);
 
 private slots:
     // called by timer in every ms
