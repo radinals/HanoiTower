@@ -27,9 +27,14 @@ class GameView : public QWidget {
     Q_OBJECT
 
 public slots:
-    void reset();    // reset the game states, and re-draw
-    void pause();    // halt the timer, inhibit input
-    void solve();    // solve the game automaticly
+    // reset the game states, and re-draw
+    void reset();
+
+    // halt the timer, inhibit input
+    void pause();
+
+    // solve the game automaticly
+    void solve();
 
 private:
     explicit GameView(QWidget *parent = nullptr);
@@ -37,8 +42,10 @@ private:
 public:
     GameView(GameView &&) = delete;
 
+    // create & return gameview instance
     static GameView *const &getInstance();
 
+    // destroy gameview instance
     static void destroyInstance();
 
     ~GameView() override;
@@ -58,17 +65,26 @@ private:
     QSoundEffect *m_placement_fx = nullptr;
 #endif
 
+    // =======================================================================
+
+    // Stores game sprites
     struct GameSprites {
         static inline QColor   stack_tint, slice_tint;
         static inline QPixmap *stack_pole = nullptr, *stack_base = nullptr,
                               *arrow = nullptr, *slice = nullptr;
     };
 
+    // =======================================================================
+
+    // Stores game object sizes
     struct Geometry {
         static inline QSizeF stack_area, stack_base, slice, dialog, window,
             stack_pole;
     };
 
+    // =======================================================================
+
+    // Stores the current slice and it's source stack selected
     struct SelectedSlice {
         static inline HanoiStack *stack = nullptr;    // source stack
         static inline HanoiSlice *slice = nullptr;    // selected slice
@@ -87,6 +103,9 @@ private:
         }
     };
 
+    // =======================================================================
+
+    // Stores the Sidebar Widget instances
     struct SidebarWidgets {
         static inline QLabel *move_count_out    = nullptr,
                              *info_msg_label    = nullptr;
@@ -94,6 +113,9 @@ private:
         static inline QTextEdit   *info_msg_out = nullptr;
     };
 
+    // =======================================================================
+
+    // Stores the stacks and slices of the game
     struct HanoiStacks {
         // all slices in game
         static inline HanoiSlice *slices[Config::SLICE_MAX];
@@ -105,10 +127,15 @@ private:
         static inline HanoiStack *goal_stack = nullptr;
     };
 
+    // =======================================================================
+
+    // Stores the QTimer instances and time elapsed
     struct TimeInfo {
         static QTimer               timer;
         static inline long long int elapsed = 0;    // ms
     };
+
+    // =======================================================================
 
     enum class GameState {
         NotRunning,
@@ -119,63 +146,112 @@ private:
         AutoSolving,
     };
 
+    // Stores the current game state
     static inline GameState m_game_state = GameState::NotRunning;
 
+    // =======================================================================
+
+    // Stores the Solver Task thread instance and state
     struct SolverTask {
         static inline std::atomic_bool stop_solving  = false;
         static inline std::atomic_bool pause_solving = false;
         static inline std::thread     *work_thread   = nullptr;
     };
 
+    // Handles Solver Thread ================================================
+
+    // hanoi tower puzzle solver
+    void hanoiIterativeSolver();
+
+    // runs the solver on a different thread
+    void start_solver_task();
+
+    // check if a task is already running
     static bool has_solver_task();
+
+    // check if the solver task is paused
     static bool has_paused_solver_task();
 
-    void        start_solver_task();
+    // halt the solver loop, and return from thread
     static void stop_solver_task();
+
+    // halt the solver loop
     static void pause_solver_task();
+
+    // un-halt the solver loop
     static void unpause_solver_task();
 
-    void        clear();    // reset the game states
+    // Reset =================================================================
+
+    // clear & reset the stacks & slices
+    void clear();    // reset the game states
+
+    // clear & reset all stack
     static void resetStacks();
+
+    // clear & reset all stack
     static void resetSlices();
+
+    // generate a random goal stack
     static void setGoalStack();
 
-    // calculate click area, returns stack under click
-    static HanoiStack *calculateStackByPos(const QPointF &);
+    // Scaling ===============================================================
 
     // calculate the base sizes
     void calculateBaseSizes();
+
+    // handles slice scaling
+    static void scaleSlices();
+
+    // handles stack scaling
+    static void scaleStack();
+
+    // Drawing/Rendering =====================================================
+
+    // draws a single stack and also it's slices
+    static void drawStack(float, HanoiStack *const, QPainter *const);
+
+    // draw the stack base/background
+    static void drawStackBase(size_t, float, QPainter *const);
+
+    // draw a dialog sprite in the center of the screen
+    static void drawDialog(const QString &, const QColor &, QPainter *const);
+
+    // Input Event ===========================================================
+
+    // on mouse press
+    void mousePressEvent(QMouseEvent *const) override;
+
+    // on mouse press release
+    void mouseReleaseEvent(QMouseEvent *const) override;
+
+    // on mouse movement
+    void mouseMoveEvent(QMouseEvent *const) override;
+
+    // Widget events =========================================================
+
+    // widget repaint event
+    void paintEvent(QPaintEvent *const) override;
+
+    // widget resize event
+    void resizeEvent(QResizeEvent *const) override;
+
+    // hide event
+    void hideEvent(QHideEvent *const) override;
+
+    // show/unhide event
+    void showEvent(QShowEvent *const) override;
+
+    // =======================================================================
+
+    // calculate click area, returns stack under click
+    static HanoiStack *calculateStackByPos(const QPointF &);
 
     // updates sidebar values
     static void updateInfo();
 
     // get pointer to stack of 'label'
     static HanoiStack *getStack(size_t label);
-
-    // handles drawing/rendering
-    static void drawStack(float, HanoiStack *const, QPainter *const);
-    static void drawStackBase(size_t, float, QPainter *const);
-    static void drawDialog(const QString &, const QColor &, QPainter *const);
-
-    static void scaleSlices();    // handles slice scaling
-    static void scaleStack();     // handles stack scaling
-
-    void hanoiIterativeSolver();
-
-    // QWidget Event Handlers
-
-    // input event
-    void mousePressEvent(QMouseEvent *const) override;
-    void mouseReleaseEvent(QMouseEvent *const) override;
-    void mouseMoveEvent(QMouseEvent *const) override;
-
-    // render events
-    void paintEvent(QPaintEvent *const) override;
-    void resizeEvent(QResizeEvent *const) override;
-
-    // widget state event
-    void hideEvent(QHideEvent *const) override;
-    void showEvent(QShowEvent *const) override;
 
     // tints pixmaps
     static void colorizeSprite(QPixmap *const, const QColor &);
@@ -189,6 +265,7 @@ private:
     // check if the goal stack has all valid slices in it
     static bool goalStackIsComplete();
 
+    // check if a move from 'source' to 'dest' stack is possible
     inline static bool moveisLegal(const HanoiStack &source,
                                    const HanoiStack &dest);
 
