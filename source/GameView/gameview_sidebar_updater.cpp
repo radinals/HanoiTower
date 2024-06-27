@@ -28,7 +28,7 @@ void
 GameView::updateInfo()
 {
     if (SidebarWidgets::timer_out != nullptr) {
-        if (m_game_state == GameState::Paused) {
+        if (m_game_state == GameState::GAME_PAUSED) {
             SidebarWidgets::timer_out->setText(" PAUSED ");
         } else if (has_solver_task()) {
             SidebarWidgets::timer_out->setText("--:--:--");

@@ -18,7 +18,7 @@ GameView::clear()
     resetStacks();
     resetSlices();
 
-    m_game_state = GameState::NotRunning;
+    m_game_state = GameState::GAME_INACTIVE;
 }
 
 void

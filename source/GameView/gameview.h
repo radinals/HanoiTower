@@ -138,16 +138,15 @@ private:
     // =======================================================================
 
     enum class GameState {
-        NotRunning,
-        Running,
-        Paused,
-        GameOverLost,
-        GameOverWon,
-        AutoSolving,
+        GAME_INACTIVE,
+        GAME_RUNNING,
+        GAME_PAUSED,
+        GAME_OVER_LOST,
+        GAME_OVER_WON,
     };
 
     // Stores the current game state
-    static inline GameState m_game_state = GameState::NotRunning;
+    static inline GameState m_game_state = GameState::GAME_INACTIVE;
 
     // =======================================================================
 

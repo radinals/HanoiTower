@@ -66,12 +66,12 @@ GameView::checkWinState()
     }
 
     if (goalStackIsComplete()) {
-        m_game_state = GameState::GameOverWon;
+        m_game_state = GameState::GAME_OVER_WON;
         TimeInfo::timer.stop();
         emit(s_game_over());
         repaint();
     } else if (TimeInfo::elapsed >= Config::Settings::time_length_ms) {
-        m_game_state = GameState::GameOverLost;
+        m_game_state = GameState::GAME_OVER_LOST;
         TimeInfo::timer.stop();
         emit(s_game_over());
         repaint();

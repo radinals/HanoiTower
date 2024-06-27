@@ -14,7 +14,9 @@
 void
 GameView::mousePressEvent(QMouseEvent* const event)
 {
-    if (SelectedSlice::hasSelected() || m_game_state != GameState::Running
+    if (has_solver_task()) return;
+
+    if (SelectedSlice::hasSelected() || m_game_state != GameState::GAME_RUNNING
         || !clickInBounds(event->pos())) {
         return;
     }
@@ -43,7 +45,9 @@ GameView::mousePressEvent(QMouseEvent* const event)
 void
 GameView::mouseMoveEvent(QMouseEvent* const event)
 {
-    if (!SelectedSlice::hasSelected() || m_game_state != GameState::Running
+    if (has_solver_task()) return;
+
+    if (!SelectedSlice::hasSelected() || m_game_state != GameState::GAME_RUNNING
         || !clickInBounds(event->pos())) {
         return;
     }
@@ -57,7 +61,10 @@ GameView::mouseMoveEvent(QMouseEvent* const event)
 void
 GameView::mouseReleaseEvent(QMouseEvent* const event)
 {
-    if (!SelectedSlice::hasSelected() || m_game_state != GameState::Running) {
+    if (has_solver_task()) return;
+
+    if (!SelectedSlice::hasSelected()
+        || m_game_state != GameState::GAME_RUNNING) {
         return;
     }
 
@@ -77,7 +84,8 @@ GameView::mouseReleaseEvent(QMouseEvent* const event)
     m_move_count++;
 
     // start the timer
-    if (m_game_state == GameState::Running && !TimeInfo::timer.isActive()) {
+    if (m_game_state == GameState::GAME_RUNNING
+        && !TimeInfo::timer.isActive()) {
         TimeInfo::timer.start(1);
         emit(s_game_started());
     }

@@ -85,7 +85,7 @@ void
 GameView::resizeEvent(QResizeEvent* event)
 {
     calculateBaseSizes();
-    if (m_game_state != GameState::NotRunning) {
+    if (m_game_state != GameState::GAME_INACTIVE) {
         scaleStack();
         scaleSlices();
     }

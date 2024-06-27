@@ -59,7 +59,7 @@ GameView::GameView(QWidget *parent) : QWidget { parent }
 
 GameView::~GameView()
 {
-    if (m_game_state == GameState::AutoSolving) { stop_solver_task(); }
+    if (has_solver_task()) { stop_solver_task(); }
 #ifndef DISABLE_AUDIO
     delete m_placement_fx;
 #endif
@@ -92,7 +92,7 @@ GameView::solve()
     // reset the stacks first
     clear();
 
-    m_game_state = GameState::AutoSolving;
+    m_game_state = GameState::GAME_RUNNING;
 
     // start timer
     TimeInfo::timer.start(1);
@@ -106,23 +106,18 @@ void
 GameView::pause()
 {
     switch (m_game_state) {
-        case GameState::Paused:
+        case GameState::GAME_PAUSED:
             TimeInfo::timer.start(1);
             updateInfo();
-            if (has_paused_solver_task()) {
-                unpause_solver_task();
-                m_game_state = GameState::AutoSolving;
-            } else {
-                m_game_state = GameState::Running;
-            }
+            if (has_paused_solver_task()) { unpause_solver_task(); }
+            m_game_state = GameState::GAME_RUNNING;
             emit(s_unpaused());
             break;
-        case GameState::AutoSolving:
-            pause_solver_task();
-        case GameState::Running:
+        case GameState::GAME_RUNNING:
+            if (has_solver_task()) { pause_solver_task(); }
             if (!TimeInfo::timer.isActive()) { return; }
             TimeInfo::timer.stop();
-            m_game_state = GameState::Paused;
+            m_game_state = GameState::GAME_PAUSED;
             emit(s_paused());
             updateInfo();
             break;
@@ -159,7 +154,7 @@ GameView::reset()
     m_placement_fx->setVolume(Config::Settings::fx_volume);
 #endif
 
-    m_game_state = GameState::Running;
+    m_game_state = GameState::GAME_RUNNING;
 
     emit(s_game_inactive());
 
