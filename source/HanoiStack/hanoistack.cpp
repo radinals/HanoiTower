@@ -29,11 +29,11 @@ HanoiStack::push(HanoiSlice* slice)
     } else {
         HanoiSlice* old_head = m_head;
 
-        slice->next    = old_head;
-        old_head->prev = slice;
+        slice->next()    = old_head;
+        old_head->prev() = slice;
 
-        m_head       = slice;
-        m_head->prev = nullptr;
+        m_head         = slice;
+        m_head->prev() = nullptr;
     }
     m_size++;
 }
@@ -57,13 +57,13 @@ HanoiStack::pop()
 
     HanoiSlice* popped = m_head;
 
-    m_head = m_head->next;
+    m_head = m_head->next();
 
-    if (m_head != nullptr) { m_head->prev = nullptr; }
+    if (m_head != nullptr) { m_head->prev() = nullptr; }
 
     --m_size;
 
-    popped->next = popped->prev = nullptr;
+    popped->prev() = popped->prev() = nullptr;
 
     return popped;
 }

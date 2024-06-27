@@ -48,7 +48,8 @@ GameView::resetSlices()
     HanoiSlice *slice = getStack(0)->getTop();
     while (slice != nullptr) {
         HanoiStacks::slices[slice->getValue()] = slice;
-        slice                                  = slice->next;
+
+        slice = slice->next();
     }
 
     // setup the sprite scaling

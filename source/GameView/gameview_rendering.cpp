@@ -12,9 +12,9 @@
 
 // draws a single stack with all of it's slices.
 void
-GameView::drawStack(float             offset,
-                    HanoiStack* const stack,
-                    QPainter* const   painter)
+GameView::drawStack(float                   offset,
+                    const HanoiStack* const stack,
+                    QPainter* const         painter)
 {
     // draw the stack base
     drawStackBase(stack->getLabel(), offset, painter);
@@ -23,7 +23,7 @@ GameView::drawStack(float             offset,
 
     float y_offset = Geometry::window.height() - Geometry::stack_base.height();
 
-    HanoiSlice* slice = stack->getTail();
+    const HanoiSlice* slice = stack->getTail();
     while (slice != nullptr) {
         y_offset -= std::floor(slice->Geometry().height);
 
@@ -32,8 +32,7 @@ GameView::drawStack(float             offset,
             y_offset,
             GameSprites::slice->scaled(slice->Geometry().width,
                                        slice->Geometry().height));
-
-        slice = slice->prev;
+        slice = slice->prev();
     }
 }
 
