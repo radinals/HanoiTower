@@ -63,7 +63,7 @@ HanoiStack::pop()
 
     --m_size;
 
-    popped->prev() = popped->prev() = nullptr;
+    popped->next() = popped->prev() = nullptr;
 
     return popped;
 }
