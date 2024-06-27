@@ -22,13 +22,15 @@ MainWindow::MainWindow(QWidget *parent)
     m_settings_window = new SettingsWindow(this);
     m_game_window     = new GameWindow(this);
 
-    ui->SettingsViewFrame->layout()->addWidget(m_settings_window);
-    ui->GameViewFrame->layout()->addWidget(m_game_window);
+    ui->WidgetFrame->layout()->addWidget(m_settings_window);
+    ui->WidgetFrame->layout()->addWidget(m_game_window);
 
     ui->GameTitle->setPixmap(m_logo);
-    ui->SettingsViewFrame->hide();
-    ui->GameViewFrame->hide();
+
+    ui->WidgetFrame->hide();
     ui->GameMenuFrame->show();
+    m_game_window->hide();
+    m_settings_window->hide();
 
 #ifndef DISABLE_AUDIO
     Config::m_bg_music_output = m_background_music.m_audio_output;
@@ -101,23 +103,25 @@ MainWindow::exitGame()
 void
 MainWindow::openMainMenu()
 {
-    ui->SettingsViewFrame->hide();
-    ui->GameViewFrame->hide();
     ui->GameMenuFrame->show();
+    ui->WidgetFrame->hide();
+    m_settings_window->hide();
+    m_game_window->hide();
 }
 
 void
 MainWindow::openGameView()
 {
     ui->GameMenuFrame->hide();
-    ui->GameViewFrame->show();
+    ui->WidgetFrame->show();
+    m_game_window->show();
 }
 
 void
 MainWindow::openSettingsMenu()
 {
-    ui->GameViewFrame->hide();
     ui->GameMenuFrame->hide();
-    ui->SettingsViewFrame->show();
+    ui->WidgetFrame->show();
+    m_game_window->hide();
     m_settings_window->show();
 }
