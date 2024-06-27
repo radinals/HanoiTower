@@ -15,9 +15,7 @@ void
 GameView::mousePressEvent(QMouseEvent* const event)
 {
     if (SelectedSlice::hasSelected() || m_game_state != GameState::Running
-        || (event->pos().x() <= 0 || event->pos().y() <= 0)
-        || (event->pos().x() >= Geometry::window.width()
-            || event->pos().y() >= Geometry::window.height())) {
+        || !clickInBounds(event->pos())) {
         return;
     }
 
@@ -46,9 +44,7 @@ void
 GameView::mouseMoveEvent(QMouseEvent* const event)
 {
     if (!SelectedSlice::hasSelected() || m_game_state != GameState::Running
-        || (event->pos().x() <= 0 || event->pos().y() <= 0)
-        || (event->pos().x() >= Geometry::window.width()
-            || event->pos().y() >= Geometry::window.height())) {
+        || !clickInBounds(event->pos())) {
         return;
     }
 
@@ -116,4 +112,12 @@ GameView::calculateStackByPos(const QPointF& point)
 
     throw std::runtime_error(
         "GameView::calculateStackByPos(): point is out of bounds");
+}
+
+bool
+GameView::clickInBounds(const QPoint& p)
+{
+    return (p.x() >= 0 && p.y() >= 0)
+           && (p.x() < Geometry::window.width()
+               && p.y() < Geometry::window.height());
 }

@@ -244,6 +244,8 @@ private:
 
     // =======================================================================
 
+    static bool clickInBounds(const QPoint &);
+
     // calculate click area, returns stack under click
     static HanoiStack *calculateStackByPos(const QPointF &);
 
