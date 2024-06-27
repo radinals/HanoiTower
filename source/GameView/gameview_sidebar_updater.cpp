@@ -10,10 +10,10 @@
 #include <QPushButton>
 
 void
-GameView::setGameInfoOutputs(QPushButton *time,
-                             QLabel      *moves,
-                             QLabel      *info_box_label,
-                             QTextEdit   *info_box)
+GameView::setSidebarWidget(QPushButton *time,
+                           QLabel      *moves,
+                           QLabel      *info_box_label,
+                           QTextEdit   *info_box)
 {
     SidebarWidgets::timer_out      = time;
     SidebarWidgets::move_count_out = moves;
