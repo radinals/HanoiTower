@@ -51,6 +51,12 @@ GameWindow::GameWindow(QWidget *parent)
     ui->AutoSolveBtn->setIconSize(QSize(ui->AutoSolveBtn->size().height(),
                                         ui->AutoSolveBtn->size().height()));
 
+    ui->RedoBtn->setIcon(QIcon(QPixmap(Config::AssetsFiles::REDO_BTN_ICON)));
+    ui->RedoBtn->setIconSize(QSize(ui->RedoBtn->height(), ui->RedoBtn->height()));
+
+    ui->UndoBtn->setIcon(QIcon(QPixmap(Config::AssetsFiles::UNDO_BTN_ICON)));
+    ui->UndoBtn->setIconSize(QSize(ui->UndoBtn->height(), ui->UndoBtn->height()));
+
     //========================================================================
 
     connect(ui->AutoSolveBtn, &QPushButton::clicked, m_game_view, &GameView::solve);
@@ -96,6 +102,9 @@ GameWindow::GameWindow(QWidget *parent)
         ui->TimerOut->setIcon(
             QIcon(QPixmap(Config::AssetsFiles::PLAY_BTN_ICON)));
     });
+
+    connect(ui->UndoBtn, &QPushButton::clicked, m_game_view, &GameView::undo);
+    connect(ui->RedoBtn, &QPushButton::clicked, m_game_view, &GameView::redo);
 
     //========================================================================
 }

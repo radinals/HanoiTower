@@ -7,6 +7,7 @@
 
 #include "../Config/config.h"
 #include "../HanoiStack/hanoistack.h"
+#include "../Utils/Stack.h"
 
 #include <QCoreApplication>
 #include <QLabel>
@@ -17,6 +18,7 @@
 #include <QWidget>
 #include <atomic>
 #include <thread>
+#include <utility>
 
 #ifndef DISABLE_AUDIO
     #include <QSoundEffect>
@@ -35,6 +37,10 @@ public slots:
 
     // solve the game automaticly
     void solve();
+
+    void undo();
+
+    void redo();
 
 private:
     explicit GameView(QWidget *parent = nullptr);
@@ -148,6 +154,9 @@ private:
 
     // Stores the current game state
     static inline GameState m_game_state = GameState::GAME_INACTIVE;
+
+    static inline Stack<std::pair<HanoiStack *, HanoiStack *>> m_move_history;
+    static inline Stack<std::pair<HanoiStack *, HanoiStack *>> m_redo_history;
 
     // =======================================================================
 

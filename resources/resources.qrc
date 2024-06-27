@@ -18,5 +18,7 @@
         <file>ui/pause_btn_icon.png</file>
         <file>ui/play_btn_icon.png</file>
         <file>ui/auto_solve_btn_icon.png</file>
+        <file>ui/redo_btn_icon.png</file>
+        <file>ui/undo_btn_icon.png</file>
     </qresource>
 </RCC>

@@ -40,6 +40,8 @@ struct Config {
         static const inline QString PAUSE_BTN_ICON = ":/ui/pause_btn_icon.png";
         static const inline QString PLAY_BTN_ICON = ":/ui/play_btn_icon.png";
         static const inline QString AUTO_SOLVE_BTN_ICON = ":/ui/auto_solve_btn_icon.png";
+        static const inline QString UNDO_BTN_ICON = ":/ui/undo_btn_icon.png";
+        static const inline QString REDO_BTN_ICON = ":/ui/redo_btn_icon.png";
     } ;
 
     // clang-format on

@@ -49,6 +49,18 @@ QLabel {
   color : #f9f9f9;
 }
 
+#PauseBtn,
+#BackToMenuBtn,
+#OpenSettingsBtn,
+#QuitGameBtn,
+#AutoSolveBtn,
+#ResetBtn,
+#UndoBtn,
+#RedoBtn {
+  background: #2a2c30;
+  border-width: 0px;
+}
+
 #SaveButton,
 #CancelButton,
 QPushButton {
@@ -60,26 +72,17 @@ QPushButton {
   border-radius: 10px;
 }
 
-#AutoSolveBtn,
-#ResetBtn,
-#PauseBtn,
-#BackToMenuBtn,
-#OpenSettingsBtn,
-#QuitGameBtn{
-  background: #343442;
-  border-width: 0px;
-}
-
-
-#ResetBtn::clicked,
-#AutoSolveBtn::clicked,
-#PauseBtn::clicked,
-#BackToMenuBtn::clicked,
-#OpenSettingsBtn::clicked,
-#QuitGameBtn::clicked,
-#SaveButton::clicked,
-#CancelButton::clicked{
-  background: #343442;
+#UndoBtn::pressed,
+#RedoBtn::pressed,
+#ResetBtn::pressed,
+#AutoSolveBtn::pressed,
+#PauseBtn::pressed,
+#BackToMenuBtn::pressed,
+#OpenSettingsBtn::pressed,
+#QuitGameBtn::pressed,
+#SaveButton::pressed,
+#CancelButton::pressed {
+  background: #59637c;
 }
 
 

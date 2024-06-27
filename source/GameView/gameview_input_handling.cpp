@@ -6,6 +6,7 @@
 
 #include <QMouseEvent>
 #include <stdexcept>
+#include <utility>
 
 #include "../Config/config.h"
 
@@ -68,9 +69,9 @@ GameView::mouseReleaseEvent(QMouseEvent* const event)
         return;
     }
 
+    HanoiStack* destination_stack = nullptr;
     try {
-        HanoiStack* destination_stack
-            = calculateStackByPos(event->position().toPoint());
+        destination_stack = calculateStackByPos(event->position().toPoint());
         destination_stack->push(SelectedSlice::slice);
     } catch (...) {
         SelectedSlice::stack->push(SelectedSlice::slice);
@@ -82,6 +83,12 @@ GameView::mouseReleaseEvent(QMouseEvent* const event)
 
     // increment the move counter
     m_move_count++;
+
+    if (!m_redo_history.isEmpty()) { m_redo_history.clear(); }
+
+    // save the move (source, dest)
+    m_move_history.push(
+        std::make_pair(SelectedSlice::stack, destination_stack));
 
     // start the timer
     if (m_game_state == GameState::GAME_RUNNING

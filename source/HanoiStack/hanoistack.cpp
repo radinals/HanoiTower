@@ -5,6 +5,7 @@
 #include "hanoistack.h"
 
 #include "hanoislice.h"
+#include <stdexcept>
 
 void
 HanoiStack::clearStack()
@@ -53,7 +54,9 @@ HanoiStack::peek() const
 HanoiSlice*
 HanoiStack::pop()
 {
-    assert(!isEmpty());
+    if (isEmpty()) {
+        throw std::out_of_range("HanoiStack::pop(): Stack Is Empty");
+    }
 
     HanoiSlice* popped = m_head;
 

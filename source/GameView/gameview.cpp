@@ -137,6 +137,9 @@ GameView::reset()
     TimeInfo::elapsed = 0;
     m_move_count      = 0;
 
+    m_redo_history.clear();
+    m_redo_history.clear();
+
     // stop the timer (if any)
     TimeInfo::timer.stop();
 
@@ -159,4 +162,56 @@ GameView::reset()
     emit(s_game_inactive());
 
     repaint();
+}
+
+void
+GameView::undo()
+{
+    if (m_move_history.isEmpty()
+        || (m_game_state != GameState::GAME_RUNNING
+            && m_game_state != GameState::GAME_PAUSED)) {
+        return;
+    }
+
+    std::pair<HanoiStack *, HanoiStack *> move = m_move_history.getTop();
+
+    try {
+        move.first->push(move.second->pop());
+    } catch (...) {
+        return;
+    }
+
+    --m_move_count;
+
+    repaint();
+
+    m_redo_history.push(move);
+
+    m_move_history.pop();
+}
+
+void
+GameView::redo()
+{
+    if (m_redo_history.isEmpty()
+        || (m_game_state != GameState::GAME_RUNNING
+            && m_game_state != GameState::GAME_PAUSED)) {
+        return;
+    }
+
+    std::pair<HanoiStack *, HanoiStack *> move = m_redo_history.getTop();
+
+    try {
+        move.second->push(move.first->pop());
+    } catch (...) {
+        return;
+    }
+
+    ++m_move_count;
+
+    repaint();
+
+    m_move_history.push(move);
+
+    m_redo_history.pop();
 }
