@@ -91,10 +91,11 @@ GameView::solve()
     // reset the stacks first
     clear();
 
-    m_game_state = GameState::GAME_RUNNING;
+    // stop the timer if active
+    if (TimeInfo::timer.isActive()) { TimeInfo::timer.stop(); }
 
-    // start timer
-    TimeInfo::timer.start(1);
+    // set state to be running
+    m_game_state = GameState::GAME_RUNNING;
 
     repaint();    // repaint first
 

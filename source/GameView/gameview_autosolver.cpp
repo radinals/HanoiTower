@@ -60,6 +60,12 @@ GameView::hanoiIterativeSolver()
         // redraw screeen
         QMetaObject::invokeMethod(this, "repaint", Qt::QueuedConnection);
 
+        if (goalStackIsComplete()) {
+            m_game_state = GameState::GAME_OVER_SOLVER_DONE;
+            emit(s_game_over());
+            break;
+        }
+
         // wait for some time
         std::this_thread::sleep_for(
             std::chrono::milliseconds(Config::SOLVER_DELAY));

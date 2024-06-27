@@ -143,6 +143,7 @@ private:
         GAME_PAUSED,
         GAME_OVER_LOST,
         GAME_OVER_WON,
+        GAME_OVER_SOLVER_DONE,
     };
 
     // Stores the current game state

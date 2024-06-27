@@ -73,7 +73,7 @@ GameView::drawStackBase(size_t label, float offset, QPainter* const painter)
         // draw the arrow if the timer is not running or
         // draw indicator instead
         if (m_game_state == GameState::GAME_RUNNING
-            && !TimeInfo::timer.isActive()) {
+            && !TimeInfo::timer.isActive() && !has_solver_task()) {
             const QPixmap arrow_sprite = GameSprites::arrow->scaled(
                 offset - Geometry::stack_area.width() * 0.5F,
                 Geometry::stack_base.width() * 0.1F);
@@ -203,11 +203,17 @@ GameView::paintEvent(QPaintEvent* event)
     // render the game over screens
     switch (m_game_state) {
         case GameState::GAME_OVER_LOST:
-            drawDialog("TIME's UP!", Config::Theme().lose_dialog_tint, &p);
+            drawDialog("TIME's UP!", Config::Theme::lose_dialog_tint, &p);
             break;
 
         case GameState::GAME_OVER_WON:
-            drawDialog("YOU WIN", Config::Theme().win_dialog_tint, &p);
+            drawDialog("YOU WIN", Config::Theme::win_dialog_tint, &p);
+            break;
+
+        case GameState::GAME_OVER_SOLVER_DONE:
+            drawDialog("SOLVER DONE",
+                       Config::Theme::solver_done_dialog_tint,
+                       &p);
             break;
 
         default:

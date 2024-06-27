@@ -45,13 +45,14 @@ struct Config {
     // clang-format on
 
     struct Theme {
-        static inline QString       font_name          = "monospace";
-        static inline QColor        font_color         = "#fffeee";
-        static inline QColor        highlight_tint     = "#e8d81c";
-        static inline QColor        stack_tint         = DEFAULT_STACK_TINT;
-        static inline QColor        slice_tint         = DEFAULT_SLICE_TINT;
-        static inline QColor        win_dialog_tint    = "#28ab2b";
-        static inline QColor        lose_dialog_tint   = "#ab282f";
+        static inline QString       font_name        = "monospace";
+        static inline QColor        font_color       = "#fffeee";
+        static inline QColor        highlight_tint   = "#e8d81c";
+        static inline QColor        stack_tint       = DEFAULT_STACK_TINT;
+        static inline QColor        slice_tint       = DEFAULT_SLICE_TINT;
+        static inline QColor        win_dialog_tint  = "#28ab2b";
+        static inline QColor        lose_dialog_tint = "#ab282f";
+        static inline QColor        solver_done_dialog_tint = "#DEDE00";
         static const inline QString default_stylesheet = ":/style/default.qss";
     };
 
