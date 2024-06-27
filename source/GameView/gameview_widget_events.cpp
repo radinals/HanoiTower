@@ -10,9 +10,9 @@
 void
 GameView::hideEvent(QHideEvent *event)
 {
-    emit(s_hidden());
     reset();
     m_game_state = GameState::GAME_INACTIVE;
+    emit(s_hidden());
     QWidget::hideEvent(event);
 }
 

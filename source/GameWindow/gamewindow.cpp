@@ -70,7 +70,6 @@ GameWindow::GameWindow(QWidget *parent)
 
     connect(ui->OpenSettingsBtn, &QPushButton::clicked, m_game_view, [&]() {
         m_settings_btn_pressed = true;
-        m_game_view->reset();
         emit(s_open_settings());
     });
 
