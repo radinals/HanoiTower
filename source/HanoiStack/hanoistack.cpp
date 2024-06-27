@@ -27,13 +27,13 @@ HanoiStack::push(HanoiSlice* slice)
             "HanoiStack::push(): tried to move a larger slice on top a smaller "
             "slice.");
     } else {
-        HanoiSlice* old_head = m_head;
-
-        slice->next()    = old_head;
-        old_head->prev() = slice;
-
+        slice->next()  = m_head;
+        slice->prev()  = nullptr;
+        m_head->prev() = slice;
         m_head         = slice;
-        m_head->prev() = nullptr;
+
+        assert(m_head != nullptr);
+        assert(m_head->next() != nullptr);
     }
     m_size++;
 }
