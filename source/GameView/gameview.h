@@ -277,7 +277,7 @@ private:
     static bool goalStackIsComplete();
 
     // check if a move from 'source' to 'dest' stack is possible
-    inline static bool moveisLegal(const HanoiStack &source,
+    static inline bool moveisLegal(const HanoiStack &source,
                                    const HanoiStack &dest);
 
 signals:
