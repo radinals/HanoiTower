@@ -45,12 +45,9 @@ GameView::resetSlices()
     std::memset(&HanoiStacks::slices, 0, Config::Settings::slice_amount);
 
     // save the slices to the array
-    HanoiSlice *slice = getStack(0)->getTop();
-    while (slice != nullptr) {
+    getStack(0)->forEverySlice([&](HanoiSlice *&slice) {
         HanoiStacks::slices[slice->getLabel()] = slice;
-
-        slice = slice->Next();
-    }
+    });
 
     // setup the sprite scaling
     scaleSlices();

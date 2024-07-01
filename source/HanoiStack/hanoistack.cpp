@@ -5,6 +5,8 @@
 #include "hanoistack.h"
 
 #include "hanoislice.h"
+#include <cassert>
+#include <functional>
 #include <stdexcept>
 
 void
@@ -63,4 +65,24 @@ HanoiStack::pop()
     popped->Next() = popped->Prev() = nullptr;
 
     return popped;
+}
+
+void
+HanoiStack::forEverySlice(const std::function<void(HanoiSlice*&)>& func)
+{
+    HanoiSlice* slice = m_head;
+    while (slice != nullptr) {
+        func(slice);
+        slice = slice->Next();
+    }
+}
+
+void
+HanoiStack::forEverySliceReversed(const std::function<void(HanoiSlice*&)>& func)
+{
+    HanoiSlice* slice = m_tail;
+    while (slice != nullptr) {
+        func(slice);
+        slice = slice->Prev();
+    }
 }

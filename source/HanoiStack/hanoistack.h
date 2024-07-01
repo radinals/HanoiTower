@@ -9,8 +9,8 @@
 
 #include "hanoislice.h"
 
-#include <QPixmap>
-#include <QString>
+#include <cstddef>
+#include <functional>
 
 class HanoiStack {
 public:
@@ -34,6 +34,9 @@ public:
     static void fillStack(HanoiStack* stack, size_t slice_amount);
 
     inline const size_t& getLabel() const { return m_label; };
+
+    void forEverySlice(const std::function<void(HanoiSlice*&)>& func);
+    void forEverySliceReversed(const std::function<void(HanoiSlice*&)>& func);
 
 private:
     size_t m_size  = 0;

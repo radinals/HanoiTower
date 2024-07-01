@@ -21,16 +21,14 @@ GameView::drawStack(float offset, HanoiStack* stack, QPainter* const painter)
 
     float y_offset = Geometry::window.height() - Geometry::stack_base.height();
 
-    HanoiSlice* slice = stack->getTail();
-    while (slice != nullptr) {
+    stack->forEverySliceReversed([&](HanoiSlice*& slice) {
         y_offset -= std::floor(slice->Height());
 
         painter->drawPixmap(
             offset - (slice->Width() * 0.5F),
             y_offset,
             GameSprites::slice->scaled(slice->Width(), slice->Height()));
-        slice = slice->Prev();
-    }
+    });
 }
 
 // render the stack base
