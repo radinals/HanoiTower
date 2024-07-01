@@ -11,6 +11,7 @@
 
 #include <QCoreApplication>
 #include <QLabel>
+#include <QPainter>
 #include <QPushButton>
 #include <QTextEdit>
 #include <QTime>
@@ -221,7 +222,9 @@ private:
     static void drawStack(float, HanoiStack *, QPainter *const);
 
     // draw the stack base/background
-    static void drawStackBase(size_t, float, QPainter *const);
+    static void drawStackBase(float, QPainter *const);
+
+    static void drawStackLabel(size_t, float, QPainter *const);
 
     // draw a dialog sprite in the center of the screen
     static void drawDialog(const QString &, const QColor &, QPainter *const);

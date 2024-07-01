@@ -12,53 +12,60 @@
 
 // draws a single stack with all of it's slices.
 void
-GameView::drawStack(float offset, HanoiStack* stack, QPainter* const painter)
+GameView::drawStack(float x_axis, HanoiStack* stack, QPainter* const painter)
 {
-    // draw the stack base
-    drawStackBase(stack->getLabel(), offset, painter);
+    assert(painter != nullptr);
+    assert(painter->isActive());
 
     if (stack->isEmpty()) { return; }
 
-    float y_offset = Geometry::window.height() - Geometry::stack_base.height();
+    float y_axis = Geometry::window.height() - Geometry::stack_base.height();
 
     stack->forEverySliceReversed([&](HanoiSlice*& slice) {
-        y_offset -= std::floor(slice->Height());
+        y_axis -= std::floor(slice->Height());
 
         painter->drawPixmap(
-            offset - (slice->Width() * 0.5F),
-            y_offset,
+            x_axis - (slice->Width() * 0.5F),
+            y_axis,
             GameSprites::slice->scaled(slice->Width(), slice->Height()));
     });
 }
 
 // render the stack base
 void
-GameView::drawStackBase(size_t label, float offset, QPainter* const painter)
+GameView::drawStackBase(float x_axis, QPainter* const painter)
 {
     assert(painter != nullptr);
     assert(painter->isActive());
 
-    //--Draw Stack Base+Pole----------------------------------------------
-
-    const float pole_y
-        = Geometry::window.height() - Geometry::stack_pole.height();
-
     // draw the pole
     painter->drawPixmap(
-        offset - (Geometry::stack_pole.width() * 0.5F),
-        pole_y,
+        x_axis - (Geometry::stack_pole.width() * 0.5F),
+        Geometry::window.height() - Geometry::stack_pole.height(),
         GameSprites::stack_pole->scaled(Geometry::stack_pole.toSize()));
 
     // draw the base
     painter->drawPixmap(
-        offset - (Geometry::stack_base.width() * 0.5F),
+        x_axis - (Geometry::stack_base.width() * 0.5F),
         Geometry::window.height() - Geometry::stack_base.height(),
         GameSprites::stack_base->scaled(Geometry::stack_base.toSize()));
+}
 
-    //--Draw Stack Label--------------------------------------------------
+// render the stack label
+void
+GameView::drawStackLabel(size_t label, float x_axis, QPainter* const painter)
+{
+    assert(painter != nullptr);
+    assert(painter->isActive());
 
-    const QSize box_size(Geometry::stack_pole.width(),
-                         Geometry::stack_pole.width());
+    const float pole_y
+        = Geometry::window.height() - Geometry::stack_pole.height();
+
+    const QRect label_box(x_axis
+                              - (Geometry::stack_pole.width() * 0.5F),    // x
+                          pole_y - (Geometry::stack_pole.width() * 2),
+                          Geometry::stack_pole.width(),
+                          Geometry::stack_pole.width());
 
     // highlight and draw the indicator if current stack is the goal stack
     if (label == (HanoiStacks::goal_stack->getLabel())) {
@@ -70,36 +77,33 @@ GameView::drawStackBase(size_t label, float offset, QPainter* const painter)
         if (m_game_state == GameState::GAME_RUNNING
             && !TimeInfo::timer.isActive() && !has_solver_task()) {
             const QPixmap arrow_sprite = GameSprites::arrow->scaled(
-                offset - Geometry::stack_area.width() * 0.5F,
-                Geometry::stack_base.width() * 0.1F);
+                x_axis - Geometry::stack_area.width() * 0.5F,    // w
+                Geometry::stack_base.width() * 0.1F);            // h
 
             assert(!arrow_sprite.isNull());
 
-            painter->drawPixmap(Geometry::stack_area.width() * 0.5F,
-                                pole_y - (arrow_sprite.height()),
+            painter->drawPixmap(Geometry::stack_area.width() * 0.5F,    // x
+                                pole_y - (arrow_sprite.height()),       // y
                                 arrow_sprite);
         } else {
-            painter->fillRect(offset - (box_size.width() * 0.5F),     // x
-                              pole_y - (box_size.height() * 0.5F),    // y
-                              box_size.width(),                       // w
-                              box_size.height() * 0.2F,               // h
+            painter->fillRect(x_axis - (label_box.width() * 0.5F),     // x
+                              pole_y - (label_box.height() * 0.5F),    // y
+                              label_box.width(),                       // w
+                              label_box.height() * 0.2F,               // h
                               Config::Theme().highlight_tint);
         }
     }
 
     // setup font for drawing the label
-    painter->setFont(QFont(Config::Theme().font_name,    // fontname
-                           box_size.width() * 0.9F));
+    painter->setFont(
+        QFont(Config::Theme().font_name, label_box.width() * 0.9F));
     painter->setPen(Config::Theme().font_color);
 
-    const QPoint box_point(offset - (Geometry::stack_pole.width() * 0.5F),
-                           pole_y - (box_size.height() * 2));
-
-    const QRect label_bounds = painter->boundingRect(QRect(box_point, box_size),
-                                                     Qt::AlignHCenter,
-                                                     Utils::numToChar(label));
+    const QRect bounds = painter->boundingRect(label_box,
+                                               Qt::AlignHCenter,
+                                               Utils::numToChar(label));
     // draw the stack label
-    painter->drawText(label_bounds, Utils::numToChar(label));
+    painter->drawText(bounds, Utils::numToChar(label));
 }
 
 void
@@ -182,6 +186,8 @@ GameView::paintEvent(QPaintEvent* event)
     // render the stacks and slices
     float x_offset = Geometry::stack_area.width() * 0.5F;
     for (size_t i = 0; i < Config::Settings().stack_amount; i++) {
+        drawStackBase(x_offset, &p);
+        drawStackLabel(getStack(i)->getLabel(), x_offset, &p);
         drawStack(x_offset, getStack(i), &p);
         x_offset += Geometry::stack_area.width();    // shift to the right
     }
