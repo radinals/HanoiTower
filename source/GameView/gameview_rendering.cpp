@@ -86,7 +86,7 @@ GameView::drawStackLabel(size_t label, float x_axis, QPainter* const painter)
                                 pole_y - (arrow_sprite.height()),       // y
                                 arrow_sprite);
         } else {
-            painter->fillRect(x_axis - (label_box.width() * 0.5F),     // x
+            painter->fillRect(label_box.x(),                           // x
                               pole_y - (label_box.height() * 0.5F),    // y
                               label_box.width(),                       // w
                               label_box.height() * 0.2F,               // h
