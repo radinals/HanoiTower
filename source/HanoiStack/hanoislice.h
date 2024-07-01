@@ -22,11 +22,8 @@ public:
     inline const Geometry_t& Geometry() const { return m_geometry; }
     inline Geometry_t&       Geometry() { return m_geometry; }
 
-    const HanoiSlice* const& next() const { return m_next; }
-    HanoiSlice*&             next() { return m_next; }
-
-    const HanoiSlice* const& prev() const { return m_prev; }
-    HanoiSlice*&             prev() { return m_prev; }
+    HanoiSlice*& next() { return m_next; }
+    HanoiSlice*& prev() { return m_prev; }
 
 private:
     unsigned int m_value = 0;
