@@ -24,7 +24,7 @@ public:
     void push(HanoiSlice* slice);
 
     HanoiSlice*             pop();
-    const HanoiSlice* const peek() const;
+    const HanoiSlice* const peek() const { return m_head; }
 
     inline const HanoiSlice* const& getTail() const { return m_tail; }
     inline HanoiSlice*&             getTail() { return m_tail; }

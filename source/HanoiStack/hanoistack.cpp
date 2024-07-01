@@ -45,12 +45,6 @@ HanoiStack::fillStack(HanoiStack* stack, size_t amount)
     for (size_t i = 0; i < amount; i++) { stack->push(new HanoiSlice(i)); }
 }
 
-const HanoiSlice* const
-HanoiStack::peek() const
-{
-    return m_head;
-}
-
 HanoiSlice*
 HanoiStack::pop()
 {
