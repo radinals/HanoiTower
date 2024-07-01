@@ -24,9 +24,6 @@ public:
     HanoiSlice*             pop();
     const HanoiSlice* const peek() const { return m_head; }
 
-    inline HanoiSlice*& getTail() { return m_tail; }
-    inline HanoiSlice*& getTop() { return m_head; }
-
     inline size_t getSize() const { return m_size; };
     inline bool   isEmpty() const { return m_size <= 0; }
 
