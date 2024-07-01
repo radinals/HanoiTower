@@ -11,8 +11,6 @@
 
 #include <QPixmap>
 #include <QString>
-#include <exception>
-#include <string>
 
 class HanoiStack {
 public:
@@ -43,18 +41,5 @@ private:
 
     HanoiSlice *m_head = nullptr, *m_tail = nullptr;
 };
-
-namespace HanoiException {
-
-    class IllegalStackMove : public std::exception {
-    private:
-        std::string m_msg;
-
-    public:
-        explicit IllegalStackMove(const std::string& msg) : m_msg(msg) { }
-        const char* what() const noexcept override { return m_msg.c_str(); }
-    };
-
-}    // namespace HanoiException
 
 #endif    // HANOISTACK_H

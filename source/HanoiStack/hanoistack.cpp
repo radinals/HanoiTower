@@ -24,7 +24,7 @@ HanoiStack::push(HanoiSlice* slice)
         m_head = slice;
         m_tail = m_head;
     } else if (slice->getValue() < peek()->getValue()) {
-        throw HanoiException::IllegalStackMove(
+        throw std::runtime_error(
             "HanoiStack::push(): tried to move a larger slice on top a smaller "
             "slice.");
     } else {
