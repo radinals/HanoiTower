@@ -53,8 +53,8 @@ private:
 
             // load the audio source
             m_media_player->setAudioOutput(m_audio_output);
-            m_media_player->setSource("qrc"
-                                      + Config::AudioFiles::BACKGROUND_MUSIC);
+            m_media_player->setSource(
+                QString(Config::AudioFiles::BACKGROUND_MUSIC));
 
             // configure audio
             m_audio_output->setVolume(Config::Settings::music_volume);

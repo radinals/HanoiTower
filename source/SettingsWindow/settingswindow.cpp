@@ -25,7 +25,7 @@ SettingsWindow::SettingsWindow(QWidget* parent)
 
 #ifndef DISABLE_AUDIO
     m_sfx_preview = new QSoundEffect(this);
-    m_sfx_preview->setSource("qrc" + Config::AudioFiles::PLACEMENT_FX);
+    m_sfx_preview->setSource(QString(Config::AudioFiles::PLACEMENT_FX));
     assert(m_sfx_preview->status() != QSoundEffect::Error);
 #else
     // hide all audio setting options
@@ -229,8 +229,8 @@ SettingsWindow::drawPreview()
     ui->PreviewOut->centerOn(m_preview_scene->sceneRect().center());
     // ----------------------------------------------------------------------
 
-    static const QPen pen(QBrush("#000000"), 4);
-    static const int  hpadding = 5;    // spacing
+    static const QPen    pen(QBrush("#000000"), 4);
+    static constexpr int hpadding = 5;    // spacing
 
     const float sceneW = ui->PreviewOut->width();
     const float sceneH = ui->PreviewOut->height();

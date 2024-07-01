@@ -45,8 +45,8 @@ GameView::moveisLegal(const HanoiStack &source, const HanoiStack &dest)
 size_t
 GameView::getRandomGoalStackIndex()
 {
-    const size_t min = 1;
-    const size_t max = Config::Settings::stack_amount - 1;
+    static constexpr size_t min = 1;
+    const size_t            max = Config::Settings::stack_amount - 1;
 
     std::random_device rdev;
     std::mt19937       gen(rdev());

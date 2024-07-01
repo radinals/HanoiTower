@@ -41,15 +41,11 @@ namespace Utils {
     };
 
     // load and get stylesheet
-    static inline const QString& getDefaultStylesheet()
+    static inline QString getDefaultStylesheet()
     {
-        static QString style_sheet;
-        if (style_sheet.isEmpty()) {
-            QFile file(Config::Theme::default_stylesheet);
-            file.open(QFile::ReadOnly);
-            style_sheet = QLatin1String(file.readAll());
-        }
-        return style_sheet;
+        QFile file = QString(Config::Theme::DEFAULT_STYLESHEET);
+        file.open(QFile::ReadOnly);
+        return QLatin1String(file.readAll());
     }
 
 };    // namespace Utils
