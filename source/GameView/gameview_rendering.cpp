@@ -63,9 +63,9 @@ GameView::drawStackLabel(size_t label, float x_axis, QPainter* const painter)
 
     const QRect label_box(x_axis
                               - (Geometry::stack_pole.width() * 0.5F),    // x
-                          pole_y - (Geometry::stack_pole.width() * 2),
-                          Geometry::stack_pole.width(),
-                          Geometry::stack_pole.width());
+                          pole_y - (Geometry::stack_pole.width() * 2),    // y
+                          Geometry::stack_pole.width(),                   // w
+                          Geometry::stack_pole.width());                  // h
 
     // highlight and draw the indicator if current stack is the goal stack
     if (label == (HanoiStacks::goal_stack->getLabel())) {
