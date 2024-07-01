@@ -6,7 +6,7 @@
 #ifndef HANOISLICE_H
 #define HANOISLICE_H
 
-#include <QString>
+#include <cstddef>
 
 class HanoiSlice {
 private:
@@ -14,22 +14,17 @@ private:
 
 public:
     HanoiSlice() {};
-    HanoiSlice(unsigned int value) : m_value(value) {};
+    HanoiSlice(size_t value) : m_value(value) {};
 
-    inline unsigned int getValue() const { return m_value; }
-
-    inline const Geometry_t& Geometry() const { return m_geometry; }
-    inline Geometry_t&       Geometry() { return m_geometry; }
-
-    HanoiSlice*& next() { return m_next; }
-    HanoiSlice*& prev() { return m_prev; }
+    inline size_t       getLabel() const { return m_value; }
+    inline float&       Height() { return m_width; }
+    inline float&       Width() { return m_height; }
+    inline HanoiSlice*& Next() { return m_next; }
+    inline HanoiSlice*& Prev() { return m_prev; }
 
 private:
-    unsigned int m_value = 0;
-
-    struct Geometry_t {
-        float width = 0, height = 0;
-    } m_geometry;
+    size_t m_value = 0;
+    float  m_width = 0, m_height = 0;
 
     HanoiSlice* m_next = nullptr;
     HanoiSlice* m_prev = nullptr;

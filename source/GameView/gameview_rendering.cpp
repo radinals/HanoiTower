@@ -23,14 +23,13 @@ GameView::drawStack(float offset, HanoiStack* stack, QPainter* const painter)
 
     HanoiSlice* slice = stack->getTail();
     while (slice != nullptr) {
-        y_offset -= std::floor(slice->Geometry().height);
+        y_offset -= std::floor(slice->Height());
 
         painter->drawPixmap(
-            offset - (slice->Geometry().width * 0.5F),
+            offset - (slice->Width() * 0.5F),
             y_offset,
-            GameSprites::slice->scaled(slice->Geometry().width,
-                                       slice->Geometry().height));
-        slice = slice->prev();
+            GameSprites::slice->scaled(slice->Width(), slice->Height()));
+        slice = slice->Prev();
     }
 }
 
@@ -191,11 +190,11 @@ GameView::paintEvent(QPaintEvent* event)
 
     // render the selected slice
     if (SelectedSlice::hasSelected()) {
-        p.drawPixmap(SelectedSlice::x,
-                     SelectedSlice::y,
-                     GameSprites::slice->scaled(
-                         SelectedSlice::slice->Geometry().width,
-                         SelectedSlice::slice->Geometry().height));
+        p.drawPixmap(
+            SelectedSlice::x,
+            SelectedSlice::y,
+            GameSprites::slice->scaled(SelectedSlice::slice->Width(),
+                                       SelectedSlice::slice->Height()));
     }
 
     // render the game over screens

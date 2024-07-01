@@ -74,10 +74,8 @@ GameView::scaleSlices()
 
     // every slice has a different size
     for (size_t i = 0; i < Config::Settings::slice_amount; i++) {
-        HanoiStacks::slices[i]->Geometry().height
-            = (height *= Config::H_SCALE_FACTOR);
-        HanoiStacks::slices[i]->Geometry().width
-            = (width *= Config::W_SCALE_FACTOR);
+        HanoiStacks::slices[i]->Height() = (height *= Config::H_SCALE_FACTOR);
+        HanoiStacks::slices[i]->Width()  = (width *= Config::W_SCALE_FACTOR);
     }
 }
 

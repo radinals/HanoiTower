@@ -23,18 +23,18 @@ HanoiStack::push(HanoiSlice* slice)
     if (isEmpty()) {
         m_head = slice;
         m_tail = m_head;
-    } else if (slice->getValue() < peek()->getValue()) {
+    } else if (slice->getLabel() < peek()->getLabel()) {
         throw std::runtime_error(
             "HanoiStack::push(): tried to move a larger slice on top a smaller "
             "slice.");
     } else {
-        slice->next()  = m_head;
-        slice->prev()  = nullptr;
-        m_head->prev() = slice;
+        slice->Next()  = m_head;
+        slice->Prev()  = nullptr;
+        m_head->Prev() = slice;
         m_head         = slice;
 
         assert(m_head != nullptr);
-        assert(m_head->next() != nullptr);
+        assert(m_head->Next() != nullptr);
     }
     m_size++;
 }
@@ -54,13 +54,13 @@ HanoiStack::pop()
 
     HanoiSlice* popped = m_head;
 
-    m_head = m_head->next();
+    m_head = m_head->Next();
 
-    if (m_head != nullptr) { m_head->prev() = nullptr; }
+    if (m_head != nullptr) { m_head->Prev() = nullptr; }
 
     --m_size;
 
-    popped->next() = popped->prev() = nullptr;
+    popped->Next() = popped->Prev() = nullptr;
 
     return popped;
 }

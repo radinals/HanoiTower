@@ -38,7 +38,7 @@ GameView::moveisLegal(const HanoiStack &source, const HanoiStack &dest)
 {
     return !source.isEmpty()
            && (dest.isEmpty()
-               || source.peek()->getValue() > dest.peek()->getValue());
+               || source.peek()->getLabel() > dest.peek()->getLabel());
 }
 
 // generate a random stack label for the goal stack
