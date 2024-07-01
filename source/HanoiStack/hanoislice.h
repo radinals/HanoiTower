@@ -13,7 +13,6 @@ private:
     struct Geometry_t;
 
 public:
-    HanoiSlice(HanoiSlice&&) = delete;
     HanoiSlice() {};
     HanoiSlice(unsigned int value) : m_value(value) {};
 

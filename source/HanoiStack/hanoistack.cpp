@@ -40,7 +40,7 @@ HanoiStack::push(HanoiSlice* slice)
 }
 
 void
-HanoiStack::fillStack(HanoiStack* stack, size_t amount)
+HanoiStack::fillStack(HanoiStack* const stack, size_t amount)
 {
     for (size_t i = 0; i < amount; i++) { stack->push(new HanoiSlice(i)); }
 }
