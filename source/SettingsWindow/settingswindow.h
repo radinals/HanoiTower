@@ -38,14 +38,14 @@ private:
     void updateDisplays();
 
     // used for handling exiting from setting window
-    void hideEvent(QHideEvent *event) override
+    void hideEvent(QHideEvent *const event) override
     {
         emit(s_hidden());
         QWidget::hideEvent(event);
     }
 
     // make sure to update the preview window everytime is 'un-hide/shown'
-    void showEvent(QShowEvent *event) override
+    void showEvent(QShowEvent *const event) override
     {
         loadDefaults();
         updateDisplays();

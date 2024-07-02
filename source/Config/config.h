@@ -13,11 +13,12 @@
     #include <QSoundEffect>
 #endif    // !DISABLE_AUDIO
 
-struct Config {
+class Config {
+public:
     static constexpr int           SOLVER_DELAY         = 10;    // ms
     static constexpr size_t        SLICE_MAX            = 10;
     static constexpr size_t        STACK_MAX            = 5;
-    static constexpr long long int TIMER_MIN            = 60000 * 3;
+    static constexpr long long int TIMER_MIN            = 60000L * 3L;
     static constexpr float         H_SCALE_FACTOR       = 0.95F;
     static constexpr float         W_SCALE_FACTOR       = 0.9F;
     static constexpr char          DEFAULT_STACK_TINT[] = "#71391c";
@@ -41,6 +42,7 @@ struct Config {
         static constexpr char AUTO_SOLVE_BTN_ICON[] = ":/ui/auto_solve_btn_icon.png";
         static constexpr char UNDO_BTN_ICON[]       = ":/ui/undo_btn_icon.png";
         static constexpr char REDO_BTN_ICON[]       = ":/ui/redo_btn_icon.png";
+        AssetsFiles() = delete;
     } ;
 
     // clang-format on
@@ -55,6 +57,7 @@ struct Config {
         static inline QColor  lose_dialog_tint        = "#ab282f";
         static inline QColor  solver_done_dialog_tint = "#DEDE00";
         static constexpr char DEFAULT_STYLESHEET[]    = ":/style/default.qss";
+        Theme()                                       = delete;
     };
 
     struct Settings {
@@ -62,7 +65,8 @@ struct Config {
         static inline size_t        stack_amount   = 3;
         static inline float         fx_volume      = 1.0F;
         static inline float         music_volume   = 1.0F;
-        static inline long long int time_length_ms = 60000 * 5;
+        static inline long long int time_length_ms = 60000L * 5L;
+        Settings()                                 = delete;
     };
 
 #ifndef DISABLE_AUDIO
@@ -71,8 +75,10 @@ struct Config {
     struct AudioFiles {
         static constexpr char PLACEMENT_FX[] = "qrc:/audio/placement_fx.wav";
         static constexpr char BACKGROUND_MUSIC[] = "qrc:/audio/bg_music.wav";
+        AudioFiles()                             = delete;
     };
 #endif    // !DISABLE_AUDIO
+    explicit Config() = delete;
 };
 
 #endif    // CONFIG_H

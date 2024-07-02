@@ -34,7 +34,7 @@ GameView::updateInfo()
             SidebarWidgets::timer_out->setText("--:--:--");
         } else {
             auto hh_mm_ss = Utils::extractTimeFromMs(
-                Config::Settings().time_length_ms - TimeInfo::elapsed);
+                Config::Settings::time_length_ms - TimeInfo::elapsed);
 
             QString h, m, s;
             h = QString::number(std::get<0>(hh_mm_ss));

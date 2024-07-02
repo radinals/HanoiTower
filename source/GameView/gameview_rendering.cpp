@@ -70,7 +70,7 @@ GameView::drawStackLabel(size_t label, float x_axis, QPainter* const painter)
     // highlight and draw the indicator if current stack is the goal stack
     if (label == (HanoiStacks::goal_stack->getLabel())) {
         // use the highlight color for the font
-        painter->setPen(Config::Theme().highlight_tint);
+        painter->setPen(Config::Theme::highlight_tint);
 
         // draw the arrow if the timer is not running or
         // draw indicator instead
@@ -90,14 +90,13 @@ GameView::drawStackLabel(size_t label, float x_axis, QPainter* const painter)
                               pole_y - (label_box.height() * 0.5F),    // y
                               label_box.width(),                       // w
                               label_box.height() * 0.2F,               // h
-                              Config::Theme().highlight_tint);
+                              Config::Theme::highlight_tint);
         }
     }
 
     // setup font for drawing the label
-    painter->setFont(
-        QFont(Config::Theme().font_name, label_box.width() * 0.9F));
-    painter->setPen(Config::Theme().font_color);
+    painter->setFont(QFont(Config::Theme::font_name, label_box.width() * 0.9F));
+    painter->setPen(Config::Theme::font_color);
 
     const QRect bounds = painter->boundingRect(label_box,
                                                Qt::AlignHCenter,
@@ -120,10 +119,10 @@ GameView::drawDialog(const QString&  text,
     colorizeSprite(&dialog, color);
 
     // setup font
-    painter->setFont(QFont(Config::Theme().font_name,        // fontname
+    painter->setFont(QFont(Config::Theme::font_name,         // fontname
                            dialog.width() / text.length()    // size
                            ));
-    painter->setPen(Config::Theme().font_color);
+    painter->setPen(Config::Theme::font_color);
 
     // setup bounds to make sure the text is centered
     const QRect dialog_rect(
@@ -185,7 +184,7 @@ GameView::paintEvent(QPaintEvent* event)
 
     // render the stacks and slices
     float x_offset = Geometry::stack_area.width() * 0.5F;
-    for (size_t i = 0; i < Config::Settings().stack_amount; i++) {
+    for (size_t i = 0; i < Config::Settings::stack_amount; i++) {
         drawStackBase(x_offset, &p);
         drawStackLabel(getStack(i)->getLabel(), x_offset, &p);
         drawStack(x_offset, getStack(i), &p);
