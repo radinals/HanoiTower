@@ -220,7 +220,7 @@ private:
     // Scaling ===============================================================
 
     // calculate the base sizes
-    void calculateBaseSizes();
+    static void calculateBaseSizes();
 
     // handles slice scaling
     static void scaleSlices();

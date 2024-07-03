@@ -6,31 +6,32 @@
 #include "gameview.h"
 
 #include "../Config/config.h"
+#include <QResizeEvent>
 
 // generate the base sizes to be used to render the sprites and etc.
 void
 GameView::calculateBaseSizes()
 {
-    Geometry::window = this->size();
+    // stack area  -----------------------------------------------------------
+    Geometry::stack_area
+        = QSizeF(Geometry::window.width() / Config::Settings::stack_amount,
+                 Geometry::window.height() * 0.8F);
 
-    Geometry::stack_area.setWidth(float(width())
-                                  / Config::Settings::stack_amount);
+    // slice -----------------------------------------------------------------
+    Geometry::slice
+        = QSizeF(Geometry::stack_area.width() * 0.9F,
+                 (Geometry::stack_area.height() / Config::SLICE_MAX) * 1.1F);
 
-    Geometry::stack_area.setHeight(height() * 0.8F);
+    // stack base ------------------------------------------------------------
+    Geometry::stack_base = QSizeF(Geometry::slice.width() * 1.1F,
+                                  Geometry::slice.height() * 0.5F);
 
-    Geometry::slice.setHeight(
-        (Geometry::stack_area.height() / Config::SLICE_MAX) * 1.1F);
+    Geometry::stack_pole = QSizeF(Geometry::stack_base.width() * 0.1F,
+                                  Geometry::stack_area.height());
 
-    Geometry::slice.setWidth(Geometry::stack_area.width() * 0.9F);
-
-    Geometry::stack_base.setWidth(Geometry::slice.width() * 1.1F);
-    Geometry::stack_base.setHeight(Geometry::slice.height() * 0.5F);
-
-    Geometry::dialog.setWidth(width() * 0.4F);
-    Geometry::dialog.setHeight(height() * 0.2F);
-
-    Geometry::stack_pole.setHeight(Geometry::stack_area.height());
-    Geometry::stack_pole.setWidth(Geometry::stack_base.width() * 0.1F);
+    // dialog ----------------------------------------------------------------
+    Geometry::dialog = QSizeF(Geometry::window.width() * 0.4F,
+                              Geometry::window.height() * 0.2F);
 }
 
 void
@@ -80,8 +81,9 @@ GameView::scaleSlices()
 }
 
 void
-GameView::resizeEvent(QResizeEvent* event)
+GameView::resizeEvent(QResizeEvent *const event)
 {
+    Geometry::window = event->size();
     calculateBaseSizes();
     if (m_game_state != GameState::GAME_INACTIVE) {
         scaleStack();
