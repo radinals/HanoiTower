@@ -6,6 +6,7 @@
 
 #include "../Config/config.h"
 #include <cassert>
+#include <cstring>
 
 // clears hanoi's stack
 void
