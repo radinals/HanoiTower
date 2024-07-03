@@ -53,7 +53,7 @@ GameView::mouseMoveEvent(QMouseEvent* const event)
         return;
     }
 
-    SelectedSlice::move(event->pos());
+    SelectedSlice::move(event->position());
     update();
 }
 
@@ -71,7 +71,7 @@ GameView::mouseReleaseEvent(QMouseEvent* const event)
 
     HanoiStack* destination_stack = nullptr;
     try {
-        destination_stack = calculateStackByPos(event->position().toPoint());
+        destination_stack = calculateStackByPos(event->position());
         destination_stack->push(SelectedSlice::slice);
     } catch (...) {
         SelectedSlice::stack->push(SelectedSlice::slice);
