@@ -20,6 +20,7 @@ GameView::hideEvent(QHideEvent *event)
 void
 GameView::showEvent(QShowEvent *event)
 {
+    calculateBaseSizes();
     reset();
     QWidget::showEvent(event);
 }
