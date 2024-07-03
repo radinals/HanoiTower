@@ -5,9 +5,9 @@
 
 #include "mainwindow.h"
 
+#include "../Common/utils.h"
 #include "../GameWindow/gamewindow.h"
 #include "../SettingsWindow/settingswindow.h"
-#include "../Utils/utils.h"
 #include "ui_mainwindow.h"
 #include <qmessagebox.h>
 

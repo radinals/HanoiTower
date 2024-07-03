@@ -32,7 +32,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 
         ${SOURCE_DIR}/Config/config.h
 
-        ${SOURCE_DIR}/Utils/utils.h
+        ${SOURCE_DIR}/Common/utils.h
+        ${SOURCE_DIR}/Common/stack.h
 
         ${SOURCE_DIR}/GameView/gameview.h
         ${SOURCE_DIR}/GameView/gameview.cpp

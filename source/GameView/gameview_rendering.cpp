@@ -5,8 +5,8 @@
 
 #include "gameview.h"
 
+#include "../Common/utils.h"
 #include "../Config/config.h"
-#include "../Utils/utils.h"
 
 #include <QPainter>
 

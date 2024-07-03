@@ -5,9 +5,9 @@
 #ifndef GAMEVIEW_H
 #define GAMEVIEW_H
 
+#include "../Common/stack.h"
 #include "../Config/config.h"
 #include "../HanoiStack/hanoistack.h"
-#include "../Utils/Stack.h"
 
 #include <QCoreApplication>
 #include <QLabel>

@@ -2,7 +2,7 @@
 // methods that handles the updating of data on the sidebar                   /
 //----------------------------------------------------------------------------/
 
-#include "../Utils/utils.h"
+#include "../Common/utils.h"
 
 #include "../Config/config.h"
 

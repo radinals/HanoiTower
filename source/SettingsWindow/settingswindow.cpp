@@ -5,7 +5,7 @@
 #include "../SettingsWindow/settingswindow.h"
 
 #include "../Config/config.h"
-#include "../Utils/utils.h"
+#include "../Common/utils.h"
 #include "ui_settingswindow.h"
 
 #ifndef DISABLE_AUDIO
