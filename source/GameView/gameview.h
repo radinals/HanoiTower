@@ -79,6 +79,7 @@ private:
         static inline QColor   stack_tint, slice_tint;
         static inline QPixmap *stack_pole = nullptr, *stack_base = nullptr,
                               *arrow = nullptr, *slice = nullptr;
+        GameSprites() = delete;
     };
 
     // =======================================================================
@@ -87,6 +88,7 @@ private:
     struct Geometry {
         static inline QSizeF stack_area, stack_base, slice, dialog, window,
             stack_pole;
+        Geometry() = delete;
     };
 
     // =======================================================================
@@ -108,6 +110,8 @@ private:
             x = (point.x() - (SelectedSlice::slice->Width() * 0.5F));
             y = (point.y() - (SelectedSlice::slice->Height() * 0.5F));
         }
+
+        SelectedSlice() = delete;
     };
 
     // =======================================================================
@@ -118,6 +122,8 @@ private:
                              *info_msg_label    = nullptr;
         static inline QPushButton *timer_out    = nullptr;
         static inline QTextEdit   *info_msg_out = nullptr;
+
+        SidebarWidgets() = delete;
     };
 
     // =======================================================================
@@ -132,6 +138,8 @@ private:
 
         // points to the target stack in the game
         static inline HanoiStack *goal_stack = nullptr;
+
+        HanoiStacks() = delete;
     };
 
     // =======================================================================
@@ -140,6 +148,8 @@ private:
     struct TimeInfo {
         static QTimer               timer;
         static inline long long int elapsed = 0;    // ms
+        //
+        TimeInfo() = delete;
     };
 
     // =======================================================================
@@ -166,6 +176,8 @@ private:
         static inline std::atomic_bool stop_solving  = false;
         static inline std::atomic_bool pause_solving = false;
         static inline std::thread     *work_thread   = nullptr;
+
+        SolverTask() = delete;
     };
 
     // Handles Solver Thread ================================================
