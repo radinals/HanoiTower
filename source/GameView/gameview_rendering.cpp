@@ -25,7 +25,7 @@ GameView::drawStack(float x_axis, HanoiStack* stack, QPainter* const painter)
         y_axis -= std::floor(slice->Height());
 
         painter->drawPixmap(
-            x_axis - (slice->Width() * 0.5F),
+            x_axis - (slice->Width() / 2.0F),
             y_axis,
             GameSprites::slice->scaled(slice->Width(), slice->Height()));
     });
@@ -40,13 +40,13 @@ GameView::drawStackBase(float x_axis, QPainter* const painter)
 
     // draw the pole
     painter->drawPixmap(
-        x_axis - (Geometry::stack_pole.width() * 0.5F),
+        x_axis - (Geometry::stack_pole.width() / 2.0F),
         Geometry::window.height() - Geometry::stack_pole.height(),
         GameSprites::stack_pole->scaled(Geometry::stack_pole.toSize()));
 
     // draw the base
     painter->drawPixmap(
-        x_axis - (Geometry::stack_base.width() * 0.5F),
+        x_axis - (Geometry::stack_base.width() / 2.0F),
         Geometry::window.height() - Geometry::stack_base.height(),
         GameSprites::stack_base->scaled(Geometry::stack_base.toSize()));
 }
@@ -62,7 +62,7 @@ GameView::drawStackLabel(size_t label, float x_axis, QPainter* const painter)
         = Geometry::window.height() - Geometry::stack_pole.height();
 
     const QRect label_box(x_axis
-                              - (Geometry::stack_pole.width() * 0.5F),    // x
+                              - (Geometry::stack_pole.width() / 2.0F),    // x
                           pole_y - (Geometry::stack_pole.width() * 2),    // y
                           Geometry::stack_pole.width(),                   // w
                           Geometry::stack_pole.width());                  // h
@@ -77,25 +77,26 @@ GameView::drawStackLabel(size_t label, float x_axis, QPainter* const painter)
         if (m_game_state == GameState::GAME_RUNNING
             && !TimeInfo::timer.isActive() && !has_solver_task()) {
             const QPixmap arrow_sprite = GameSprites::arrow->scaled(
-                x_axis - Geometry::stack_area.width() * 0.5F,    // w
-                Geometry::stack_base.width() * 0.1F);            // h
+                x_axis - Geometry::stack_area.width() / 2.0F,         // w
+                Utils::percent(10, Geometry::stack_base.width()));    // h
 
             assert(!arrow_sprite.isNull());
 
-            painter->drawPixmap(Geometry::stack_area.width() * 0.5F,    // x
+            painter->drawPixmap(Geometry::stack_area.width() / 2.0F,    // x
                                 pole_y - (arrow_sprite.height()),       // y
                                 arrow_sprite);
         } else {
-            painter->fillRect(label_box.x(),                           // x
-                              pole_y - (label_box.height() * 0.5F),    // y
-                              label_box.width(),                       // w
-                              label_box.height() * 0.2F,               // h
+            painter->fillRect(label_box.x(),                             // x
+                              pole_y - (label_box.height() / 2.0F),      // y
+                              label_box.width(),                         // w
+                              Utils::percent(20, label_box.height()),    // h
                               Config::Theme::highlight_tint);
         }
     }
 
     // setup font for drawing the label
-    painter->setFont(QFont(Config::Theme::font_name, label_box.width() * 0.9F));
+    painter->setFont(
+        QFont(Config::Theme::font_name, Utils::percent(90, label_box.width())));
     painter->setPen(Config::Theme::font_color);
 
     const QRect bounds = painter->boundingRect(label_box,
@@ -126,16 +127,17 @@ GameView::drawDialog(const QString&  text,
 
     // setup bounds to make sure the text is centered
     const QRect dialog_rect(
-        QPoint(((Geometry::window.width() * 0.5F) - (dialog.width() * 0.5F)),
-               ((Geometry::window.height() * 0.5F) - (dialog.height() * 0.5F))),
+        QPoint(((Geometry::window.width() / 2.0F) - (dialog.width() / 2.0F)),
+               ((Geometry::window.height() / 2.0F) - (dialog.height() / 2.0F))),
         dialog.size());
 
-    const QRect text_rect = painter->boundingRect(dialog_rect.x(),
-                                                  dialog_rect.y(),
-                                                  dialog_rect.width(),
-                                                  dialog.rect().height() * 0.9F,
-                                                  Qt::AlignCenter,
-                                                  text);
+    const QRect text_rect
+        = painter->boundingRect(dialog_rect.x(),
+                                dialog_rect.y(),
+                                dialog_rect.width(),
+                                Utils::percent(90, dialog.rect().height()),
+                                Qt::AlignCenter,
+                                text);
 
     // render the dialog
     painter->drawPixmap(dialog_rect, dialog);
@@ -183,7 +185,7 @@ GameView::paintEvent(QPaintEvent* event)
     updateInfo();
 
     // render the stacks and slices
-    float x_offset = Geometry::stack_area.width() * 0.5F;
+    float x_offset = Geometry::stack_area.width() / 2.0F;
     for (size_t i = 0; i < Config::Settings::stack_amount; i++) {
         drawStackBase(x_offset, &p);
         drawStackLabel(getStack(i)->getLabel(), x_offset, &p);

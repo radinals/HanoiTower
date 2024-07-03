@@ -4,8 +4,8 @@
 
 #include "../SettingsWindow/settingswindow.h"
 
-#include "../Config/config.h"
 #include "../Common/utils.h"
+#include "../Config/config.h"
 #include "ui_settingswindow.h"
 
 #ifndef DISABLE_AUDIO
@@ -229,6 +229,8 @@ SettingsWindow::drawPreview()
     ui->PreviewOut->centerOn(m_preview_scene->sceneRect().center());
     // ----------------------------------------------------------------------
 
+    using namespace Utils;
+
     static const QPen    pen(QBrush("#000000"), 4);
     static constexpr int hpadding = 5;    // spacing
 
@@ -236,12 +238,13 @@ SettingsWindow::drawPreview()
     const float sceneH = ui->PreviewOut->height();
 
     const QSizeF stack_area(float(sceneW) / Settings.stack_amount,
-                            float(sceneH) * 0.9F);
+                            percent(90, sceneH));
 
-    const QSizeF base_slice(stack_area.width() * 0.9F,
+    const QSizeF base_slice(percent(90, stack_area.width()),
                             stack_area.height() / Config::SLICE_MAX);
 
-    const QSizeF stack_pole(base_slice.width() * 0.1F, stack_area.height());
+    const QSizeF stack_pole(percent(10, base_slice.width()),
+                            stack_area.height());
 
     const QSizeF stack_base(stack_area.width() - hpadding, base_slice.height());
 
@@ -250,8 +253,8 @@ SettingsWindow::drawPreview()
     {
         float x = 0;
         for (size_t i = 0; i < Settings.stack_amount; i++) {
-            ui->PreviewOut->scene()->addRect(x + (stack_area.width() * 0.5F)
-                                                 - (stack_pole.width() * 0.5f),
+            ui->PreviewOut->scene()->addRect(x + (stack_area.width() / 2.0F)
+                                                 - (stack_pole.width() / 2.0F),
                                              sceneH - stack_pole.height(),
                                              stack_pole.width(),
                                              stack_pole.height(),
@@ -273,14 +276,14 @@ SettingsWindow::drawPreview()
     {
         QSizeF slice = base_slice;    // scale size
 
-        const float x = stack_area.width() * 0.5F;
+        const float x = stack_area.width() / 2.0F;
 
         float y = (sceneH - stack_base.height());    // bottom y
 
         for (size_t i = 0; i < Settings.slice_amount; i++) {
             y -= slice.height();    // shift up
 
-            ui->PreviewOut->scene()->addRect(x - slice.width() * 0.5F,
+            ui->PreviewOut->scene()->addRect(x - slice.width() / 2.0F,
                                              y,
                                              slice.width(),
                                              slice.height(),
@@ -324,7 +327,7 @@ void
 SettingsWindow::on_AudioMusicVolSlider_sliderMoved(int position)
 {
 #ifndef DISABLE_AUDIO
-    Settings.music_volume_level = (position * 0.01f);
+    Settings.music_volume_level = Utils::percent(1, position);
     updateDisplays();
     if (Config::m_bg_music_output != nullptr) {
         Config::m_bg_music_output->setVolume(Settings.music_volume_level);
@@ -336,7 +339,7 @@ void
 SettingsWindow::on_AudioSFXVolSlider_sliderMoved(int position)
 {
 #ifndef DISABLE_AUDIO
-    Settings.sfx_volume_level = (position * 0.01f);
+    Settings.sfx_volume_level = Utils::percent(1, position);
     updateDisplays();
     if (this->isVisible()) {
         m_sfx_preview->setVolume(Settings.sfx_volume_level);

@@ -5,6 +5,7 @@
 
 #include "gameview.h"
 
+#include "../Common/utils.h"
 #include "../Config/config.h"
 #include <QResizeEvent>
 
@@ -12,26 +13,28 @@
 void
 GameView::calculateBaseSizes()
 {
+    using namespace Utils;
+
     // stack area  -----------------------------------------------------------
     Geometry::stack_area
         = QSizeF(Geometry::window.width() / Config::Settings::stack_amount,
-                 Geometry::window.height() * 0.8F);
+                 Utils::percent(80, Geometry::window.height()));
 
     // slice -----------------------------------------------------------------
-    Geometry::slice
-        = QSizeF(Geometry::stack_area.width() * 0.9F,
-                 (Geometry::stack_area.height() / Config::SLICE_MAX) * 1.1F);
+    Geometry::slice = QSizeF(
+        percent(90, Geometry::stack_area.width()),
+        percent(110, (Geometry::stack_area.height() / Config::SLICE_MAX)));
 
     // stack base ------------------------------------------------------------
-    Geometry::stack_base = QSizeF(Geometry::slice.width() * 1.1F,
-                                  Geometry::slice.height() * 0.5F);
+    Geometry::stack_base = QSizeF(percent(110, Geometry::slice.width()),
+                                  Geometry::slice.height() / 2.0F);
 
-    Geometry::stack_pole = QSizeF(Geometry::stack_base.width() * 0.1F,
+    Geometry::stack_pole = QSizeF(percent(10, Geometry::stack_base.width()),
                                   Geometry::stack_area.height());
 
     // dialog ----------------------------------------------------------------
-    Geometry::dialog = QSizeF(Geometry::window.width() * 0.4F,
-                              Geometry::window.height() * 0.2F);
+    Geometry::dialog = QSizeF(percent(40, Geometry::window.width()),
+                              percent(20, Geometry::window.height()));
 }
 
 void

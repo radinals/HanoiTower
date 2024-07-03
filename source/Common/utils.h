@@ -48,6 +48,11 @@ namespace Utils {
         return QLatin1String(file.readAll());
     }
 
+    static inline float percent(int percent, int n)
+    {
+        return n * (percent / 100.0F);
+    };
+
 };    // namespace Utils
 
 #endif    // !UTILS_H
