@@ -12,9 +12,6 @@
 void
 GameView::clear()
 {
-    // get the base sizes for rendering
-    calculateBaseSizes();
-
     // reset the stacks/slices
     resetStacks();
     resetSlices();
