@@ -111,18 +111,16 @@ GameView::mouseReleaseEvent(QMouseEvent* const event)
 HanoiStack*
 GameView::calculateStackByPos(const QPointF& point)
 {
-    const float stack_area_height = Geometry::window.height();
-    const float stack_area_width  = Geometry::stack_area.width();
+    const float normy = point.y() / Geometry::window.height();
 
-    float area_width = stack_area_width;
+    float area_w = Geometry::stack_area.width();
 
     for (size_t i = 0; i < Config::Settings::stack_amount; i++) {
-        const float x = (point.x() != 0) ? (point.x() / area_width) : 0;
-        const float y = (point.y() != 0) ? (point.y() / stack_area_height) : 0;
-
-        if ((x >= 0 && x <= 1) && (y >= 0 && y <= 1)) { return getStack(i); }
-
-        area_width += stack_area_width;
+        const float normx = point.x() / area_w;
+        if ((normx >= 0 && normx <= 1) && (normy >= 0 && normy <= 1)) {
+            return getStack(i);
+        }
+        area_w += Geometry::stack_area.width();
     }
 
     throw std::runtime_error(
