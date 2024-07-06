@@ -18,10 +18,10 @@ namespace Utils {
     {
         long long int total_seconds, hours, minutes, seconds;
 
-        total_seconds = ms / 1000;
-        hours         = total_seconds / 3600;           // Calculate hours
-        minutes       = (total_seconds % 3600) / 60;    // Calculate minutes
-        seconds       = (ms % 60000) / 1000.0;          // Calculate seconds
+        total_seconds = ms / 1000.0;
+        hours         = total_seconds / 3600.0;           // Calculate hours
+        minutes       = (total_seconds % 3600) / 60.0;    // Calculate minutes
+        seconds       = (ms % 60000) / 1000.0;            // Calculate seconds
 
         return { hours, minutes, seconds };
     }
