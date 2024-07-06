@@ -46,7 +46,7 @@ GameView::mousePressEvent(QMouseEvent* const event)
 void
 GameView::mouseMoveEvent(QMouseEvent* const event)
 {
-    if (has_solver_task()) return;
+    if (has_solver_task()) { return; }
 
     if (!SelectedSlice::hasSelected() || m_game_state != GameState::GAME_RUNNING
         || !clickInBounds(event->pos())) {
@@ -62,7 +62,7 @@ GameView::mouseMoveEvent(QMouseEvent* const event)
 void
 GameView::mouseReleaseEvent(QMouseEvent* const event)
 {
-    if (has_solver_task()) return;
+    if (has_solver_task()) { return; }
 
     if (!SelectedSlice::hasSelected()
         || m_game_state != GameState::GAME_RUNNING) {
