@@ -71,8 +71,8 @@ GameView::~GameView()
 GameView *const &
 GameView::getInstance()
 {
-    static GameView *G = new GameView();
-    return G;
+    static GameView *instance = new GameView();
+    return instance;
 };
 
 void
