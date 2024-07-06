@@ -9,9 +9,6 @@
 #include <cstddef>
 
 class HanoiSlice {
-private:
-    struct Geometry_t;
-
 public:
     HanoiSlice() {};
     HanoiSlice(size_t value) : m_value(value) {};
