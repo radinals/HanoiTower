@@ -131,6 +131,6 @@ bool
 GameView::clickInBounds(const QPoint& p)
 {
     return (p.x() >= 0 && p.y() >= 0)
-           && (p.x() <= Geometry::window.width()
-               && p.y() <= Geometry::window.height());
+           && (p.x() < Geometry::window.width()
+               && p.y() < Geometry::window.height());
 }
