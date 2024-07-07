@@ -9,7 +9,6 @@
 #include "../GameWindow/gamewindow.h"
 #include "../SettingsWindow/settingswindow.h"
 #include "ui_mainwindow.h"
-#include <qmessagebox.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -48,10 +47,7 @@ MainWindow::MainWindow(QWidget *parent)
             this,
             &MainWindow::openSettingsMenu);
 
-    connect(m_game_window,
-            &GameWindow::s_exit_game,
-            this,
-            &MainWindow::exitGame);
+    connect(m_game_window, &GameWindow::s_exit_game, this, [&]() { close(); });
 
     // setting window slots
     connect(m_settings_window,
@@ -60,10 +56,7 @@ MainWindow::MainWindow(QWidget *parent)
             &MainWindow::settingsWindowCloseEvent);
 
     // main window slots
-    connect(ui->StartExitBtn,
-            &QPushButton::clicked,
-            this,
-            &MainWindow::exitGame);
+    connect(ui->StartExitBtn, &QPushButton::clicked, this, [&]() { close(); });
 
     connect(ui->StartBtn,
             &QPushButton::clicked,
@@ -92,12 +85,6 @@ MainWindow::settingsWindowCloseEvent()
     } else {
         openMainMenu();
     }
-}
-
-void
-MainWindow::exitGame()
-{
-    close();
 }
 
 void

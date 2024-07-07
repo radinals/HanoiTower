@@ -73,7 +73,6 @@ private:
 
 private slots:
     void settingsWindowCloseEvent();
-    void exitGame();
     void openMainMenu();
     void openGameView();
     void openSettingsMenu();
