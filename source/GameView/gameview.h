@@ -79,7 +79,9 @@ private:
     struct GameSprites {
         static inline QColor   stack_tint, slice_tint;
         static inline QPixmap *stack_pole = nullptr, *stack_base = nullptr,
-                              *arrow = nullptr, *slice = nullptr;
+                              *arrow = nullptr, *slice = nullptr,
+                              *bg_image = nullptr;
+
         GameSprites() = delete;
     };
 

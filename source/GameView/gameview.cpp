@@ -6,6 +6,7 @@
 #include "gameview.h"
 
 #include "../Config/config.h"
+#include <qpixmap.h>
 
 #ifndef DISABLE_AUDIO
     #include <QSoundEffect>
@@ -41,6 +42,12 @@ GameView::GameView(QWidget *parent) : QWidget { parent }
     GameSprites::stack_base = new QPixmap();
     GameSprites::arrow      = new QPixmap();
     GameSprites::slice      = new QPixmap();
+    GameSprites::bg_image   = new QPixmap();
+
+    // load background image sprite =========================================
+    GameSprites::bg_image->load(Config::AssetsFiles::BG_IMAGE);
+    assert(!GameSprites::bg_image->isNull());
+    colorizeSprite(GameSprites::bg_image, Config::Theme::BG_IMAGE_TINT);
 
     // load arrow sprite ====================================================
     GameSprites::arrow->load(Config::AssetsFiles::ARROW);
@@ -66,6 +73,7 @@ GameView::~GameView()
     delete GameSprites::stack_base;
     delete GameSprites::arrow;
     delete GameSprites::slice;
+    delete GameSprites::bg_image;
 }
 
 GameView *const &

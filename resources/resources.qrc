@@ -20,5 +20,6 @@
         <file>ui/auto_solve_btn_icon.png</file>
         <file>ui/redo_btn_icon.png</file>
         <file>ui/undo_btn_icon.png</file>
+        <file>ui/bg_image.png</file>
     </qresource>
 </RCC>

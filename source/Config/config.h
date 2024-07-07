@@ -42,6 +42,7 @@ public:
         static constexpr char AUTO_SOLVE_BTN_ICON[] = ":/ui/auto_solve_btn_icon.png";
         static constexpr char UNDO_BTN_ICON[]       = ":/ui/undo_btn_icon.png";
         static constexpr char REDO_BTN_ICON[]       = ":/ui/redo_btn_icon.png";
+        static constexpr char BG_IMAGE[]            = ":/ui/bg_image.png";
         AssetsFiles() = delete;
     } ;
 
@@ -56,6 +57,7 @@ public:
         static inline QColor  win_dialog_tint         = "#28ab2b";
         static inline QColor  lose_dialog_tint        = "#ab282f";
         static inline QColor  solver_done_dialog_tint = "#DEDE00";
+        static constexpr char BG_IMAGE_TINT[]         = "#343442";
         static constexpr char DEFAULT_STYLESHEET[]    = ":/style/default.qss";
         Theme()                                       = delete;
     };

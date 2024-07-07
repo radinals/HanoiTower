@@ -200,6 +200,12 @@ GameView::paintEvent(QPaintEvent* event)
 
     updateInfo();
 
+    p.drawPixmap(0,
+                 0,
+                 Geometry::window.width(),
+                 Geometry::window.height(),
+                 *GameSprites::bg_image);
+
     // render the stacks and slices
     float x_offset = Utils::percent(50, Geometry::stack_area.width());
     for (size_t i = 0; i < Config::Settings::stack_amount; i++) {
