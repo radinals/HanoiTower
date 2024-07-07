@@ -57,7 +57,7 @@ public:
     };
 
     struct Settings {
-        static constexpr int           SOLVER_DELAY   = 10;    // ms
+        static constexpr int           SOLVER_DELAY   = 1000 / 60;    // ms
         static constexpr size_t        SLICE_MAX      = 10;
         static constexpr size_t        STACK_MAX      = 5;
         static constexpr long long int TIMER_MIN      = 60000L * 3L;
