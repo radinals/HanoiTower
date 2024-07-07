@@ -23,7 +23,8 @@ GameView::calculateBaseSizes()
     // slice -----------------------------------------------------------------
     Geometry::slice = QSizeF(
         percent(80, Geometry::stack_area.width()),
-        percent(110, (Geometry::stack_area.height() / Config::SLICE_MAX)));
+        percent(110,
+                (Geometry::stack_area.height() / Config::Settings::SLICE_MAX)));
 
     // stack base ------------------------------------------------------------
     Geometry::stack_base = QSizeF(percent(90, Geometry::stack_area.width()),
@@ -79,8 +80,10 @@ GameView::scaleSlices()
 
     // every slice has a different size
     for (size_t i = 0; i < Config::Settings::slice_amount; i++) {
-        HanoiStacks::slices[i]->Height() = (height *= Config::H_SCALE_FACTOR);
-        HanoiStacks::slices[i]->Width()  = (width *= Config::W_SCALE_FACTOR);
+        HanoiStacks::slices[i]->Width()  = (width);
+        HanoiStacks::slices[i]->Height() = (height);
+        height *= Config::Settings::H_SCALE_FACTOR;
+        width *= Config::Settings::W_SCALE_FACTOR;
     }
 }
 

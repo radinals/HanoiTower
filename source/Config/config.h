@@ -15,15 +15,6 @@
 
 class Config {
 public:
-    static constexpr int           SOLVER_DELAY         = 10;    // ms
-    static constexpr size_t        SLICE_MAX            = 10;
-    static constexpr size_t        STACK_MAX            = 5;
-    static constexpr long long int TIMER_MIN            = 60000L * 3L;
-    static constexpr float         H_SCALE_FACTOR       = 0.95F;    // 95%
-    static constexpr float         W_SCALE_FACTOR       = 0.9F;     // 90%
-    static constexpr char          DEFAULT_STACK_TINT[] = "#71391c";
-    static constexpr char          DEFAULT_SLICE_TINT[] = "#7e1313";
-
     // clang-format off
 
     struct AssetsFiles {
@@ -49,6 +40,10 @@ public:
     // clang-format on
 
     struct Theme {
+        static constexpr char DEFAULT_STACK_TINT[]    = "#71391c";
+        static constexpr char DEFAULT_SLICE_TINT[]    = "#7e1313";
+        static constexpr char BG_IMAGE_TINT[]         = "#343442";
+        static constexpr char DEFAULT_STYLESHEET[]    = ":/style/default.qss";
         static inline QString font_name               = "monospace";
         static inline QColor  font_color              = "#fffeee";
         static inline QColor  highlight_tint          = "#e8d81c";
@@ -57,18 +52,24 @@ public:
         static inline QColor  win_dialog_tint         = "#28ab2b";
         static inline QColor  lose_dialog_tint        = "#ab282f";
         static inline QColor  solver_done_dialog_tint = "#DEDE00";
-        static constexpr char BG_IMAGE_TINT[]         = "#343442";
-        static constexpr char DEFAULT_STYLESHEET[]    = ":/style/default.qss";
-        Theme()                                       = delete;
+
+        Theme() = delete;
     };
 
     struct Settings {
-        static inline size_t        slice_amount   = 5;
-        static inline size_t        stack_amount   = 3;
-        static inline float         fx_volume      = 1.0F;
-        static inline float         music_volume   = 1.0F;
-        static inline long long int time_length_ms = 60000L * 5L;
-        Settings()                                 = delete;
+        static constexpr int           SOLVER_DELAY   = 10;    // ms
+        static constexpr size_t        SLICE_MAX      = 10;
+        static constexpr size_t        STACK_MAX      = 5;
+        static constexpr long long int TIMER_MIN      = 60000L * 3L;
+        static constexpr float         H_SCALE_FACTOR = 0.95F;    // 95%
+        static constexpr float         W_SCALE_FACTOR = 0.9F;     // 90%
+        static inline size_t           slice_amount   = 5;
+        static inline size_t           stack_amount   = 3;
+        static inline float            fx_volume      = 1.0F;
+        static inline float            music_volume   = 1.0F;
+        static inline long long int    time_length_ms = 60000L * 5L;
+
+        Settings() = delete;
     };
 
 #ifndef DISABLE_AUDIO
@@ -77,7 +78,8 @@ public:
     struct AudioFiles {
         static constexpr char PLACEMENT_FX[] = "qrc:/audio/placement_fx.wav";
         static constexpr char BACKGROUND_MUSIC[] = "qrc:/audio/bg_music.wav";
-        AudioFiles()                             = delete;
+
+        AudioFiles() = delete;
     };
 #endif    // !DISABLE_AUDIO
     explicit Config() = delete;

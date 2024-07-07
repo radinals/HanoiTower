@@ -135,10 +135,10 @@ private:
     // Stores the stacks and slices of the game
     struct HanoiStacks {
         // all slices in game
-        static inline HanoiSlice *slices[Config::SLICE_MAX];
+        static inline HanoiSlice *slices[Config::Settings::SLICE_MAX];
 
         // all stack in game
-        static inline HanoiStack stacks[Config::STACK_MAX];
+        static inline HanoiStack stacks[Config::Settings::STACK_MAX];
 
         // points to the target stack in the game
         static inline HanoiStack *goal_stack = nullptr;

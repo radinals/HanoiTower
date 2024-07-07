@@ -68,7 +68,7 @@ GameView::hanoiIterativeSolver()
 
         // wait for some time
         std::this_thread::sleep_for(
-            std::chrono::milliseconds(Config::SOLVER_DELAY));
+            std::chrono::milliseconds(Config::Settings::SOLVER_DELAY));
     }
 
     emit(s_solver_exited());

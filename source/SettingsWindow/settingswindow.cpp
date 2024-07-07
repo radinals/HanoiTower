@@ -39,8 +39,8 @@ SettingsWindow::SettingsWindow(QWidget* parent)
     ui->AudioSettingGroupLine->hide();
 #endif    // !DISABLE_AUDIO
 
-    ui->GameSliceAmountSlider->setMaximum(Config::SLICE_MAX);
-    ui->GameStackAmountSlider->setMaximum(Config::STACK_MAX);
+    ui->GameSliceAmountSlider->setMaximum(Config::Settings::SLICE_MAX);
+    ui->GameStackAmountSlider->setMaximum(Config::Settings::STACK_MAX);
 
     // init the preview scene
     m_preview_scene = new QGraphicsScene;
@@ -121,7 +121,7 @@ SettingsWindow::on_ThemeSliceColorSettingsInput_editingFinished()
 
         Settings.slice_color = (QColor::isValidColorName(input_str))
                                    ? input_str
-                                   : Config::DEFAULT_SLICE_TINT;
+                                   : Config::Theme::DEFAULT_SLICE_TINT;
     }
     updateDisplays();
     drawPreview();
@@ -135,7 +135,7 @@ SettingsWindow::on_ThemeStackColorSettingsInput_editingFinished()
 
         Settings.stack_color = (QColor::isValidColorName(input_str))
                                    ? input_str
-                                   : Config::DEFAULT_STACK_TINT;
+                                   : Config::Theme::DEFAULT_STACK_TINT;
     }
     updateDisplays();
     drawPreview();
@@ -149,7 +149,7 @@ SettingsWindow::on_GameTimerInput_userTimeChanged(const QTime& time)
                                                           time.minute(),
                                                           time.second());
 
-        if (ms <= 0 || ms < Config::TIMER_MIN) {
+        if (ms <= 0 || ms < Config::Settings::TIMER_MIN) {
             updateDisplays();
             return;
         }
@@ -165,7 +165,9 @@ SettingsWindow::on_GameTimerInput_editingFinished()
         const long long int ms = Utils::extractMsFromTime(time.hour(),
                                                           time.minute(),
                                                           time.second());
-        if (ms > 0 && ms >= Config::TIMER_MIN) { Settings.timer_ms = (ms); }
+        if (ms > 0 && ms >= Config::Settings::TIMER_MIN) {
+            Settings.timer_ms = (ms);
+        }
     }
 
     updateDisplays();
@@ -241,7 +243,7 @@ SettingsWindow::drawPreview()
                             percent(90, sceneH));
 
     const QSizeF base_slice(percent(90, stack_area.width()),
-                            stack_area.height() / Config::SLICE_MAX);
+                            stack_area.height() / Config::Settings::SLICE_MAX);
 
     const QSizeF stack_pole(percent(10, base_slice.width()),
                             stack_area.height());
@@ -299,9 +301,9 @@ SettingsWindow::drawPreview()
 
             // scale down
             slice.setHeight(slice.height()
-                            * Config::H_SCALE_FACTOR);    // scale down
+                            * Config::Settings::H_SCALE_FACTOR);    // scale down
             slice.setWidth(slice.width()
-                           * Config::W_SCALE_FACTOR);    // scale down
+                           * Config::Settings::W_SCALE_FACTOR);    // scale down
         }
 
         // clang-format on
@@ -316,7 +318,7 @@ SettingsWindow::drawPreview()
 void
 SettingsWindow::on_GameSliceAmountSlider_valueChanged(int value)
 {
-    if (value > 0 && value <= Config::SLICE_MAX) {
+    if (value > 0 && value <= Config::Settings::SLICE_MAX) {
         Settings.slice_amount = value;
     }
     updateDisplays();
@@ -326,7 +328,7 @@ SettingsWindow::on_GameSliceAmountSlider_valueChanged(int value)
 void
 SettingsWindow::on_GameStackAmountSlider_valueChanged(int value)
 {
-    if (value > 0 && value <= Config::STACK_MAX) {
+    if (value > 0 && value <= Config::Settings::STACK_MAX) {
         Settings.stack_amount = value;
     }
     updateDisplays();
