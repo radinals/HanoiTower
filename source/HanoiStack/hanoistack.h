@@ -32,8 +32,12 @@ public:
 
     inline const size_t& getLabel() const { return m_label; };
 
-    void forEverySlice(const std::function<void(HanoiSlice*&)>& func);
-    void forEverySliceReversed(const std::function<void(HanoiSlice*&)>& func);
+    // clang-format off
+
+    void forEverySlice(const std::function<void(HanoiSlice* const&)>&, bool reversed=false);
+    void forEverySlice(const std::function<void(const HanoiSlice&)>&, bool reversed=false) const;
+
+    // clang-format on
 
 private:
     size_t m_size  = 0;

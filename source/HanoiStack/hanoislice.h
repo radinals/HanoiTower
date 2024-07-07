@@ -16,6 +16,8 @@ public:
     inline size_t       getLabel() const { return m_value; }
     inline float&       Height() { return m_width; }
     inline float&       Width() { return m_height; }
+    inline float        getHeight() const { return m_width; }
+    inline float        getWidth() const { return m_height; }
     inline HanoiSlice*& Next() { return m_next; }
     inline HanoiSlice*& Prev() { return m_prev; }
 

@@ -231,7 +231,7 @@ private:
     // Drawing/Rendering =====================================================
 
     // draws a single stack and also it's slices
-    static void drawStack(float, HanoiStack *, QPainter *const);
+    static void drawStack(float, const HanoiStack &, QPainter *const);
 
     // draw the stack base/background
     static void drawStackBase(float, QPainter *const);

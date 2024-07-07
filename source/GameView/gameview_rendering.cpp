@@ -12,23 +12,27 @@
 
 // draws a single stack with all of it's slices.
 void
-GameView::drawStack(float x_axis, HanoiStack* stack, QPainter* const painter)
+GameView::drawStack(float             x_axis,
+                    const HanoiStack& stack,
+                    QPainter* const   painter)
 {
     assert(painter != nullptr);
     assert(painter->isActive());
 
-    if (stack->isEmpty()) { return; }
+    if (stack.isEmpty()) { return; }
 
     float y_axis = Geometry::window.height() - Geometry::stack_base.height();
 
-    stack->forEverySliceReversed([&](HanoiSlice*& slice) {
-        y_axis -= std::floor(slice->Height());
+    stack.forEverySlice(
+        [&](const HanoiSlice& slice) {
+            y_axis -= std::floor(slice.getHeight());
 
-        painter->drawPixmap(
-            x_axis - (slice->Width() / 2.0F),
-            y_axis,
-            GameSprites::slice->scaled(slice->Width(), slice->Height()));
-    });
+            painter->drawPixmap(x_axis - (slice.getWidth() / 2.0F),
+                                y_axis,
+                                GameSprites::slice->scaled(slice.getWidth(),
+                                                           slice.getHeight()));
+        },
+        true);    // start from the bottom stack
 }
 
 // render the stack base
@@ -189,7 +193,7 @@ GameView::paintEvent(QPaintEvent* event)
     for (size_t i = 0; i < Config::Settings::stack_amount; i++) {
         drawStackBase(x_offset, &p);
         drawStackLabel(getStack(i)->getLabel(), x_offset, &p);
-        drawStack(x_offset, getStack(i), &p);
+        drawStack(x_offset, *getStack(i), &p);
         x_offset += Geometry::stack_area.width();    // shift to the right
     }
 

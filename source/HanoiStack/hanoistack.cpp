@@ -68,21 +68,23 @@ HanoiStack::pop()
 }
 
 void
-HanoiStack::forEverySlice(const std::function<void(HanoiSlice*&)>& func)
+HanoiStack::forEverySlice(const std::function<void(HanoiSlice* const&)>& func,
+                          bool reversed)
 {
-    HanoiSlice* slice = m_head;
+    HanoiSlice* slice = (reversed) ? m_tail : m_head;
     while (slice != nullptr) {
         func(slice);
-        slice = slice->Next();
+        slice = (reversed) ? slice->Prev() : slice->Next();
     }
 }
 
 void
-HanoiStack::forEverySliceReversed(const std::function<void(HanoiSlice*&)>& func)
+HanoiStack::forEverySlice(const std::function<void(const HanoiSlice&)>& func,
+                          bool reversed) const
 {
-    HanoiSlice* slice = m_tail;
+    HanoiSlice* slice = (reversed) ? m_tail : m_head;
     while (slice != nullptr) {
-        func(slice);
-        slice = slice->Prev();
+        func(*slice);
+        slice = (reversed) ? slice->Prev() : slice->Next();
     }
 }
