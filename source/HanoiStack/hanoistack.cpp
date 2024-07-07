@@ -67,24 +67,28 @@ HanoiStack::pop()
     return popped;
 }
 
+// clang-format off
+
 void
-HanoiStack::forEverySlice(const std::function<void(HanoiSlice* const&)>& func,
-                          bool reversed)
+HanoiStack::forEverySlice(IterStart loop_start,
+                          const std::function<void(HanoiSlice* const&)>& func)
 {
-    HanoiSlice* slice = (reversed) ? m_tail : m_head;
+    HanoiSlice* slice = (loop_start == IterStart::TAIL) ? m_tail : m_head;
     while (slice != nullptr) {
         func(slice);
-        slice = (reversed) ? slice->Prev() : slice->Next();
+        slice = (loop_start == IterStart::TAIL) ? slice->Prev() : slice->Next();
     }
 }
 
 void
-HanoiStack::forEverySlice(const std::function<void(const HanoiSlice&)>& func,
-                          bool reversed) const
+HanoiStack::forEverySlice(IterStart loop_start,
+                          const std::function<void(const HanoiSlice&)>& func) const
 {
-    HanoiSlice* slice = (reversed) ? m_tail : m_head;
+    HanoiSlice* slice = (loop_start == IterStart::TAIL) ? m_tail : m_head;
     while (slice != nullptr) {
         func(*slice);
-        slice = (reversed) ? slice->Prev() : slice->Next();
+        slice = (loop_start == IterStart::TAIL) ? slice->Prev() : slice->Next();
     }
 }
+
+// clang-format on

@@ -34,8 +34,8 @@ public:
 
     // clang-format off
 
-    void forEverySlice(const std::function<void(HanoiSlice* const&)>&, bool reversed=false);
-    void forEverySlice(const std::function<void(const HanoiSlice&)>&, bool reversed=false) const;
+    void forEverySlice(IterStart,const std::function<void(HanoiSlice* const&)>&);
+    void forEverySlice(IterStart,const std::function<void(const HanoiSlice&)>&) const;
 
     // clang-format on
 

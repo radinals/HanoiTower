@@ -23,16 +23,19 @@ GameView::drawStack(float             x_axis,
 
     float y_axis = Geometry::window.height() - Geometry::stack_base.height();
 
-    stack.forEverySlice(
+    // clang-format off
+    stack.forEverySlice(HanoiStack::IterStart::TAIL,
         [&](const HanoiSlice& slice) {
             y_axis -= std::floor(slice.getHeight());
-
-            painter->drawPixmap(x_axis - Utils::percent(50, slice.getWidth()),
-                                y_axis,
-                                GameSprites::slice->scaled(slice.getWidth(),
-                                                           slice.getHeight()));
-        },
-        true);    // start from the bottom stack
+            painter->drawPixmap(
+                x_axis - Utils::percent(50, slice.getWidth()), // x
+                y_axis,                                        // y
+                slice.getWidth(),                              // w
+                slice.getHeight(),                             // h
+                *GameSprites::slice);
+        }
+    );
+    // clang-format on
 }
 
 // render the stack base

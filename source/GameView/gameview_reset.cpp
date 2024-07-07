@@ -42,12 +42,14 @@ GameView::resetSlices()
     // reset the slice array
     std::memset(&HanoiStacks::slices, 0, Config::Settings::slice_amount);
 
+    // clang-format off
     // save the slices to the array
-    getStack(0)->forEverySlice(
-        [&](HanoiSlice *const &slice) {
-            HanoiStacks::slices[slice->getLabel()] = slice;
-        },
-        false);    // start from the top
+    getStack(0)->forEverySlice(HanoiStack::IterStart::HEAD,
+       [&](HanoiSlice *const &slice) {
+           HanoiStacks::slices[slice->getLabel()] = slice;
+       }
+    );
+    // clang-format on
 
     // setup the sprite scaling
     scaleSlices();
