@@ -84,6 +84,8 @@ GameView::mouseReleaseEvent(QMouseEvent* const event)
     // increment the move counter
     m_move_count++;
 
+    // if any move is made when the redo stack is not empty, means the
+    // redo history in the stack is invalidated.
     if (!m_redo_history.isEmpty()) { m_redo_history.clear(); }
 
     // save the move (source, dest)

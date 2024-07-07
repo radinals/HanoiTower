@@ -7,7 +7,6 @@
 
 #include "../Common/utils.h"
 #include "../Config/config.h"
-#include <qpixmap.h>
 
 #ifndef DISABLE_AUDIO
     #include <QSoundEffect>
@@ -184,8 +183,8 @@ GameView::undo()
         return;
     }
 
+    // get the top of the move history, and try to move
     std::pair<HanoiStack *, HanoiStack *> move = m_move_history.getTop();
-
     try {
         move.first->push(move.second->pop());
     } catch (...) {
@@ -196,9 +195,10 @@ GameView::undo()
 
     repaint();
 
+    // push the successful undo move to the move redo history stack
     m_redo_history.push(move);
 
-    m_move_history.pop();
+    m_move_history.pop();    // pop the top
 }
 
 void
@@ -210,8 +210,8 @@ GameView::redo()
         return;
     }
 
+    // get the top of the redo history, and try to move
     std::pair<HanoiStack *, HanoiStack *> move = m_redo_history.getTop();
-
     try {
         move.second->push(move.first->pop());
     } catch (...) {
@@ -222,7 +222,8 @@ GameView::redo()
 
     repaint();
 
+    // push the successful redo move to the move history stack
     m_move_history.push(move);
 
-    m_redo_history.pop();
+    m_redo_history.pop();    // pop the top
 }
