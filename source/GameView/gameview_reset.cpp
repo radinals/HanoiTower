@@ -59,13 +59,13 @@ void
 GameView::setGoalStack()
 {
     // get randomly chosen stack label
-    const size_t goalStackLabel = getRandomGoalStackIndex();
+    HanoiStacks::goal_stack_index = getRandomGoalStackIndex();
 
-    assert(goalStackLabel > 0);
-    assert(goalStackLabel < Config::Settings::stack_amount);
+    assert(HanoiStacks::goal_stack_index > 0);
+    assert(HanoiStacks::goal_stack_index < Config::Settings::stack_amount);
 
     // save the address of the stack
-    HanoiStacks::goal_stack = getStack(goalStackLabel);
+    HanoiStacks::goal_stack = getStack(HanoiStacks::goal_stack_index);
 
     assert(HanoiStacks::goal_stack != nullptr);
 }

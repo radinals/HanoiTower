@@ -143,6 +143,8 @@ private:
         // points to the target stack in the game
         static inline HanoiStack *goal_stack = nullptr;
 
+        static inline size_t goal_stack_index = 0;
+
         HanoiStacks() = delete;
     };
 
