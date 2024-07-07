@@ -19,8 +19,8 @@ public:
     static constexpr size_t        SLICE_MAX            = 10;
     static constexpr size_t        STACK_MAX            = 5;
     static constexpr long long int TIMER_MIN            = 60000L * 3L;
-    static constexpr float         H_SCALE_FACTOR       = 0.95F;
-    static constexpr float         W_SCALE_FACTOR       = 0.9F;
+    static constexpr float         H_SCALE_FACTOR       = 0.95F;    // 95%
+    static constexpr float         W_SCALE_FACTOR       = 0.9F;     // 90%
     static constexpr char          DEFAULT_STACK_TINT[] = "#71391c";
     static constexpr char          DEFAULT_SLICE_TINT[] = "#7e1313";
 

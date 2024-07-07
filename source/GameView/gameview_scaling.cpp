@@ -18,23 +18,23 @@ GameView::calculateBaseSizes()
     // stack area  -----------------------------------------------------------
     Geometry::stack_area
         = QSizeF(Geometry::window.width() / Config::Settings::stack_amount,
-                 Utils::percent(80, Geometry::window.height()));
+                 percent(80, Geometry::window.height()));
 
     // slice -----------------------------------------------------------------
     Geometry::slice = QSizeF(
-        percent(90, Geometry::stack_area.width()),
+        percent(80, Geometry::stack_area.width()),
         percent(110, (Geometry::stack_area.height() / Config::SLICE_MAX)));
 
     // stack base ------------------------------------------------------------
-    Geometry::stack_base = QSizeF(percent(110, Geometry::slice.width()),
-                                  Geometry::slice.height() / 2.0F);
+    Geometry::stack_base = QSizeF(percent(90, Geometry::stack_area.width()),
+                                  percent(50, Geometry::slice.height()));
 
     Geometry::stack_pole = QSizeF(percent(10, Geometry::stack_base.width()),
                                   Geometry::stack_area.height());
 
     // dialog ----------------------------------------------------------------
-    Geometry::dialog = QSizeF(percent(40, Geometry::window.width()),
-                              percent(20, Geometry::window.height()));
+    Geometry::dialog = QSizeF(percent(50, Geometry::window.width()),
+                              percent(25, Geometry::window.height()));
 }
 
 void
@@ -74,7 +74,8 @@ GameView::scaleSlices()
         GameSprites::slice_tint = Config::Theme::slice_tint;
     }
 
-    float width = Geometry::slice.width(), height = Geometry::slice.height();
+    float width  = Geometry::slice.width();
+    float height = Geometry::slice.height();
 
     // every slice has a different size
     for (size_t i = 0; i < Config::Settings::slice_amount; i++) {

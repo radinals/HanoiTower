@@ -6,6 +6,7 @@
 #define GAMEVIEW_H
 
 #include "../Common/stack.h"
+#include "../Common/utils.h"
 #include "../Config/config.h"
 #include "../HanoiStack/hanoistack.h"
 
@@ -107,8 +108,9 @@ private:
         // move slice stored by SelectedSlice:: to the QPoints x and y values
         static inline void move(const QPointF &point)
         {
-            x = (point.x() - (SelectedSlice::slice->Width() / 2.0F));
-            y = (point.y() - (SelectedSlice::slice->Height() / 2.0F));
+            using namespace Utils;
+            x = (point.x() - percent(50, SelectedSlice::slice->Width()));
+            y = (point.y() - percent(50, SelectedSlice::slice->Height()));
         }
 
         SelectedSlice() = delete;

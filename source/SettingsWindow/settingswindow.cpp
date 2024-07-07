@@ -251,50 +251,60 @@ SettingsWindow::drawPreview()
     // Draw the base and the pole -------------------------------------------
 
     {
-        float x = 0;
+        // clang-format off
+        float x_offset = 0;
         for (size_t i = 0; i < Settings.stack_amount; i++) {
-            ui->PreviewOut->scene()->addRect(x + (stack_area.width() / 2.0F)
-                                                 - (stack_pole.width() / 2.0F),
-                                             sceneH - stack_pole.height(),
-                                             stack_pole.width(),
-                                             stack_pole.height(),
+            ui->PreviewOut->scene()->addRect(
+                x_offset + (percent(50, stack_base.width())
+                    - percent(50, stack_pole.width())),       // x
+                sceneH - stack_pole.height(),                 // y
+                stack_pole.width(),                           // w
+                stack_pole.height(),                          // h
+                pen,
+                Settings.stack_color);
+
+            ui->PreviewOut->scene()->addRect(x_offset,                     // x
+                                             sceneH - stack_base.height(), // y
+                                             stack_base.width(),           // w
+                                             stack_base.height(),          // h
                                              pen,
                                              Settings.stack_color);
 
-            ui->PreviewOut->scene()->addRect(x,
-                                             sceneH - stack_base.height(),
-                                             stack_base.width(),
-                                             stack_base.height(),
-                                             pen,
-                                             Settings.stack_color);
-
-            x += stack_area.width() + hpadding;    // shifting to right
+            x_offset += stack_area.width() + hpadding;    // shifting to right
         }
+        // clang-format on
     }
 
     // Draw Slices on the first stack ---------------------------------------
     {
         QSizeF slice = base_slice;    // scale size
 
-        const float x = stack_area.width() / 2.0F;
+        const float x_offset = percent(50, stack_area.width());
 
-        float y = (sceneH - stack_base.height());    // bottom y
+        float y_offset = (sceneH - stack_base.height());    // bottom y
+
+        // clang-format off
 
         for (size_t i = 0; i < Settings.slice_amount; i++) {
-            y -= slice.height();    // shift up
+            y_offset -= slice.height();    // shift up
 
-            ui->PreviewOut->scene()->addRect(x - slice.width() / 2.0F,
-                                             y,
-                                             slice.width(),
-                                             slice.height(),
-                                             pen,
-                                             Settings.slice_color);
+            ui->PreviewOut->scene()->addRect(
+                x_offset - percent(50, slice.width()), // x
+                y_offset,                              // y
+                slice.width(),                         // w
+                slice.height(),                        // h
+                pen,
+                Settings.slice_color
+            );
+
             // scale down
             slice.setHeight(slice.height()
                             * Config::H_SCALE_FACTOR);    // scale down
             slice.setWidth(slice.width()
                            * Config::W_SCALE_FACTOR);    // scale down
         }
+
+        // clang-format on
     }
 
     // ----------------------------------------------------------------------
