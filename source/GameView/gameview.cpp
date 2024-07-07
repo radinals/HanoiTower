@@ -5,6 +5,7 @@
 
 #include "gameview.h"
 
+#include "../Common/utils.h"
 #include "../Config/config.h"
 #include <qpixmap.h>
 
@@ -25,8 +26,10 @@ GameView::GameView(QWidget *parent) : QWidget { parent }
     // timer will call checkWinState every tick (should be every 1ms).
     connect(&TimeInfo::timer, &QTimer::timeout, this, &GameView::checkWinState);
 
+    using namespace Utils;
+
     for (size_t i = 0; i < Config::Settings::STACK_MAX; i++) {
-        HanoiStacks::stacks[i] = HanoiStack(i);
+        HanoiStacks::stacks[i] = HanoiStack(char('A' + i));
     }
 
 // load the placement sound effect

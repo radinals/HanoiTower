@@ -49,20 +49,20 @@ GameView::drawStackBase(float x_axis, QPainter* const painter)
 
     // draw the pole
     painter->drawPixmap(
-        x_axis - percent(50, Geometry::stack_pole.width()),
-        Geometry::window.height() - Geometry::stack_pole.height(),
+        x_axis - percent(50, Geometry::stack_pole.width()),           // x
+        Geometry::window.height() - Geometry::stack_pole.height(),    // y
         GameSprites::stack_pole->scaled(Geometry::stack_pole.toSize()));
 
     // draw the base
     painter->drawPixmap(
-        x_axis - percent(50, Geometry::stack_base.width()),
-        Geometry::window.height() - Geometry::stack_base.height(),
+        x_axis - percent(50, Geometry::stack_base.width()),           // x
+        Geometry::window.height() - Geometry::stack_base.height(),    // y
         GameSprites::stack_base->scaled(Geometry::stack_base.toSize()));
 }
 
 // render the stack label
 void
-GameView::drawStackLabel(size_t label, float x_axis, QPainter* const painter)
+GameView::drawStackLabel(char label, float x_axis, QPainter* const painter)
 {
     assert(painter != nullptr);
     assert(painter->isActive());
@@ -88,19 +88,14 @@ GameView::drawStackLabel(size_t label, float x_axis, QPainter* const painter)
         // draw indicator instead
         if (m_game_state == GameState::GAME_RUNNING
             && !TimeInfo::timer.isActive() && !has_solver_task()) {
-            const QPixmap arrow_sprite = GameSprites::arrow->scaled(
-                x_axis - percent(50, Geometry::stack_area.width()),    // w
-                Utils::percent(10, Geometry::stack_base.width()));     // h
-
-            assert(!arrow_sprite.isNull());
-
             painter->drawPixmap(
-                percent(50, Geometry::stack_area.width()),    // x
-                pole_y - (arrow_sprite.height()),             // y
-                arrow_sprite);
+                percent(50, Geometry::stack_area.width()),             // x
+                pole_y - percent(10, Geometry::stack_base.width()),    // y
+                x_axis - percent(50, Geometry::stack_area.width()),    // w
+                percent(10, Geometry::stack_base.width()),             // h
+                *GameSprites::arrow);
 
         } else {
-            using namespace Utils;
             painter->fillRect(label_box.x(),                               // x
                               pole_y - percent(50, label_box.height()),    // y
                               label_box.width(),                           // w
@@ -111,14 +106,13 @@ GameView::drawStackLabel(size_t label, float x_axis, QPainter* const painter)
 
     // setup font for drawing the label
     painter->setFont(
-        QFont(Config::Theme::font_name, Utils::percent(90, label_box.width())));
+        QFont(Config::Theme::font_name, percent(90, label_box.width())));
     painter->setPen(Config::Theme::font_color);
 
-    const QRect bounds = painter->boundingRect(label_box,
-                                               Qt::AlignHCenter,
-                                               Utils::numToChar(label));
+    const QRect bounds
+        = painter->boundingRect(label_box, Qt::AlignHCenter, QString(label));
     // draw the stack label
-    painter->drawText(bounds, Utils::numToChar(label));
+    painter->drawText(bounds, QString(label));
 }
 
 void
@@ -220,11 +214,11 @@ GameView::paintEvent(QPaintEvent* event)
 
     // render the selected slice
     if (SelectedSlice::hasSelected()) {
-        p.drawPixmap(
-            SelectedSlice::x,
-            SelectedSlice::y,
-            GameSprites::slice->scaled(SelectedSlice::slice->Width(),
-                                       SelectedSlice::slice->Height()));
+        p.drawPixmap(SelectedSlice::x,
+                     SelectedSlice::y,
+                     SelectedSlice::slice->Width(),
+                     SelectedSlice::slice->Height(),
+                     *GameSprites::slice);
     }
 
     // render the game over screens

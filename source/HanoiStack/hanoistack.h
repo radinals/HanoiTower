@@ -14,8 +14,10 @@
 
 class HanoiStack {
 public:
+    enum class IterStart { HEAD, TAIL };
+
     HanoiStack() {};
-    HanoiStack(size_t label) : m_label(label) {};
+    HanoiStack(char label) : m_label(label) {};
     ~HanoiStack() { clearStack(); };
 
     void clearStack();
@@ -30,7 +32,7 @@ public:
     // initialize a stack with 'slice_amount' of slices
     static void fillStack(HanoiStack* stack, size_t slice_amount);
 
-    inline const size_t& getLabel() const { return m_label; };
+    inline char getLabel() const { return m_label; };
 
     // clang-format off
 
@@ -41,7 +43,7 @@ public:
 
 private:
     size_t m_size  = 0;
-    size_t m_label = 0;
+    char   m_label = 0;
 
     HanoiSlice *m_head = nullptr, *m_tail = nullptr;
 };

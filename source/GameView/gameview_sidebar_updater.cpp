@@ -61,7 +61,7 @@ GameView::updateInfo()
     if (SidebarWidgets::info_msg_out != nullptr) {
         SidebarWidgets::info_msg_out->setText(
             "Move All Slice to Stack "
-            + Utils::numToChar(HanoiStacks::goal_stack->getLabel()));
+            + QString(HanoiStacks::goal_stack->getLabel()));
         SidebarWidgets::info_msg_out->setAlignment(Qt::AlignCenter);
     }
 }

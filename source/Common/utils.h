@@ -32,14 +32,6 @@ namespace Utils {
         return (hh * 3600000) + (mm * 60000) + (ss * 1000);
     }
 
-    // convert the numeric labels of stacks to alphabets
-    static inline QString numToChar(size_t n)
-    {
-        std::string str;
-        str += char('A' + n);
-        return QString::fromStdString(str);
-    };
-
     // load and get stylesheet
     static inline QString getDefaultStylesheet()
     {

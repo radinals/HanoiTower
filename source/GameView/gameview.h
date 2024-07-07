@@ -240,7 +240,7 @@ private:
     // draw the stack base/background
     static void drawStackBase(float, QPainter *const);
 
-    static void drawStackLabel(size_t, float, QPainter *const);
+    static void drawStackLabel(char, float, QPainter *const);
 
     // draw a dialog sprite in the center of the screen
     static void drawDialog(const QString &, const QColor &, QPainter *const);

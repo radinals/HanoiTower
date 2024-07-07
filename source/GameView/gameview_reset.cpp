@@ -68,5 +68,4 @@ GameView::setGoalStack()
     HanoiStacks::goal_stack = getStack(goalStackLabel);
 
     assert(HanoiStacks::goal_stack != nullptr);
-    assert(HanoiStacks::goal_stack->getLabel() == goalStackLabel);
 }
