@@ -59,7 +59,8 @@ void
 GameView::setGoalStack()
 {
     // get randomly chosen stack label
-    HanoiStacks::goal_stack_index = getRandomGoalStackIndex();
+    HanoiStacks::goal_stack_index
+        = Utils::randomRange<size_t>(1, Config::Settings::stack_amount - 1);
 
     assert(HanoiStacks::goal_stack_index > 0);
     assert(HanoiStacks::goal_stack_index < Config::Settings::stack_amount);

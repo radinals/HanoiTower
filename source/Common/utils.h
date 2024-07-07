@@ -6,7 +6,7 @@
 
 #include <QFile>
 #include <QString>
-#include <string>
+#include <random>
 #include <tuple>
 
 #include "../Config/config.h"
@@ -44,6 +44,16 @@ namespace Utils {
     {
         return n * (percent / 100.0F);
     };
+
+    // random range [min,max]
+    template<typename IntType> IntType randomRange(IntType min, IntType max)
+    {
+        std::random_device                     rdev;
+        std::mt19937                           gen(rdev());
+        std::uniform_int_distribution<IntType> distr(min, max);
+
+        return distr(gen);
+    }
 
 };    // namespace Utils
 

@@ -291,9 +291,6 @@ private:
     // move/pop the top slice of a stack
     static void makeLegalMove(HanoiStack *const source, HanoiStack *const dest);
 
-    // generate random stack index from 1 to n-1
-    static size_t getRandomGoalStackIndex();
-
     // check if the goal stack has all valid slices in it
     static bool goalStackIsComplete();
 

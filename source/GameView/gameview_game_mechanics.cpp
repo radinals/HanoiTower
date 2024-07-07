@@ -5,7 +5,6 @@
 
 #include "../Config/config.h"
 #include "gameview.h"
-#include <random>
 
 // get the pointer to a stack
 HanoiStack *
@@ -39,21 +38,6 @@ GameView::moveisLegal(const HanoiStack &source, const HanoiStack &dest)
     return !source.isEmpty()
            && (dest.isEmpty()
                || source.peek()->getLabel() > dest.peek()->getLabel());
-}
-
-// generate a random stack label for the goal stack
-size_t
-GameView::getRandomGoalStackIndex()
-{
-    static constexpr size_t min = 1;
-    const size_t            max = Config::Settings::stack_amount - 1;
-
-    std::random_device rdev;
-    std::mt19937       gen(rdev());
-
-    std::uniform_int_distribution<size_t> distr(min, max);
-
-    return distr(gen);
 }
 
 // check the win state, is called by the timer every 1ms
