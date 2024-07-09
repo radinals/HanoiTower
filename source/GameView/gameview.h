@@ -134,9 +134,6 @@ private:
 
     // Stores the stacks and slices of the game
     struct HanoiStacks {
-        // all slices in game
-        static inline HanoiSlice *slices[Config::Settings::SLICE_MAX];
-
         // all stack in game
         static inline HanoiStack stacks[Config::Settings::STACK_MAX];
 
@@ -154,7 +151,7 @@ private:
     struct TimeInfo {
         static QTimer               timer;
         static inline long long int elapsed = 0;    // ms
-        //
+
         TimeInfo() = delete;
     };
 
@@ -213,12 +210,6 @@ private:
 
     // clear & reset the stacks & slices
     void clear();    // reset the game states
-
-    // clear & reset all stack
-    static void resetStacks();
-
-    // clear & reset all stack
-    static void resetSlices();
 
     // generate a random goal stack
     static void setGoalStack();

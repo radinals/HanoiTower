@@ -79,16 +79,20 @@ GameView::scaleSlices()
     float height = Geometry::slice.height();
 
     // every slice has a different size
-    for (size_t i = 0; i < Config::Settings::slice_amount; i++) {
-        HanoiStacks::slices[i]->Width()  = (width);
-        HanoiStacks::slices[i]->Height() = (height);
-        height *= Config::Settings::H_SCALE_FACTOR;
-        width *= Config::Settings::W_SCALE_FACTOR;
+    for (size_t i = 0; i < Config::Settings::stack_amount; i++) {
+        HanoiStacks::stacks[i].forEverySlice(
+            HanoiStack::IterStart::TAIL,
+            [&](HanoiSlice* const& slice) {
+                slice->Width()  = (width);
+                slice->Height() = (height);
+                height *= Config::Settings::H_SCALE_FACTOR;
+                width *= Config::Settings::W_SCALE_FACTOR;
+            });
     }
 }
 
 void
-GameView::resizeEvent(QResizeEvent *const event)
+GameView::resizeEvent(QResizeEvent* const event)
 {
     Geometry::window = event->size();
     calculateBaseSizes();
